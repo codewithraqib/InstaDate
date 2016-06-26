@@ -31,18 +31,10 @@ public class TabFragment2 extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        NYT = SitesXmlPullParserNYT.getStackSitesFromFile(getActivity().getBaseContext());
-        ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getActivity().getBaseContext());
-//        GK = SitesXmlPullParserGK.getStackSitesFromFile(getActivity().getBaseContext());
-        TFE = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getActivity().getBaseContext());
         TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
         ScienceDaily = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {
-                addAll(TFE);
-                addAll(NYT);
-                addAll(ESPN);
-//                addAll(GK);
                 addAll(TFETech);
                 addAll(ScienceDaily);
             }
