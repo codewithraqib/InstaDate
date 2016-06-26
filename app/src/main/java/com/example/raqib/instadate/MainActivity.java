@@ -19,11 +19,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -37,20 +35,7 @@ import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class MainActivity extends AppCompatActivity{
-    public List<NewsItems> NYT;
-    public List<NewsItems> ESPN;
-    public List<NewsItems> GK;
-    public List<NewsItems> TFE;
-    public List<NewsItems> TFETech;
-    public List<NewsItems> ScienceDaily;
-    RecyclerView myRecyclerView;
-    LinearLayout myLinearLayout;
-    Context context;
     static String link;
-    int position = MyNewsRecyclerViewAdapter.pos;
-//    ViewPagerAdapter adapter;
-    ViewPager pager;
-    static boolean scroll_down;
     ActionBar actionBar;
     int uiOptions = 0;
 
@@ -99,14 +84,11 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-               // viewPager.removeAllViews();
-//                viewPager.removeViewAt(0);
 
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-//                viewPager.setCurrentItem(tab.getPosition());
             }
         });
 //        displayNews();
@@ -124,36 +106,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     private void displayNews() {
-
-
-
-//        //MATERIAL TAB HOST ON WORK
-//        tabHost = (MaterialTabHost) this.findViewById(R.id.tabHost);
-//        pager = (ViewPager) this.findViewById(R.id.pager);
-//
-//        // init view pager
-//        adapter = new ViewPagerAdapter(getSupportFragmentManager());
-//        pager.setAdapter(adapter);
-//
-//
-//        pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                // when user do a swipe the selected tab change
-//                tabHost.setSelectedNavigationItem(position);
-//
-//            }
-//        });
-//
-//        // insert all tabs from pagerAdapter data
-//        for (int i = 0; i < adapter.getCount(); i++) {
-//            Log.e("ADAPTER COUNT ", String.valueOf(adapter.getCount()));
-//            tabHost.addTab(
-//                    tabHost.newTab()
-//                            .setText(adapter.getPageTitle(i))
-//                            .setTabListener(this)
-//            );
-//        }
+        // thinking
     }
 
     //HELPER METHOD TO DETERMINE WHETHER NETWORK IS AVAILABLE OR NOT
@@ -240,47 +193,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-
-//    @Override
-//    public void onTabSelected(MaterialTab tab) {
-//        pager.setCurrentItem(tab.getPosition());
-//    }
-//
-//    @Override
-//    public void onTabReselected(MaterialTab tab) {
-//
-//    }
-//
-//    @Override
-//    public void onTabUnselected(MaterialTab tab) {
-//
-//    }
-//
-//
-//    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
-//
-//        public ViewPagerAdapter(FragmentManager fm) {
-//            super(fm);
-//
-//        }
-//
-//        public Fragment getItem(int num) {
-//            return new FragmentText();
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return 10;
-//        }
-//
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return "Section " + position;
-//        }
-//
-//    }
-
-
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {
 
 //        ProgressDialog pdl;
@@ -288,30 +200,6 @@ public class MainActivity extends AppCompatActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-////            pdl = ProgressDialog.show(context,"please wait...","fetching data",false,false);
-//            myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-//            myRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//            myRecyclerView.hasFixedSize();
-//
-//            NYT = SitesXmlPullParserNYT.getStackSitesFromFile(getApplicationContext());
-//            ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getApplicationContext());
-////            GK = SitesXmlPullParserGK.getStackSitesFromFile(getApplicationContext());
-//            TFE = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getApplicationContext());
-//            TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getApplicationContext());
-//            ScienceDaily = SitesXmlPullParserScienceDaily.getStackSitesFromFile(getApplicationContext());
-//
-//            List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
-//                {
-//                    addAll(TFE);
-//                    addAll(NYT);
-//                    addAll(ESPN);
-////                    addAll(GK);
-//                    addAll(TFETech);
-//                    addAll(ScienceDaily);
-//                }
-//            };
-//            myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
         }
 
         @Override
@@ -337,28 +225,6 @@ public class MainActivity extends AppCompatActivity{
             toast.setGravity(Gravity.CENTER_HORIZONTAL,0,0);
             toast.show();
 
-//            myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-//            myRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//            myRecyclerView.hasFixedSize();
-//
-//            NYT = SitesXmlPullParserNYT.getStackSitesFromFile(getApplicationContext());
-//            ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getApplicationContext());
-////            GK = SitesXmlPullParserGK.getStackSitesFromFile(getApplicationContext());
-//            TFE = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getApplicationContext());
-//            TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getApplicationContext());
-//            ScienceDaily = SitesXmlPullParserScienceDaily.getStackSitesFromFile(getApplicationContext());
-//
-//            List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
-//                {
-//                    addAll(TFE);
-//                    addAll(NYT);
-//                    addAll(ESPN);
-////                    addAll(GK);
-//                    addAll(TFETech);
-//                    addAll(ScienceDaily);
-//                }
-//            };
-//            myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
         }
 
     }

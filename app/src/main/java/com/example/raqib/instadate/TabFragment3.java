@@ -14,10 +14,6 @@ import java.util.List;
 public class TabFragment3 extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> NYT;
-    public List<NewsItems> ESPN;
-    public List<NewsItems> GK;
-    public List<NewsItems> TFE;
     public List<NewsItems> TFETech;
     public List<NewsItems> ScienceDaily;
 
