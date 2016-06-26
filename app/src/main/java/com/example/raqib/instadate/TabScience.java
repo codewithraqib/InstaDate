@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TabScience extends Fragment {
@@ -27,14 +26,15 @@ public class TabScience extends Fragment {
         myRecyclerView.hasFixedSize();
 
         ScienceDaily = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
-        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
-            {
+        //FOR DIFFERENT CHANNELS
+//        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
+//            {
+//
+//                addAll(ScienceDaily);
+//            }
+//        };
 
-                addAll(ScienceDaily);
-            }
-        };
-
-        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
+        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(ScienceDaily));
         return view;
     }
 
