@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">InstaDate</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Sign In</string>
+    <string name="title_activity_register">Sign Up</string>
+    <string name="action_Register">Login</string>
+    <string name="seperator">___________________________________</string>
+    <string name="today">today</string>
+    <string name="new_york_times">New York Times</string>
+    <string name="action_RegisterEmail">Email</string>
+    <string name="action_Customization">Customization</string>
+    <string name="title_activity_register_user">RegisterUser</string>
+    <string name="action_RegisterEmailHint">Email</string>
+    <string name="action_RegisterButton">Register</string>
+    <string name="action_RegisterPassword">Password</string>
+    <string name="action_RegisterPasswordHint1">Password</string>
+    <string name="action_RegisterPasswordHint2">Password Again</string>
+    <string name="action_RegisterPasswordConfirm">Password</string>
+    <string name="action_LoginButton">Login</string>
+    <string name="action_LogoutButton">Logout</string>
+    <string name="action_RegisterHere">Register Here</string>
+    <string name="action_RegisterName">Name</string>
+    <string name="action_RegisterNameHint">Name</string>
+    <string name="action_about">About</string>
+    <string name="Main_News">Description - main News</string>
+    <string name="Main_Link">link to main News</string>
+    <string name="title_activity_customization">CustomizationActivity</string>
+    <string name="title_activity_custom_list">CustomList</string>
+    <string name="SaveButton">Save Changes</string>
+    <string name="action_exit">Exit</string>
+    <string name="image_parsing">parsing</string>
+    <string name="action_RegisterUser">New User? Register Here</string>
+    <string name="action_AlreadyRegistered">Already Registered? Login Here</string>
+    <string name="action_LoginHere">Login Here</string>
+    <string name="action_moreAt">more at </string>
+    <string name="action_moreAtLink">Here</string>
+    <string name="title_activity_about_insta_date">AboutInstaDate</string>
+    <string name="title_about">InstaDate, To Keep You Up To Date!</string>
+    <string name="description_about">The InstaDate has been developed by Raqib. The App has been developed to keep the users up to date about the current Happenings and provides its users with the daily News Updates from almost all fields of life. The App is still in its development phase so if you have any suggestions, you can write to me by clicking the below Email Icon </string>
+    <string name="action_FollowMe">Follow Me</string>
+    <string name="heading">News Title</string>
+    <string name="title_activity_detailed_newss">DetailedNewss</string>
+    <string name="title_activity_detailed_news">DetailedNews</string>
+    <string name="title_activity_customization_drawer">CustomizationDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="importDrawer">Import</string>
+    <string name="galleryDrawer">Gallery</string>
+    <string name="title">title</string>
+    <string name="news_details">news details</string>
+    <string name="share">share...</string>
+
+</resources>

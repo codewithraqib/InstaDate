@@ -19,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,7 +31,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -79,6 +77,7 @@ public class MainActivity extends AppCompatActivity{
 
         //NEW IMPLEMENTATION OF SWIPE TABS
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabHost);
+        assert tabLayout != null;
         tabLayout.addTab(tabLayout.newTab().setText("Top News"));
         tabLayout.addTab(tabLayout.newTab().setText("Science"));
         tabLayout.addTab(tabLayout.newTab().setText("Technology"));
@@ -88,6 +87,7 @@ public class MainActivity extends AppCompatActivity{
 
         PagerAdapter1 adapter = new PagerAdapter1(getSupportFragmentManager(), tabLayout.getTabCount());
 
+        assert viewPager != null;
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -100,51 +100,15 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                // viewPager.removeAllViews();
-                viewPager.removeViewAt(0);
+//                viewPager.removeViewAt(0);
 
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+//                viewPager.setCurrentItem(tab.getPosition());
             }
         });
-
-                myRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
-
-                myRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-
-                if (scroll_down) {
-                    View decorView = getWindow().getDecorView();
-                    // Hide the status bar.
-                    int uiOptions = 0;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                    }
-                    decorView.setSystemUiVisibility(uiOptions);
-                }
-
-
-            }
-             @Override
-             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if ( dy > 5 ) {
-                    //scroll down
-                    scroll_down = true;
-
-                } else if ( dy < -5 ) {
-                    //scroll up
-                    scroll_down = false;
-                }
-            }
-        });
-
-
 //        displayNews();
 
         if (isNetworkAvailable()) {
@@ -157,62 +121,12 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    //TO  DESTROY THE OLD VIEW AND TO MAKE SPACE NULL FOR THE NEXT TAB VIEW
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        if (view != null) {
-//            ViewGroup parentViewGroup = (ViewGroup) view.getParent();
-//            if (parentViewGroup != null) {
-//                parentViewGroup.removeAllViews();
-//            }
-//        }
-//    }
+
 
     private void displayNews() {
 
-//
-//        //TO HIDE AND SHOW THE ACTIONBAR ON SCROLL
-//        myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-//        myLinearLayout = (LinearLayout) findViewById(R.id.myLinearLayout);
-//
-//        actionBar = getSupportActionBar();
-//
-//        myRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//
-//
-//                if (scroll_down) {
-//                    View decorView = getWindow().getDecorView();
-//                    // Hide the status bar.
-//                    int uiOptions = 0;
-//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-//                    }
-//                    decorView.setSystemUiVisibility(uiOptions);
-//                    actionBar.hide();
-//                } else {
-//                    actionBar.show();
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (dy > 10) {
-//                    //scroll down
-//                    scroll_down = true;
-//
-//                } else if (dy < -10) {
-//                    //scroll up
-//                    scroll_down = false;
-//                }
-//            }
-//        });
-//
-//
+
+
 //        //MATERIAL TAB HOST ON WORK
 //        tabHost = (MaterialTabHost) this.findViewById(R.id.tabHost);
 //        pager = (ViewPager) this.findViewById(R.id.pager);
@@ -423,28 +337,28 @@ public class MainActivity extends AppCompatActivity{
             toast.setGravity(Gravity.CENTER_HORIZONTAL,0,0);
             toast.show();
 
-            myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-            myRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            myRecyclerView.hasFixedSize();
-
-            NYT = SitesXmlPullParserNYT.getStackSitesFromFile(getApplicationContext());
-            ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getApplicationContext());
-//            GK = SitesXmlPullParserGK.getStackSitesFromFile(getApplicationContext());
-            TFE = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getApplicationContext());
-            TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getApplicationContext());
-            ScienceDaily = SitesXmlPullParserScienceDaily.getStackSitesFromFile(getApplicationContext());
-
-            List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
-                {
-                    addAll(TFE);
-                    addAll(NYT);
-                    addAll(ESPN);
-//                    addAll(GK);
-                    addAll(TFETech);
-                    addAll(ScienceDaily);
-                }
-            };
-            myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
+//            myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+//            myRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//            myRecyclerView.hasFixedSize();
+//
+//            NYT = SitesXmlPullParserNYT.getStackSitesFromFile(getApplicationContext());
+//            ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getApplicationContext());
+////            GK = SitesXmlPullParserGK.getStackSitesFromFile(getApplicationContext());
+//            TFE = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getApplicationContext());
+//            TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getApplicationContext());
+//            ScienceDaily = SitesXmlPullParserScienceDaily.getStackSitesFromFile(getApplicationContext());
+//
+//            List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
+//                {
+//                    addAll(TFE);
+//                    addAll(NYT);
+//                    addAll(ESPN);
+////                    addAll(GK);
+//                    addAll(TFETech);
+//                    addAll(ScienceDaily);
+//                }
+//            };
+//            myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
         }
 
     }
