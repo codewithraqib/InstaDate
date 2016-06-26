@@ -11,34 +11,37 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabFragment2 extends Fragment {
+
+public class TabTopStories extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> TFETech;
-    public List<NewsItems> ScienceDaily;
+    public List<NewsItems> NYT;
+    public List<NewsItems> TFE;
 
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.general_recycler_view,container, false);
+        View view = inflater.inflate(R.layout.general_recycler_view,container,false);
         myRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
-        ScienceDaily = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
+        NYT = SitesXmlPullParserNYT.getStackSitesFromFile(getActivity().getBaseContext());
+        TFE = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getActivity().getBaseContext());
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {
-
-                addAll(ScienceDaily);
-                addAll(TFETech);
+                addAll(TFE);
+                addAll(NYT);
             }
         };
 
-        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
+            myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
+
+
         return view;
     }
+
 
 }

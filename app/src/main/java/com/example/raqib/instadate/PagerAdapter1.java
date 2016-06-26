@@ -3,6 +3,7 @@ package com.example.raqib.instadate;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 public class PagerAdapter1 extends FragmentStatePagerAdapter {
     int mNumOfTabs;
@@ -17,14 +18,17 @@ public class PagerAdapter1 extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                TabFragment1 tab1 = new TabFragment1();
+                TabTopStories tab1 = new TabTopStories();
                 return tab1;
             case 1:
-                TabFragment2 tab2 = new TabFragment2();
+                TabScience tab2 = new TabScience();
                 return tab2;
             case 2:
-                TabFragment3 tab3 = new TabFragment3();
+                TabTechnology tab3 = new TabTechnology();
                 return tab3;
+            case 3:
+                TabSports tab4 = new TabSports();
+                return tab4;
             default:
                 return null;
         }
@@ -32,6 +36,7 @@ public class PagerAdapter1 extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
+        Log.e("No Of TABS", String.valueOf(mNumOfTabs));
         return mNumOfTabs;
     }
 }

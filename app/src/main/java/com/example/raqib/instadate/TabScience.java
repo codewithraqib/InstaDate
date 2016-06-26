@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabFragment3 extends Fragment {
+public class TabScience extends Fragment {
 
     RecyclerView myRecyclerView;
     public List<NewsItems> TFETech;
@@ -31,17 +31,13 @@ public class TabFragment3 extends Fragment {
         ScienceDaily = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {
-                addAll(TFETech);
+
                 addAll(ScienceDaily);
             }
         };
 
-//        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
         myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
-
         return view;
     }
-
-
 
 }
