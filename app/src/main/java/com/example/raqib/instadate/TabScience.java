@@ -14,7 +14,6 @@ import java.util.List;
 public class TabScience extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> TFETech;
     public List<NewsItems> ScienceDaily;
 
 
@@ -27,7 +26,6 @@ public class TabScience extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
         ScienceDaily = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {

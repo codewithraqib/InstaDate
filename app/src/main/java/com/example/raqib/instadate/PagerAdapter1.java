@@ -3,7 +3,6 @@ package com.example.raqib.instadate;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 public class PagerAdapter1 extends FragmentStatePagerAdapter {
     int mNumOfTabs;
@@ -36,7 +35,6 @@ public class PagerAdapter1 extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        Log.e("No Of TABS", String.valueOf(mNumOfTabs));
         return mNumOfTabs;
     }
 }
