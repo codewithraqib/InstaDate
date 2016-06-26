@@ -26,7 +26,7 @@ public class TabTechnology extends Fragment {
         myRecyclerView.hasFixedSize();
 
         TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
-        //FOR DIFFERENT CHANNELS
+        //FOR DIFFERENT CHANNELS ADD HERE IN LIST
 //        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
 //            {
 //                addAll(TFETech);
