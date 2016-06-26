@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public class TabScience extends Fragment {
+public class TabHealth extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> ScienceDaily;
+    public List<NewsItems> HealthService;
 
 
 
@@ -25,7 +25,7 @@ public class TabScience extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        ScienceDaily = SitesXmlPullParserScienceDaily.getStackSitesFromFile(getActivity().getBaseContext());
+        HealthService = SitesXmlPullParserHealth.getStackSitesFromFile(getActivity().getBaseContext());
         //FOR DIFFERENT CHANNELS
 //        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
 //            {
@@ -34,7 +34,7 @@ public class TabScience extends Fragment {
 //            }
 //        };
 
-        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(ScienceDaily));
+        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(HealthService));
         return view;
     }
 
