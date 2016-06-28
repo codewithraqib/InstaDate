@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity{
         tabLayout.addTab(tabLayout.newTab().setText("Technology"));
         tabLayout.addTab(tabLayout.newTab().setText("Sports"));
         tabLayout.addTab(tabLayout.newTab().setText("Health"));
-        tabLayout.setTabGravity(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
