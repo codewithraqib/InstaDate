@@ -30,7 +30,7 @@
     <string name="action_exit">Exit</string>
     <string name="image_parsing">parsing</string>
     <string name="action_RegisterUser">New User? Register Here</string>
-    <string name="action_AlreadyRegistered">Already Registered? Login Here</string>
+    <string name="action_AlreadyRegistered">Login</string>
     <string name="action_LoginHere">Login Here</string>
     <string name="action_moreAt">more at </string>
     <string name="action_moreAtLink">Here</string>
@@ -49,6 +49,13 @@
     <string name="galleryDrawer">Gallery</string>
     <string name="title">title</string>
     <string name="news_details">news details</string>
-    <string name="share">share...</string>
+    <string name="share">share</string>
+    <string name="log_in">Log In</string>
+    <string name="exit">Exit</string>
+    <string name="customization">Customization</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="already_registered">Already Registered</string>
 
 </resources>

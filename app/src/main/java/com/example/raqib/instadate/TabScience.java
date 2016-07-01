@@ -2,6 +2,7 @@ package com.example.raqib.instadate;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ public class TabScience extends Fragment {
 
     RecyclerView myRecyclerView;
     public List<NewsItems> ScienceDaily;
+    ActionBar actionBar;
 
 
 
@@ -35,6 +37,13 @@ public class TabScience extends Fragment {
 //        };
 
         myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(ScienceDaily));
+
+
+
+
+
+
+
         return view;
     }
 

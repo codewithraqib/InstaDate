@@ -10,13 +10,16 @@
     tools:context=".MainActivity">
 
 
+
+
     <!--<include-->
         <!--android:id="@+id/app_bar"-->
         <!--layout="@layout/app_bar"/>-->
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        />
+    <!--<include-->
+        <!--android:id="@+id/toolbar"-->
+        <!--layout="@layout/toolbar"-->
+        <!--/>-->
+
 
     <com.example.raqib.instadate.CustomTabLayout
         android:id="@+id/tabHost"

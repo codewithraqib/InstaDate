@@ -3,7 +3,9 @@ package com.example.raqib.instadate;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,10 +21,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.backendless.Backendless;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,8 +45,12 @@ public class MainActivity extends AppCompatActivity{
     static String link;
     ActionBar actionBar;
     int uiOptions = 0;
+    public static final String APP_ID = "B325D49E-27BD-C5D6-FF3F-46457273B900";
+    public static final String SECRET_KEY = "E7D442EA-E108-4F9E-FF28-E010A8EB1700";
+    public static final String VERSION = "v1";
 
-
+    RecyclerView myRecyclerView;
+    static boolean scroll_down;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -53,12 +64,16 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //SETTING BACKENDLESS
+        Backendless.initApp(this, APP_ID, SECRET_KEY, VERSION );
+
         //TO HIDE STATUS BAR AND ACTION BAR
         View decorView = getWindow().getDecorView();
         actionBar = getSupportActionBar();
+//        myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-        actionBar.hide();
+//        actionBar.hide();
 
         //NEW IMPLEMENTATION OF SWIPE TABS
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabHost);
@@ -68,7 +83,35 @@ public class MainActivity extends AppCompatActivity{
         tabLayout.addTab(tabLayout.newTab().setText("Technology"));
         tabLayout.addTab(tabLayout.newTab().setText("Sports"));
         tabLayout.addTab(tabLayout.newTab().setText("Health"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabGravity(TabLayout.MODE_SCROLLABLE);
+
+
+//        //TO HIDE THE APP BAR AND STATUS BAR ON SWIPING UP AND DOWN THE RECYCLER VIEW
+//        myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+//        myRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                if (scroll_down) {
+//                    actionBar.hide();
+//                } else {
+//                    actionBar.show();
+//                }
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if (dy > 5) {
+//                    //scroll down
+//                    scroll_down = true;
+//
+//                } else if (dy < -5) {
+//                    //scroll up
+//                    scroll_down = false;
+//                }
+//            }
+//        });
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
@@ -104,6 +147,78 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.menu_Register:
+//                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+//                startActivity(intent);
+//                return true;
+//
+//            case R.id.menu_customization:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+//            case R.id.menu_about:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+//            case R.id.menu_exit:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+//
+//            default:
+//                // If we got here, the user's action was not recognized.
+//                // Invoke the superclass to handle it.
+//                return super.onOptionsItemSelected(item);
+//
+//        }
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public void RegisterUser(MenuItem item) {
+        startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+    }
+
+
+//    public void UserCustomization(MenuItem item) {
+//        startActivity(new Intent(MainActivity.this, CustomizationActivity.class));
+//    }
+//
+//    public void about(MenuItem item) {
+//        startActivity(new Intent(MainActivity.this, AboutInstaDate.class));
+//    }
+
+    public void closeApp(MenuItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Do You want to exit :( ?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MainActivity.this.finish();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
 
@@ -195,6 +310,8 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+
+
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {
 
 //        ProgressDialog pdl;
@@ -211,7 +328,7 @@ public class MainActivity extends AppCompatActivity{
             try {
                 Downloader.DownloadFromUrl("http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml", openFileOutput("NYTNews.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.espncricinfo.com/rss/content/story/feeds/6.xml", openFileOutput("EspnCricinfo.xml", Context.MODE_PRIVATE));
-//                Downloader.DownloadFromUrl("http://www.greaterkashmir.com/feed.aspx?cat_id=2", openFileOutput("GK.xml", Context.MODE_PRIVATE));
+//              Downloader.DownloadFromUrl("http://www.greaterkashmir.com/feed.aspx?cat_id=2", openFileOutput("GK.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/feed/", openFileOutput("TFE.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/section/industry/tech/feed/", openFileOutput("TFETech.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("https://rss.sciencedaily.com/computers_math.xml", openFileOutput("ScienceDaily.xml", Context.MODE_PRIVATE));

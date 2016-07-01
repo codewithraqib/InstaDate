@@ -39,6 +39,10 @@ Context context;
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_view_item, parent, false);
         return new ViewHolder(view);
+
+
+
+
     }
 
     @Override
