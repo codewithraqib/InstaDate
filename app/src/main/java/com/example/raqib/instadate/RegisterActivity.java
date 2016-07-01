@@ -1,9 +1,8 @@
 package com.example.raqib.instadate;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Gravity;
@@ -24,20 +23,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     EditText UserPasswordConfirm;
     TextView registerButton;
     TextView loginRedirection;
-    ActionBar actionBar;
-    int uiOptions = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //TO HIDE STATUS BAR AND ACTION BAR
-        View decorView = getWindow().getDecorView();
-        actionBar = getSupportActionBar();
-//        myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
 
         emailField = (EditText) findViewById(R.id.UserEmail);
         nameField = (EditText) findViewById(R.id.UserName);
