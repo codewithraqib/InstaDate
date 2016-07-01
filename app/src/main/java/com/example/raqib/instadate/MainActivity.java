@@ -147,35 +147,6 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menu_Register:
-//                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-//                startActivity(intent);
-//                return true;
-//
-//            case R.id.menu_customization:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
-//            case R.id.menu_about:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
-//            case R.id.menu_exit:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
-//
-//            default:
-//                // If we got here, the user's action was not recognized.
-//                // Invoke the superclass to handle it.
-//                return super.onOptionsItemSelected(item);
-//
-//        }
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
