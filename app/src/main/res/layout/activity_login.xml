@@ -17,8 +17,8 @@
         android:gravity="center"
         android:paddingLeft="30dp"
         android:paddingStart="30dp"
-        android:paddingRight="60dp"
-        android:paddingEnd="60dp"
+        android:paddingRight="30dp"
+        android:paddingEnd="30dp"
         >
 
 
@@ -26,20 +26,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginBottom="50dp"
             >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                >
 
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/layeru"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    />
 
                 <EditText
                     android:id="@+id/UserEmailLogin"
@@ -49,7 +52,6 @@
                     android:textColorHint="#d9e5f3"
                     android:layout_marginLeft="15dp"
                     android:background="#00000000"
-                    android:letterSpacing="0.1"
                     android:textSize="16sp"
                     android:inputType="textEmailAddress"
                     android:textColor="#fff"
@@ -86,7 +88,6 @@
                     android:layout_marginLeft="15dp"
                     android:background="#00000000"
                     android:inputType="textPassword"
-                    android:letterSpacing="0.1"
                     android:textSize="16sp"
                     android:textColor="#fff"/>
 
@@ -106,7 +107,8 @@
         android:paddingRight="60dp"
         android:orientation="vertical"
         android:gravity="bottom"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="60dp"
+
         >
         <TextView
             android:id="@+id/LoginButton"
@@ -137,7 +139,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_marginBottom="400dp">
+        android:layout_marginBottom="380dp"
+        >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

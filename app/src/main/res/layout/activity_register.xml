@@ -14,13 +14,15 @@
         android:gravity="center"
         android:paddingLeft="30dp"
         android:paddingStart="30dp"
-        android:paddingRight="60dp">
+        android:paddingRight="30dp"
+        android:paddingEnd="30dp">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginBottom="30dp"
             >
 
             <LinearLayout
@@ -205,6 +207,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_marginBottom="400dp"
+        android:layout_marginTop="5dp"
         android:weightSum="1">
         <ImageView
             android:layout_width="match_parent"

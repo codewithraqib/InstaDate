@@ -11,13 +11,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SitesXmlPullParserHealth {
+public class SitesXmlPullParserBingKashmir {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
     static final String KEY_LINK = "link";
     static final String KEY_ABOUT = "description";
-    static final String KEY_IMAGE_URL = "media:content";
+    static final String KEY_IMAGE_URL = "News:Image";
     static final String KEY_DATE = "pubDate";
 
 
@@ -39,7 +39,7 @@ public class SitesXmlPullParserHealth {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("HealthService.xml");
+            FileInputStream fis = ctx.openFileInput("BingKashmir.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -68,12 +68,6 @@ public class SitesXmlPullParserHealth {
                                 curNewsItems = new NewsItems();
                         }
 
-                        if (tagName.equalsIgnoreCase(KEY_IMAGE_URL) && actual_work){
-
-                            String url = xpp.getAttributeValue(null, "url");
-                            curNewsItems.setImgUrl(url);
-
-                        }
                         break;
 
                     case XmlPullParser.TEXT:
@@ -101,10 +95,12 @@ public class SitesXmlPullParserHealth {
                             curNewsItems.setDescription(curText);
                         }
                             else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
-                            // if </image> use setImgUrl() on curSite
-//                            Log.e("IMAGE URL IS  : ",curText);
 
                             curNewsItems.setDate(curText);
+                        }
+                        else if (tagName.equalsIgnoreCase(KEY_IMAGE_URL) && actual_work) {
+//                            Log.e("IMAGE URL IS  : ",curText);
+                            curNewsItems.setImgUrl(curText);
                         }
                         break;
 

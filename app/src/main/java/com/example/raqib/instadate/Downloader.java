@@ -25,14 +25,13 @@ public class Downloader {
 	 * @param fos - a FileOutputStream to save the downloaded file to.
 	 ************************************************/
 	public static void DownloadFromUrl(String URL, FileOutputStream fos) {  //this is the downloader method
-		String myTag = "STACKSITES";
 		try {
 
 			URL url = new URL(URL); //URL of the file
 			
 			//keep the start time so we can display how long it took to the Log.
 			long startTime = System.currentTimeMillis();
-			Log.d(myTag, "DOWNLOAD STARTED");
+			Log.d("NewsContents", "DOWNLOAD STARTED");
 			
 			/* Open a connection to that URL. */
 			URLConnection ucon = url.openConnection();
@@ -40,22 +39,22 @@ public class Downloader {
 			// this will be useful so that you can show a tipical 0-100% progress bar
             //int lengthOfFile = ucon.getContentLength();
 
-			Log.i(myTag, "OPENED CONNECTION");
+//			Log.i(myTag, "OPENED CONNECTION");
 			
 			/************************************************
 			 * Define InputStreams to read from the URLConnection.
 			 ************************************************/
 			InputStream is = ucon.getInputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);
-			Log.i(myTag, "GOT INPUT STREAM AND BUFFERED INPUT STREAM");
+//			Log.i(myTag, "GOT INPUT STREAM AND BUFFERED INPUT STREAM");
 			
 			/************************************************
 			 * Define OutputStreams to write to our file.
 			 ************************************************/
 			
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
-			Log.i(myTag, "GOT FILE OUTPUT STREAM AND BUFFERED OUTPUT STREAM");
-			
+//			Log.i(myTag, "GOT FILE OUTPUT STREAM AND BUFFERED OUTPUT STREAM");
+
 			/************************************************
 			 * Start reading the and writing our file.
 			 ************************************************/
@@ -74,11 +73,11 @@ public class Downloader {
 			bos.flush();
 			bos.close();
 			
-			Log.d(myTag, "DOWNLOAD READY IN"
+			Log.d("NewsContents", "DOWNLOAD READY IN"
 					+ ((System.currentTimeMillis() - startTime))
 					+ " MILLI SECONDS");
 		} catch (IOException e) {
-			Log.d(myTag, "ERROR: " + e);
+			Log.d("NewsContents", "ERROR: " + e);
 		}
 	}
 }

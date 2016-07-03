@@ -16,8 +16,8 @@ public class TabSports extends Fragment {
 
     RecyclerView myRecyclerView;
     public List<NewsItems> NYT;
-    public List<NewsItems> ESPN;
-    public List<NewsItems> TFE;
+//    public List<NewsItems> ESPN;
+    public List<NewsItems> WorldSports;
 
 
 
@@ -29,10 +29,13 @@ public class TabSports extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getActivity().getBaseContext());
+//        ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getActivity().getBaseContext());
+        WorldSports = SitesXmlPullParserWorldSports.getStackSitesFromFile(getActivity().getBaseContext());
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {
-                addAll(ESPN);
+
+                addAll(WorldSports);
+//                addAll(ESPN);
             }
         };
 

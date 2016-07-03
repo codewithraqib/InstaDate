@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SitesXmlPullParserHealth {
+public class SitesXmlPullParserWorldSports {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
@@ -39,7 +39,7 @@ public class SitesXmlPullParserHealth {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("HealthService.xml");
+            FileInputStream fis = ctx.openFileInput("WorldSports.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.

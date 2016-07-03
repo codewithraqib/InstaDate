@@ -19,8 +19,6 @@ public class TabTopStories extends Fragment {
     public List<NewsItems> TFE;
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.general_recycler_view,container,false);

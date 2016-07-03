@@ -45,12 +45,11 @@ public class MainActivity extends AppCompatActivity{
     static String link;
     ActionBar actionBar;
     int uiOptions = 0;
+    RecyclerView recyclerView;
     public static final String APP_ID = "B325D49E-27BD-C5D6-FF3F-46457273B900";
     public static final String SECRET_KEY = "E7D442EA-E108-4F9E-FF28-E010A8EB1700";
     public static final String VERSION = "v1";
 
-    RecyclerView myRecyclerView;
-    static boolean scroll_down;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -70,10 +69,12 @@ public class MainActivity extends AppCompatActivity{
         //TO HIDE STATUS BAR AND ACTION BAR
         View decorView = getWindow().getDecorView();
         actionBar = getSupportActionBar();
-//        myRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        Log.e("Recycler View is", String.valueOf(recyclerView));
+
         uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-//        actionBar.hide();
+        actionBar.setElevation(0);
 
         //NEW IMPLEMENTATION OF SWIPE TABS
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabHost);
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity{
         tabLayout.addTab(tabLayout.newTab().setText("Technology"));
         tabLayout.addTab(tabLayout.newTab().setText("Sports"));
         tabLayout.addTab(tabLayout.newTab().setText("Health"));
+        tabLayout.addTab(tabLayout.newTab().setText("Kashmir"));
         tabLayout.setTabGravity(TabLayout.MODE_SCROLLABLE);
 
 
@@ -139,7 +141,6 @@ public class MainActivity extends AppCompatActivity{
 //        displayNews();
 
         if (isNetworkAvailable()) {
-            Log.i("StackSites", "starting download Task");
             SitesDownloadTask download = new SitesDownloadTask();
             download.execute();
         } else {
@@ -160,13 +161,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-//    public void UserCustomization(MenuItem item) {
-//        startActivity(new Intent(MainActivity.this, CustomizationActivity.class));
-//    }
-//
-//    public void about(MenuItem item) {
-//        startActivity(new Intent(MainActivity.this, AboutInstaDate.class));
-//    }
 
     public void closeApp(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -295,15 +289,18 @@ public class MainActivity extends AppCompatActivity{
         @Override
         protected Void doInBackground(Void... arg0) {
 
-            //Download the file
+            //Download the files
             try {
                 Downloader.DownloadFromUrl("http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml", openFileOutput("NYTNews.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.espncricinfo.com/rss/content/story/feeds/6.xml", openFileOutput("EspnCricinfo.xml", Context.MODE_PRIVATE));
-//              Downloader.DownloadFromUrl("http://www.greaterkashmir.com/feed.aspx?cat_id=2", openFileOutput("GK.xml", Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl("http://www.tribuneindia.com/rss/feed.aspx?cat_id=5", openFileOutput("TribuneKashmir.xml", Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl("http://www.bing.com/news/search?q=Kashmir&qs=n&form=QBNT&pq=Kashmir&sc=0-0&sp=-1&sk=&format=RSS", openFileOutput("BingKashmir.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/feed/", openFileOutput("TFE.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/section/industry/tech/feed/", openFileOutput("TFETech.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("https://rss.sciencedaily.com/computers_math.xml", openFileOutput("ScienceDaily.xml", Context.MODE_PRIVATE));
-                Downloader.DownloadFromUrl("http://www.hsj.co.uk/XmlServers/navsectionRSS.aspx?navsectioncode=20703", openFileOutput("HealthService.xml", Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl("http://www.financialexpress.com/section/lifestyle/health/feed/", openFileOutput("HealthService.xml", Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl("http://www.financialexpress.com/section/sports/feed/", openFileOutput("WorldSports.xml", Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl("http://www.financialexpress.com/section/lifestyle/science/feed/", openFileOutput("Science2.xml", Context.MODE_PRIVATE));
             } catch (FileNotFoundException e) {
                 Log.e("ERROR at DoInBackground", String.valueOf(e));
             }

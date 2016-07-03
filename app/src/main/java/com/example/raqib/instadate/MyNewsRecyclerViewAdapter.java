@@ -49,9 +49,21 @@ Context context;
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             holder.title.setText(mValues.get(position).getName());
-//            Log.e("Title is ",mValues.get(position).getName());
             holder.description.setText(mValues.get(position).getDescription());
+            String dateToFormat = mValues.get(position).getDate();
+
             holder.time.setText(mValues.get(position).getDate());
+
+
+        //MAKE A DATE OBJECT OUT OF STRING
+//        String dtStart = "2010-10-15T09:27:37Z";
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+//        try {
+//            Date date = format.parse(dtStart);
+//            System.out.println(date);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         holder.moreAtLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +81,7 @@ Context context;
         if(imageUrl == null)
             return;
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context).build();
-        imageLoader = ImageLoader.getInstance();
+        imageLoader = ImageLoader.getInstance();    //COMMENTED FOR TESTING
         imageLoader.init(config);
 
         //T0 KEEP THE DOWNLOADED IMAGES IN THE CACHE WE ARE IMPLEMENTING THE BELOW CODE
@@ -99,7 +111,6 @@ Context context;
             }
         };
 
-//        Log.e("IMAGE URL IS", imageUrl);
         imageLoader.displayImage(imageUrl, holder.imageView,options, listener);
     }
 
@@ -108,14 +119,6 @@ Context context;
         return mValues.size();
     }
 
-    private void goToActivity(String linkNews) {
-        //Intent intent = new Intent(context, WebViewActivity.class);
-
-            Intent it = new Intent(context, WebViewActivity.class);
-            it.putExtra("WebPage Link", linkNews);
-            context.startActivity(it);
-
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
@@ -141,5 +144,13 @@ Context context;
             progressBar = (ProgressBar)view.findViewById(R.id.progressBarNews);
 
         }
+    }
+    private void goToActivity(String linkNews) {
+        //Intent intent = new Intent(context, WebViewActivity.class);
+
+        Intent intent = new Intent(context, WebViewActivity.class);
+        intent.putExtra("WebPage Link", linkNews);
+        context.startActivity(intent);
+
     }
 }

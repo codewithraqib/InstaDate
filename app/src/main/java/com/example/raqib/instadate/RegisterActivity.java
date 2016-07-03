@@ -125,6 +125,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void handleResponse(BackendlessUser response) {
                             Toast.makeText(RegisterActivity.this,"Hey "+ nameOfUser + "You Have Been Successfully Registered", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                            finish();
                         }
 
                         @Override
