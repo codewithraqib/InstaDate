@@ -13,7 +13,7 @@ import java.util.List;
 public class TabTechnology extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> TFETech;
+    static public List<NewsItems> TFETech;
 
 
 

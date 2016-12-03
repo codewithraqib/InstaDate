@@ -29,8 +29,8 @@
     <string name="SaveButton">Save Changes</string>
     <string name="action_exit">Exit</string>
     <string name="image_parsing">parsing</string>
-    <string name="action_RegisterUser">New User? Register Here</string>
-    <string name="action_AlreadyRegistered">Login</string>
+    <string name="action_RegisterUser">New User?</string>
+    <string name="action_AlreadyRegistered">Login Here</string>
     <string name="action_LoginHere">Login Here</string>
     <string name="action_moreAt">more at </string>
     <string name="action_moreAtLink">Here</string>
@@ -54,8 +54,32 @@
     <string name="exit">Exit</string>
     <string name="customization">Customization</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="already_registered">Already Registered</string>
+    <string name="already_registered">Already Registered?</string>
+    <string name="open_in_browser">Open In Browser</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="share_link_web_activity">Share Link</string>
+    <string name="title_activity_navigation_drawer">InstaDate</string>
+    <string name="name_of_user">Welcome</string>
+    <string name="share_app">Share App</string>
+    <string name="top_feeds">Top Feeds</string>
+    <string name="science">Science</string>
+    <string name="international">International</string>
+    <string name="national">National</string>
+    <string name="health">Health</string>
+    <string name="sports">Sports</string>
+    <string name="support_us">Support Us</string>
+    <string name="forget_password">Forget password ?</string>
+    <string name="register_link_on_login_page">Register Here</string>
+    <string name="settings_main_menu">Settings</string>
+    <string name="save_customization_to_database">Save</string>
+    <string name="bookmarkNews">bookmarkNews</string>
+    <string name="refresh_feed">Refresh Feed</string>
+    <string name="rate_this_app">Rate This App</string>
+    <string name="bookmarked_feeds">Bookmarked Feeds</string>
+    <string name="saving_experience">Saving Experience</string>
+    <string name="information_about_app">Information About App</string>
+    <string name="want_to_leave">Want To Leave?</string>
+    <string name="search_in_main_menu">Search</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
 
 </resources>

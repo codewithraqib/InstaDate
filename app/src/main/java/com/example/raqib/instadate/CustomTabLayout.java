@@ -49,4 +49,18 @@ public class CustomTabLayout extends TabLayout {
         }
     }
 
+    @Override
+    public void setSmoothScrollingEnabled(boolean smoothScrollingEnabled) {
+        super.setSmoothScrollingEnabled(true);
+    }
+
+    @Override
+    public void setOverScrollMode(int mode) {
+        super.setOverScrollMode(mode);
+    }
+
+    @Override
+    public void scrollTo(int x, int y) {
+        super.scrollTo(x, y);
+    }
 }

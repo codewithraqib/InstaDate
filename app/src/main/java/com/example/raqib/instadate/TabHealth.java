@@ -13,7 +13,7 @@ import java.util.List;
 public class TabHealth extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> HealthService;
+    static public List<NewsItems> HealthService;
 
 
 

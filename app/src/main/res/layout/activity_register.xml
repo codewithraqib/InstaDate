@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@drawable/gradient"
     tools:context="com.example.raqib.instadate.RegisterActivity">
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:paddingLeft="30dp"
-        android:paddingStart="30dp"
-        android:paddingRight="30dp"
-        android:paddingEnd="30dp">
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingRight="15dp"
+        android:paddingEnd="15dp">
 
 
         <LinearLayout
@@ -35,16 +36,17 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/layerem"
+                    android:src="@drawable/layere_mail"
                     android:layout_gravity="center"/>
 
-                <EditText
+                <customfonts.MyEditText
                     android:id="@+id/UserEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/action_RegisterEmailHint"
                     android:textColorHint="#d9e5f3"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:background="#00000000"
                     android:textSize="16sp"
                     android:inputType="textEmailAddress"
@@ -53,10 +55,11 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
                 android:background="#4a5a71"> </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,16 +71,17 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/layeru"
+                    android:src="@drawable/layer_user"
                     android:layout_gravity="center"/>
 
-                <EditText
+                <customfonts.MyEditText
                     android:id="@+id/UserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/action_RegisterNameHint"
                     android:textColorHint="#d9e5f3"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:background="#00000000"
                     android:textSize="16sp"
                     android:inputType="text"
@@ -88,6 +92,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
                 android:background="#4a5a71"> </LinearLayout>
 
             <LinearLayout
@@ -104,13 +110,14 @@
                     android:layout_gravity="center"/>
 
 
-                <EditText
+                <customfonts.MyEditText
                     android:id="@+id/UserPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/action_RegisterPasswordHint1"
                     android:textColorHint="#d9e5f3"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:background="#00000000"
                     android:inputType="textPassword"
                     android:textSize="16sp"
@@ -121,6 +128,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
                 android:layout_height="1dp"
                 android:background="#4a5a71"> </LinearLayout>
             <LinearLayout
@@ -136,23 +145,26 @@
                     android:src="@drawable/layer0"
                     android:layout_gravity="center"/>
 
-                <EditText
+                <customfonts.MyEditText
                     android:id="@+id/UserPasswordConfirm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/action_RegisterPasswordHint2"
                     android:textColorHint="#d9e5f3"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:background="#00000000"
-                    android:letterSpacing="0.1"
                     android:textSize="16sp"
                     android:inputType="textPassword"
                     android:textColor="#fff"
                     />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
                 android:layout_height="1dp"
                 android:background="#4a5a71"> </LinearLayout>
 
@@ -168,37 +180,40 @@
         android:gravity="bottom"
         android:layout_marginBottom="20dp"
         >
-        <TextView
+        <Button
             android:id="@+id/RegisterButton"
+            android:background="#0097a7"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#009a9a"
             android:text="@string/action_RegisterButton"
-            android:textColor="#d9e5f3"
-            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:textColor="#f5f5f5"
+            android:textStyle="italic"
             android:gravity="center"
-            android:layout_gravity="bottom"
-            android:padding="16dp"
-            android:layout_marginBottom="25dp"
-            android:letterSpacing="0.2"/>
-        <TextView
+            android:layout_marginBottom="35dp"
+            android:clickable="true"
+            android:typeface="serif" />
+
+
+        <customfonts.MyTextView
             android:id="@+id/LoginHereVirtual"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/already_registered"
-            android:textColor="#d9e5f3"
-            android:letterSpacing="0.1"/>
+            android:textColor="#bdbdbd"
+            android:textSize="20sp"
+            android:layout_marginBottom="2dp"
+            />
 
-        <TextView
+        <customfonts.MyTextView
             android:id="@+id/LoginHere"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/action_AlreadyRegistered"
-            android:textColor="#009a9a"
-            android:textSize="18sp"
-            android:letterSpacing="0.1"/>
+            android:textColor="#f5f5f5"
+            android:textSize="22sp"
+            android:layout_marginBottom="30dp"/>
 
 
     </LinearLayout>
@@ -206,14 +221,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_marginBottom="400dp"
+        android:layout_marginBottom="420dp"
         android:layout_marginTop="5dp"
-        android:weightSum="1">
+        >
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="110dp"
             android:src="@drawable/main_image"
-            android:layout_weight="0.08" />
+            />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 

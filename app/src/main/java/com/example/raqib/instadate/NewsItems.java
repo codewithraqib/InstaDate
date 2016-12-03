@@ -18,7 +18,7 @@ public class NewsItems {
 		this.name = name;
 		return null;
 	}
-	public String getName() {
+	public String getTitle() {
 		return name;
 	}
 	public void setDate(String date) {

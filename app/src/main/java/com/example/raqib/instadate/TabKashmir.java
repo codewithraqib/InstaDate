@@ -15,8 +15,8 @@ import java.util.List;
 public class TabKashmir extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> BingKashmir;
-    public List<NewsItems> TribuneKashmir;
+    static public List<NewsItems> BingKashmir;
+    static public List<NewsItems> TribuneKashmir;
 
 
 
@@ -27,6 +27,8 @@ public class TabKashmir extends Fragment {
         myRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
+
+        List<NewsItems> Bookmarks = MyNewsRecyclerViewAdapter.bookmarkedNewsList;
 
 //        BingKashmir = SitesXmlPullParserBingKashmir.getStackSitesFromFile(getActivity().getBaseContext());
         TribuneKashmir = SitesXmlPullParserTribuneKashmir.getStackSitesFromFile(getActivity().getBaseContext());

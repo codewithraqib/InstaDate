@@ -15,8 +15,8 @@ import java.util.List;
 public class TabTopStories extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> NYT;
-    public List<NewsItems> TFE;
+    static public List<NewsItems> NYT;
+    static public List<NewsItems> TFE;
 
 
     @Override

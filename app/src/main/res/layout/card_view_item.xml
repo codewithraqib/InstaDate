@@ -9,7 +9,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_gravity="center"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         card_view:cardCornerRadius="6dp"
@@ -17,23 +17,28 @@
         card_view:paddingEnd="10dp"
         card_view:cardElevation="10dp"
         card_view:cardPreventCornerOverlap="true"
-
         >
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:id="@+id/mainScreen"
-            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <ProgressBar
                 android:id="@+id/progressBarNews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:foregroundGravity="center"
+                android:foregroundGravity="center_vertical|center|center_horizontal"
                 android:padding="10dp"
                 android:layout_marginTop="90dp"
-                android:layout_marginLeft="130dp"
-                android:layout_marginStart="140dp"/>
+                android:layout_marginLeft="115dp"
+                android:layout_marginStart="115dp"
+                android:layout_gravity="center_horizontal" />
 
             <ImageView
                 android:id="@+id/image"
@@ -41,9 +46,9 @@
                 android:layout_height="250dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:contentDescription="@string/new_york_times"
-                android:layout_alignParentTop="true"
-                />
+                android:contentDescription="@string/new_york_times" />
+
+                </RelativeLayout>
 
             <customfonts.MyTextView
                 android:id="@+id/newsTitle"
@@ -53,23 +58,12 @@
                 android:textSize="25sp"
                 android:background="#ffffff"
                 android:textColor="#000000"
-                android:textStyle="bold"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignBottom="@+id/image"
-                android:layout_alignLeft="@+id/newsScrollView"
-                android:layout_alignStart="@+id/newsScrollView" />
+                android:textStyle="bold" />
 
-            <ScrollView
-                android:id="@+id/newsScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newsTitle"
-                android:overScrollMode="always"
-                >
+
 
             <customfonts.MyTextView
-                android:id="@+id/news"
+                android:id="@+id/newsDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/news_details"
@@ -78,68 +72,80 @@
                 android:includeFontPadding="true"
                 android:paddingTop="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="15dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginBottom="20dp"
-                android:paddingBottom="10dp"
                 android:layout_marginRight="5dp" />
-            </ScrollView>
 
-            <customfonts.MyTextView
-                android:id="@+id/newsDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/today"
-                android:textColor="#1b1919"
-                android:paddingBottom="5dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignBottom="@+id/newsScrollView"
-                android:layout_marginStart="100dp"
-                android:layout_marginLeft="100dp" />
-
-            <customfonts.MyTextView
-                android:id="@+id/moreAtVirtual"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/action_moreAt"
-                android:textColor="#1b1919"
-                android:textSize="12sp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_alignTop="@+id/moreAtLink"
-                android:layout_alignLeft="@+id/image"
-                android:paddingTop="6sp"
-                android:paddingBottom="5dp"
-                android:layout_alignStart="@+id/image" />
-
-            <customfonts.MyTextView
-                android:id="@+id/moreAtLink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/action_moreAtLink"
-                android:textColor="#05515b"
-                android:layout_marginLeft="5dp"
-                android:paddingBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_alignBottom="@+id/newsDate"
-                android:layout_toRightOf="@+id/moreAtVirtual"
-                android:layout_toEndOf="@+id/moreAtVirtual" />
-
-            <ImageButton
-                android:id="@+id/shareButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/share"
-                android:onClick="shareWith"
-                android:background="#ffffff"
-                android:contentDescription="@string/share"
-                android:layout_alignBottom="@+id/moreAtVirtual"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
 
-        </RelativeLayout>
+
+                <customfonts.MyTextView
+                    android:id="@+id/moreAtVirtual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/action_moreAt"
+                    android:textColor="#1b1919"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingTop="6dp"
+                    />
+
+                <customfonts.MyTextView
+                    android:id="@+id/moreAtLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/action_moreAtLink"
+                    android:textColor="#05515b"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    />
+
+                <customfonts.MyTextView
+                    android:id="@+id/newsDate"
+                    android:layout_width="75dp"
+                    android:layout_height="15dp"
+                    android:text="@string/today"
+                    android:textColor="#1b1919"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginLeft="15dp" />
+
+                <ImageButton
+                    android:id="@+id/bookmarkButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bookmark_icon"
+                    android:background="#ffffff"
+                    android:contentDescription="@string/bookmarkNews"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginLeft="40dp"
+                    />
+
+                <ImageButton
+                    android:id="@+id/shareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/share"
+                    android:onClick="shareWith"
+                    android:background="#ffffff"
+                    android:contentDescription="@string/share"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
     </android.support.v7.widget.CardView>
 
 

@@ -1,14 +1,26 @@
 package com.example.raqib.instadate;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.List;
+
 public class WebViewActivity extends AppCompatActivity {
-    String link;
+    static  String link;
     WebView myWebView;
 
     @Override
@@ -16,20 +28,49 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
+//        getSupportActionBar().setElevation(0);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarWebView);
+        setSupportActionBar(toolbar);
+
         link = getIntent().getExtras().getString("WebPage Link");
-        Log.e("LINK is ", link);
+//        Log.e("LINK is ", link);
         myWebView = (WebView) findViewById(R.id.webview);
         try{
-            myWebView.loadUrl(link);
+            if (myWebView != null) {
+                myWebView.loadUrl(link);
+            }else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(WebViewActivity.this);
+                builder.setMessage("There Is A Problem Opening The WebPage");
+                builder.setCancelable(true);
+
+                builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         } catch(Exception e){
             Log.e("Exception WebPage", String.valueOf(e));
         }
         myWebView.setWebViewClient(new WebViewClient());
+        myWebView.setKeepScreenOn(true);
+        myWebView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                Log.e("DragEvent", String.valueOf(event));
+                return false;
+            }
+        });
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // Check if the key event was the Back button and if there's history
+
+        // CHECK IF THE KEY EVENT WAS THE BACK BUTTON AND IF THERE'S HISTORY
         if ((keyCode == KeyEvent.KEYCODE_BACK) && myWebView.canGoBack()) {
             myWebView.goBack();
             return true;
@@ -38,22 +79,48 @@ public class WebViewActivity extends AppCompatActivity {
             myWebView.goForward();
             return true;
         }
-        // If it wasn't the Back key or there's no web page history, bubble up to the default
-        // system behavior (probably exit the activity)
+        // IF IT WASN'T THE BACK KEY OR THERE'S NO WEB PAGE HISTORY, BUBBLE UP TO THE DEFAULT
+        // SYSTEM BEHAVIOR (PROBABLY EXIT THE ACTIVITY)
         return super.onKeyDown(keyCode, event);
     }
-}
 
-// private class MyWebViewClient extends WebViewClient {
-//    @Override
-//    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//        if (Uri.parse(url).getHost().equals("www.example.com")) {
-//            // This is my web site, so do not override; let my WebView load the page
-//            return false;
-//        }
-//        // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
-//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//        startActivity(intent);
-//        return true;
-//    }
-//}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_web_activity, menu);
+        return true;
+    }
+
+    public void openInBrowser(MenuItem item) {
+        Uri webPage = Uri.parse(link);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webPage);
+
+        //TO GET A LIST OF APPS THAT CAN HANDLE THE PARTICULAR INTENT
+        PackageManager packageManager = getPackageManager();
+        List activities = packageManager.queryIntentActivities(webIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        boolean isIntentSafe = activities.size() > 0;
+
+        if(isIntentSafe) {
+            startActivity(webIntent);
+        }
+
+    }
+
+    public void shareLinkOutside(MenuItem item) {
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, link);
+        sendIntent.setType("text/plain");
+
+        //TO GET A LIST OF APPS THAT CAN HANDLE THE PARTICULAR INTENT
+        PackageManager packageManager = getPackageManager();
+        List activities = packageManager.queryIntentActivities(sendIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        boolean isIntentSafe = activities.size() > 0;
+
+        if(isIntentSafe) {
+            startActivity(sendIntent);
+        }
+    }
+}

@@ -15,8 +15,9 @@ import java.util.List;
 public class TabScience extends Fragment {
 
     RecyclerView myRecyclerView;
-    public List<NewsItems> ScienceDaily;
-    public List<NewsItems> Science2;
+    static public List<NewsItems> ScienceDaily;
+    static public List<NewsItems> Science2;
+    static  public List<NewsItems> newsItemsList;
     ActionBar actionBar;
 
 
@@ -33,7 +34,7 @@ public class TabScience extends Fragment {
         Science2 = SitesXmlPullParserScience2.getStackSitesFromFile(getActivity().getBaseContext());
 
 //        FOR DIFFERENT CHANNELS
-        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
+        newsItemsList = new ArrayList<NewsItems>(){
             {
 
                 addAll(Science2);
