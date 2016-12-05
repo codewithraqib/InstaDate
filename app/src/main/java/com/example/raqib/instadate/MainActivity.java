@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(Customization.sharedPreferences.getBoolean("healthFeeds", false))
         tabLayout.addTab(tabLayout.newTab().setText("Health"));
         if(Customization.sharedPreferences.getBoolean("localFeeds", false))
-        tabLayout.addTab(tabLayout.newTab().setText("Kashmir"));
+        tabLayout.addTab(tabLayout.newTab().setText("International"));
         tabLayout.setTabGravity(TabLayout.MODE_SCROLLABLE);
 
 
@@ -474,6 +474,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/section/lifestyle/health/feed/", openFileOutput("HealthService.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/section/sports/feed/", openFileOutput("WorldSports.xml", Context.MODE_PRIVATE));
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/section/lifestyle/science/feed/", openFileOutput("Science2.xml", Context.MODE_PRIVATE));
+
+                Downloader.DownloadFromUrl("http://www.oneindia.com/rss/news-international-fb.xml", openFileOutput("InternationalNews.xml", Context.MODE_PRIVATE));
             } catch (FileNotFoundException e) {
                 Log.e("ERROR at DoInBackground", String.valueOf(e));
             }

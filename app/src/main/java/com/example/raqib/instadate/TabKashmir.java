@@ -8,14 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class TabKashmir extends Fragment {
 
     RecyclerView myRecyclerView;
-    static public List<NewsItems> BingKashmir;
+    static public List<NewsItems> OneIndiaInternationalNews;
     static public List<NewsItems> TribuneKashmir;
 
 
@@ -31,15 +30,16 @@ public class TabKashmir extends Fragment {
         List<NewsItems> Bookmarks = MyNewsRecyclerViewAdapter.bookmarkedNewsList;
 
 //        BingKashmir = SitesXmlPullParserBingKashmir.getStackSitesFromFile(getActivity().getBaseContext());
-        TribuneKashmir = SitesXmlPullParserTribuneKashmir.getStackSitesFromFile(getActivity().getBaseContext());
-        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
-            {
-//                addAll(BingKashmir);
-                addAll(TribuneKashmir);
-            }
-        };
+//        TribuneKashmir = SitesXmlPullParserTribuneKashmir.getStackSitesFromFile(getActivity().getBaseContext());
+        OneIndiaInternationalNews = SitesXmlPullParserInternationalNews.getStackSitesFromFile(getActivity().getBaseContext());
+//        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
+//            {
+//                addAll(OneIndiaInternationalNews);
+//                addAll(TribuneKashmir);
+//            }
+//        };
 
-            myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
+            myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(OneIndiaInternationalNews));
 
 
         return view;

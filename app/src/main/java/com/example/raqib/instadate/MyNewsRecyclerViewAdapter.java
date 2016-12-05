@@ -224,8 +224,4 @@ Context context;
         Set<String> bookmarkedList = null;
     }
 
-
-
-
-
 }
