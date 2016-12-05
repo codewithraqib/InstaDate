@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TabTechnology extends Fragment {
 
     RecyclerView myRecyclerView;
     static public List<NewsItems> TFETech;
+    static public List<NewsItems> NYTTechnology;
 
 
 
@@ -26,14 +28,17 @@ public class TabTechnology extends Fragment {
         myRecyclerView.hasFixedSize();
 
         TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
+        NYTTechnology = SitesXmlPullParserNYTTechnology.getStackSitesFromFile(getActivity().getBaseContext());
         //FOR DIFFERENT CHANNELS ADD HERE IN LIST
-//        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
-//            {
-//                addAll(TFETech);
-//            }
-//        };
+        List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
+            {
+                addAll(TFETech);
+                addAll(NYTTechnology);
 
-        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(TFETech));
+            }
+        };
+
+        myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
 
         return view;
     }
