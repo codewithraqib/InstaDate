@@ -86,7 +86,7 @@ public class DatabaseTableForSearch {
 
             final List<NewsItems> HealthService = TabHealth.HealthService;
 //            final List<NewsItems> BingKashmir = TabKashmir.BingKashmir;
-            final List<NewsItems> TribuneKashmir = TabKashmir.TribuneKashmir;
+            final List<NewsItems> TribuneKashmir = TabInternational.TribuneKashmir;
             final List<NewsItems> ScienceDaily = TabScience.ScienceDaily;
             final List<NewsItems> Science2 = TabScience.Science2;
             final List<NewsItems> WorldSports = TabSports.WorldSports;

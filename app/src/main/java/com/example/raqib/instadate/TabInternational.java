@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 
-public class TabKashmir extends Fragment {
+public class TabInternational extends Fragment {
 
     RecyclerView myRecyclerView;
     static public List<NewsItems> OneIndiaInternationalNews;

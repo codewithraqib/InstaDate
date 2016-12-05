@@ -81,5 +81,9 @@
     <string name="want_to_leave">Want To Leave?</string>
     <string name="search_in_main_menu">Search</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="FinancialExpress">FE</string>
+    <string name="NewYorkTimes">NYT</string>
+    <string name="OneIndia">OI</string>
+    <string name="ScienceDaily">SD</string>
 
 </resources>

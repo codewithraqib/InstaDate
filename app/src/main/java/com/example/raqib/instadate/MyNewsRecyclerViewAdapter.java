@@ -33,16 +33,16 @@ Context context;
     static public List<NewsItems> bookmarkedNewsList;
     NewsItems bookmarkNewsItems;
     int sizeOfBookmarkedNewsList;
-    static SharedPreferences sharedPreferences;
+    private static SharedPreferences sharedPreferences;
     static String link;
-    static String bookmarkHeading;
-    static String bookmarkDetailedNews;
-    static String bookmarkLink;
-    static String bookmarkImageUrl;
-    static String bookmarkNewsDate;
-    static String imageUrl;
-    DisplayImageOptions options;
-    ImageLoader imageLoader;
+    private static String bookmarkHeading;
+    private static String bookmarkDetailedNews;
+    private static String bookmarkLink;
+    private static String bookmarkImageUrl;
+    private static String bookmarkNewsDate;
+    private static String imageUrl;
+    private DisplayImageOptions options;
+    private ImageLoader imageLoader;
 
     public MyNewsRecyclerViewAdapter(List<NewsItems> items) {
         mValues = items;
@@ -65,10 +65,31 @@ Context context;
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             holder.title.setText(mValues.get(position).getTitle());
+
             holder.description.setText(mValues.get(position).getDescription());
+
             String dateToFormat = mValues.get(position).getDate();
 
             holder.time.setText(mValues.get(position).getDate());
+
+
+        //SETTING THE NAME OF THE WEBSITE AT THE "MORE AT LINK"
+
+        String linkToCheck = mValues.get(position).getLink();
+        String FE = "www.financialexpress.com";
+        String NYT = "www.nytimes.com";
+        String OI = "www.oneindia.com";
+        String SD = "www.sciencedaily.com";
+
+        if(linkToCheck.toLowerCase().contains(FE.toLowerCase()))
+            holder.moreAtLink.setText(R.string.FinancialExpress);
+        else if(linkToCheck.toLowerCase().contains(NYT.toLowerCase()))
+            holder.moreAtLink.setText(R.string.NewYorkTimes);
+        else if(linkToCheck.toLowerCase().contains(OI.toLowerCase()))
+            holder.moreAtLink.setText(R.string.OneIndia);
+        else if(linkToCheck.toLowerCase().contains(SD.toLowerCase()))
+            holder.moreAtLink.setText(R.string.ScienceDaily);
+
 
 
         //MAKE A DATE OBJECT OUT OF STRING
@@ -158,8 +179,8 @@ Context context;
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        final View mView;
 
         TextView title;
         TextView description;
@@ -170,7 +191,7 @@ Context context;
         ProgressBar progressBar;
         ImageButton bookmarkButton;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
 
             super(view);
             mView = view;
@@ -193,7 +214,7 @@ Context context;
         context.startActivity(intent);
     }
 
-    public void bookmarkCurrentFeed(String bookmarkImageUrl, String bookmarkHeading, String bookmarkDetailedNews, String bookmarkLink, String bookmarkNewsDate) {
+    private void bookmarkCurrentFeed(String bookmarkImageUrl, String bookmarkHeading, String bookmarkDetailedNews, String bookmarkLink, String bookmarkNewsDate) {
 
         bookmarkNewsItems = new NewsItems();
 

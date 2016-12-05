@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         assert tabLayout != null;
         Customization.sharedPreferences = this.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
 
-        tabLayout.addTab(tabLayout.newTab().setText("All News"));
+        tabLayout.addTab(tabLayout.newTab().setText("Top National"));
         if(Customization.sharedPreferences.getBoolean("scienceFeeds", false))
         tabLayout.addTab(tabLayout.newTab().setText("Science"));
         if(Customization.sharedPreferences.getBoolean("technologyFeeds", false))
