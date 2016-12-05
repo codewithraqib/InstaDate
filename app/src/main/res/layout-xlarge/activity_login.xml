@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.raqib.instadate.LoginActivity"
+    >
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
+        android:paddingRight="30dp"
+        android:paddingEnd="30dp"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="50dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                >
+
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/layer_user"
+                    android:layout_gravity="center"
+                    />
+
+                <EditText
+                    android:id="@+id/UserEmailLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/action_RegisterEmailHint"
+                    android:textColorHint="#d9e5f3"
+                    android:layout_marginLeft="15dp"
+                    android:background="#00000000"
+                    android:textSize="16sp"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#fff"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
+                android:background="#4a5a71"> </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/layer0"
+                    android:layout_gravity="center"/>
+
+
+                <EditText
+                    android:id="@+id/UserLoginPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/action_RegisterPasswordHint1"
+                    android:textColorHint="#d9e5f3"
+                    android:layout_marginLeft="15dp"
+                    android:background="#00000000"
+                    android:inputType="textPassword"
+                    android:textSize="16sp"
+                    android:textColor="#fff"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
+                android:background="#4a5a71"> </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:layout_marginBottom="60dp"
+
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/LoginButton"
+            android:background="#009a9a"
+            android:textColor="#f5f5f5"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/action_LoginButton"
+            android:layout_marginBottom="20dp"
+            />
+
+        <TextView
+            android:id="@+id/forgetPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/forget_password"
+            android:layout_gravity="bottom"
+            android:textColor="#f5f6f7"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="30dp"/>
+
+        <TextView
+            android:id="@+id/newUserVirtual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/action_RegisterUser"
+            android:textColor="#bdbdbd"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="3dp"/>
+        <TextView
+            android:id="@+id/newUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/register_link_on_login_page"
+            android:textColor="#f5f5f5"
+            android:textSize="25sp"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="20dp"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="start"
+        android:layout_marginBottom="380dp"
+        >
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/main_image"
+            />
+    </LinearLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
+

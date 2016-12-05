@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+
+    <item android:id="@+id/menu_openInBrowser"
+        android:title="@string/open_in_browser"
+        android:orderInCategory="50"
+        app:showAsAction="never"
+        android:onClick="openInBrowser"
+        />
+
+    <item android:id="@+id/menu_copyLink"
+        android:title="@string/copy_link"
+        android:orderInCategory="51"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/menu_shareLnk"
+        android:title="@string/share_link_web_activity"
+        android:orderInCategory="52"
+        app:showAsAction="never"
+        android:onClick="shareLinkOutside"/>
+
+</menu>

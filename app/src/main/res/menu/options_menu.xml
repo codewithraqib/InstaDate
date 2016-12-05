@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item android:id="@+id/refresh_button"
+        android:title="@string/refresh_feed"
+        android:orderInCategory="2"
+        app:showAsAction="never"
+        android:icon="@drawable/refresh_button"
+        android:onClick="refreshFeed"
+        />
+    <item android:id="@+id/searchInMain"
+        android:title="@string/search_in_main_menu"
+        android:orderInCategory="1"
+        android:icon="@drawable/search_icon"
+        android:queryHint="Search"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.SearchView"
+        />
+
+
+</menu>

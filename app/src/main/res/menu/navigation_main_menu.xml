@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item android:title="@string/saving_experience">
+        <menu>
+
+    <item android:id="@+id/menu_Register"
+        android:title="@string/log_in"
+        android:orderInCategory="50"
+        app:showAsAction="never"
+        android:icon="@drawable/login_icon"
+        android:onClick="RegisterUser"
+        />
+
+    <item android:id="@+id/menu_customization"
+        android:title="@string/customization"
+        android:orderInCategory="51"
+        app:showAsAction="never"
+        android:icon="@drawable/customization_icon"
+        android:onClick="goToCustomizationActivity"/>
+
+            <item
+                android:id="@+id/nav_main_menu_settings"
+                android:orderInCategory="52"
+                android:icon="@drawable/settings_main_menu"
+                android:title="@string/settings_main_menu" />
+
+        </menu>
+    </item>
+
+
+    <item android:title="@string/information_about_app">
+        <menu>
+
+    <item android:id="@+id/menu_about"
+        android:title="@string/action_about"
+        android:orderInCategory="53"
+        android:icon="@drawable/about_icon"
+        app:showAsAction="never" />
+
+        </menu>
+    </item>
+
+    <item android:title="@string/want_to_leave">
+        <menu>
+
+    <item android:id="@+id/menu_exit"
+        android:title="@string/exit"
+        android:orderInCategory="54"
+        app:showAsAction="never"
+        android:icon="@drawable/exit_icon"
+        android:onClick="closeApp"
+        />
+        </menu>
+    </item>
+
+
+
+    <!--<item android:title="@string/settings_main_menu">-->
+    <!--<menu>-->
+
+    <!--<item-->
+    <!--android:id="@+id/nav_share"-->
+    <!--android:orderInCategory="54"-->
+    <!--android:icon="@drawable/settings_main_menu"-->
+    <!--android:title="@string/settings_main_menu" />-->
+
+
+
+    <!--</menu>-->
+    <!--</item>-->
+
+</menu>

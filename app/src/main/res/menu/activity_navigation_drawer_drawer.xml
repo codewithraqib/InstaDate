@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_top_feeds"
+            android:icon="@drawable/top_feeds"
+            android:title="@string/top_feeds" />
+        <item
+            android:id="@+id/nav_science"
+            android:icon="@drawable/science_icon"
+            android:title="@string/science" />
+        <item
+            android:id="@+id/nav_national"
+            android:icon="@drawable/national_icon"
+            android:title="@string/national" />
+        <item
+            android:id="@+id/nav_international"
+            android:icon="@drawable/international_icon"
+            android:title="@string/international" />
+        <item
+            android:id="@+id/nav_health"
+            android:icon="@drawable/health_icon"
+            android:title="@string/health" />
+        <item
+            android:id="@+id/nav_sports"
+            android:icon="@drawable/sports_icon"
+            android:title="@string/sports" />
+        <item
+            android:id="@+id/nav_bookmarked_feeds"
+            android:icon="@drawable/bookmark_icon"
+            android:title="@string/bookmarked_feeds" />
+
+
+    </group>
+
+    <item android:title="@string/support_us">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/share_app" />
+
+            <item
+                android:id="@+id/nav_rate_app"
+                android:icon="@drawable/rate_app_icon"
+                android:title="@string/rate_this_app" />
+        </menu>
+    </item>
+
+</menu>

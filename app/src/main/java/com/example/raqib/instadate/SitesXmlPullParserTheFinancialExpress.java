@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SitesXmlPullParserTheFinancialExpress {
 
@@ -73,6 +75,7 @@ public class SitesXmlPullParserTheFinancialExpress {
                             String url = xpp.getAttributeValue(null, "url");
                             curNewsItems.setImgUrl(url);
                         }
+
                         break;
 
                     case XmlPullParser.TEXT:
@@ -94,10 +97,16 @@ public class SitesXmlPullParserTheFinancialExpress {
                             // if </link> use setLink() on curSite
 //                            Log.e("LINK IS ",curText);
                             curNewsItems.setLink(curText);
-                        } else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
+                        }
+                        else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
                             // if </description> use setDescription() on curSite
 //                            Log.e("DESCRIPTION IS ",curText);
-                            curNewsItems.setDescription(curText);
+                            final Pattern pattern = Pattern.compile("<p>(.+?)</p>");
+                            final Matcher matcher = pattern.matcher(curText);
+                            matcher.find();
+                            System.out.println(matcher.group(1));
+
+                            curNewsItems.setDescription(matcher.group(1));
                         }
                             else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
                             // if </image> use setImgUrl() on curSite
