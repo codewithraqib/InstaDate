@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 //        startActivity(new Intent(this, GeneralNavigationTab.class));
 
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view) ;
 
 
