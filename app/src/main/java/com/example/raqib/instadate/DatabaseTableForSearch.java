@@ -15,17 +15,17 @@ import java.util.List;
 /**
  *  Created by RaQib on 16-07-2016.
  */
-public class DatabaseTableForSearch {
+class DatabaseTableForSearch {
 
     private static final String TAG = "DictionaryDatabase";
 
     //The columns we'll include in the news table
 
-    public static final String IMAGE_URL = "IMAGE_URL";
-    public static final String NEWS_TITLE = "NEWS_TITLE";
-    public static final String NEWS_DESCRIPTION = "NEWS_DESCRIPTION";
-    public static final String NEWS_LINK = "NEWS_LINK";
-    public static final String NEWS_DATE = "NEWS_DATE";
+    private static final String IMAGE_URL = "IMAGE_URL";
+    private static final String NEWS_TITLE = "NEWS_TITLE";
+    private static final String NEWS_DESCRIPTION = "NEWS_DESCRIPTION";
+    private static final String NEWS_LINK = "NEWS_LINK";
+    private static final String NEWS_DATE = "NEWS_DATE";
 
     private static final String DATABASE_NAME = "NEWSDATA";
     private static final String FTS_VIRTUAL_TABLE = "FTS";
@@ -33,7 +33,7 @@ public class DatabaseTableForSearch {
 
     private final DatabaseOpenHelper mDatabaseOpenHelper;
 
-    public DatabaseTableForSearch(Context context) {
+    DatabaseTableForSearch(Context context) {
         mDatabaseOpenHelper = new DatabaseOpenHelper(context);
     }
 
@@ -82,7 +82,7 @@ public class DatabaseTableForSearch {
             }).start();
         }
 
-        public void actualContentLoading() throws IOException {
+        void actualContentLoading() throws IOException {
 
             final List<NewsItems> HealthService = TabHealth.HealthService;
 //            final List<NewsItems> BingKashmir = TabKashmir.BingKashmir;
@@ -129,7 +129,7 @@ public class DatabaseTableForSearch {
             }
         }
 
-        public long addWord(String image, String title, String description, String link, String date) {
+        long addWord(String image, String title, String description, String link, String date) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(IMAGE_URL, image);
             contentValues.put(NEWS_TITLE, title);
@@ -143,7 +143,7 @@ public class DatabaseTableForSearch {
 
     }
 
-    public Cursor getWordMatches(String query, String[] columns) {
+    Cursor getWordMatches(String query, String[] columns) {
         String selection = NEWS_TITLE + " MATCH ?";
         String[] selectionArgs = new String[] {query+"*"};
 

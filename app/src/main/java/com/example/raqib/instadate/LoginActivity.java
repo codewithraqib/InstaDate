@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.View;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
     static EditText passwordField;
     static Button LoginButton;
     static TextView RegisterHere, ForgetPassword;
+   // static TextView setNameInDrawer, setEmailInDrawer;
 
 
     @Override
@@ -38,6 +40,13 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
         LoginButton = (Button) findViewById(R.id.LoginButton);
         RegisterHere = (TextView) findViewById(R.id.newUser);
         ForgetPassword = (TextView) findViewById(R.id.forgetPassword);
+
+        //TO SET THE NAME IN THE DRAWER BUT FAILS DUE TO NPE
+//        setNameInDrawer = (TextView) findViewById(R.id.drawerLogIn);
+//        setEmailInDrawer = (TextView) findViewById(R.id.drawerUserEmail);
+//        Log.e("LOGIN ISSUE*****: ",String.valueOf(setNameInDrawer));
+//        Log.e("LOGIN ISSUE*****:: ",String.valueOf(setEmailInDrawer));
+
 
 //        GoForLogin goForLogin = new GoForLogin();
 //        Log.e("Background call", "Working...");
@@ -163,17 +172,24 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                                     public void handleResponse(BackendlessUser response) {
                                         Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_LONG).show();
                                         progressDialog.dismiss();
+
+                                        //TO SET THE NAME IN THE DRAWER BUT FAILS DUE TO NPE
+//                                        setNameInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
+//                                        setEmailInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getEmail()));
+//                                        Log.e("LOGIN ISSUE*****:",String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
                                     }
 
                                     @Override
                                     public void handleFault(BackendlessFault fault) {
-                                        Toast.makeText(LoginActivity.this, "Hey Log In Failed, Check Credentials And Try Again ", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(LoginActivity.this, "Hey Log In Failed " + String.valueOf(fault), Toast.LENGTH_LONG).show();
+                                        Log.e("HandleFault: ",String.valueOf(fault) );
                                         progressDialog.dismiss();
                                     }
-                                },
-                                true); //TRUE IS HERE TO REMEMBER THE CURRENTLY LOGGED IN USER
+                                }
+                                ,true  //TRUE IS HERE TO REMEMBER THE CURRENTLY LOGGED IN USER
+                        );
                     }
 
                     break;

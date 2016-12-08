@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,12 +40,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String VERSION = "v1";
     TextView setNameInDrawer, setEmailInDrawer;
     SwipeRefreshLayout mySwipeRefreshLayout;
+    TextView LogoutButton;
 
 
     // Storage Permissions
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,13 +78,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Backendless.initApp(this, APP_ID, SECRET_KEY, VERSION);
+
         //noinspection ConstantConditions
         getSupportActionBar().isHideOnContentScrollEnabled();
 
 //        startActivity(new Intent(this, GeneralNavigationTab.class));
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view) ;
-        Log.e("RecyclerView in Main", String.valueOf(recyclerView));
+
+
+
+        //CHECK FOR CURRENTLY LOGGED IN USER
+
+//        LogoutButton = (TextView) findViewById(R.id.drawerLogOut);
+//        Log.e("OBJECT ", String.valueOf(LogoutButton));
+//
+//        String userToken = UserTokenStorageFactory.instance().getStorage().get();
+//
+//        if( userToken != null && !userToken.equals( "" ) )
+//        { // user login is available, do your work now
+//            Log.e("Inside IF of ", "Current User");
+//            assert LogoutButton != null;
+//            LogoutButton.setVisibility(View.VISIBLE);
+//        } else{
+//            Log.e("Inside ELSE of ", "Current User");
+//            assert LogoutButton != null;
+//            LogoutButton.setVisibility(View.INVISIBLE);
+//        }
+
 
 
         // SWIPE DOWN TO REFRESH IMPLEMENTATION
@@ -96,21 +121,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // METHOD WHICH IS CALLED WHEN THE USER IS ALREADY ON THE TOP AND SWIPES DOWN TO REFRESH THE DATA
         @Override
         public void onRefresh(){
-            Log.e("Checking OnRefresh", "inside on Refresh");
             if (isNetworkAvailable()) {
-                Log.e("Checking OnRefresh", "inside IF ");
                 SitesDownloadTask download = new SitesDownloadTask();
                 download.execute();
             }
             else{
                 mySwipeRefreshLayout.setRefreshing(false);
-                Log.e("Checking OnRefresh", "inside ELSE");
                 Toast toast = Toast.makeText(getApplicationContext(),"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER,0,0);
                 toast.show();
             }
         }
+
+
     });
+
 
         //SETTING LEFT NAVIGATION DRAWER
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
@@ -141,19 +166,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        rightNavigationView.setNavigationItemSelectedListener(this);
 
         //SETTING BACKENDLESS
-        Backendless.initApp(this, APP_ID, SECRET_KEY, VERSION);
+
+
 
 
         //SETTING NAME AND EMAIL IN DRAWER
+        // UserTokenStorageFactory is available in the com.backendless.persistence.local package
+
         setNameInDrawer = (TextView) findViewById(R.id.drawerLogIn);
         setEmailInDrawer = (TextView) findViewById(R.id.drawerUserEmail);
+        Log.e("***LOGIN ISSUE***: ", String.valueOf(setEmailInDrawer));  // why NPE
+        Log.e("***LOGIN ISSUE***: ", String.valueOf(setNameInDrawer));      //why NPE
+//        Log.e("***LOGIN ISSUE***: ", String.valueOf(Backendless.UserService.CurrentUser().getProperty("name")));
 
         if(Backendless.UserService.CurrentUser() != null){
-            setNameInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
-            setEmailInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getEmail()));
-            Log.e("NameInDrawer",String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
-
+//            setNameInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
+//            setEmailInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getEmail()));
+//            Log.e("NameInDrawer",String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
         }
+
+
 
         //TO HIDE STATUS BAR AND ACTION BAR
 //        View decorView = getWindow().getDecorView();
@@ -264,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+    //MENU OPTIONS OVERRIDDEN
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -279,8 +312,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setIconifiedByDefault(false);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-        Log.e("SearchView In Menu", String.valueOf(searchManager));
-        Log.e("SearchInfoInMain", String.valueOf(searchManager.getSearchableInfo(getComponentName())));
+
 //        searchView.setSubmitButtonEnabled(true);
 
 
@@ -307,6 +339,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    //EXIT THE APP USING MENU OPTION
     public void closeApp(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("Do You want to exit :( ?");
@@ -345,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+    //BACK PRESS
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
@@ -357,6 +391,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    //NAVIGATION DRAWER
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -433,11 +468,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
+
     public void goToCustomizationActivity(MenuItem item) {
         startActivity(new Intent(MainActivity.this, Customization.class));
         this.finish();
     }
 
+    //TO REFRESH THE NEWS FEED
     public void refreshFeed(MenuItem item) {
         if (isNetworkAvailable()) {
             SitesDownloadTask download = new SitesDownloadTask();
@@ -448,6 +485,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toast.setGravity(Gravity.CENTER,0,0);
             toast.show();
         }
+    }
+
+
+    //SIMPLE LOGOUT API
+    public void logOutCurrentUser(View view) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setTitle("Please Wait!");
+        progressDialog.setMessage("Logging Out...");
+        progressDialog.show();
+
+        Backendless.UserService.logout(new AsyncCallback<Void>() {
+            @Override
+            public void handleResponse(Void response) {
+                progressDialog.dismiss();
+                Toast toast = Toast.makeText(getApplicationContext(),"You Have Been Successfully Logged Out!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                progressDialog.dismiss();
+                Toast toast = Toast.makeText(getApplicationContext(),"Sorry! "+ String.valueOf(fault), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+            }
+        });
     }
 
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {
@@ -496,6 +561,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         protected void onPostExecute(Void result) {
+            mySwipeRefreshLayout.setRefreshing(false);
             Toast toast = Toast.makeText(MainActivity.this, "Your Feeds Has Been Successfully Updated!", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
@@ -543,42 +609,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    // BELOW ONCLICK METHODS FROM CARD VIEW ITEM
 
+
+    // BELOW ONCLICK METHODS FROM CARD VIEW ITEM
     public void shareWith(View view) {
 
         Bitmap myBitmap;
+
+        //TO GET THE WHOLE SCREEN TO DISPLAY IN THE SCREENSHOT
         View v1 = getWindow().getDecorView().getRootView();
 
-        //TO GET THE PARTICULAR SCREEN TO DISPLAY IN THE SCREENSHOT
-//        View v2 = findViewById(R.id.mainScreen);
-        v1.setDrawingCacheEnabled(true);
-        myBitmap = Bitmap.createBitmap(v1.getDrawingCache());
-        v1.setDrawingCacheEnabled(false);
+        //TO GET THE PARTICULAR SCREEN(only news chunk) TO DISPLAY IN THE SCREENSHOT
+        View v2 = findViewById(R.id.wholeNewsChunk);
 
+        assert v2 != null;
+        v2.setDrawingCacheEnabled(true);
+        myBitmap = Bitmap.createBitmap(v2.getDrawingCache());
+        v2.setDrawingCacheEnabled(false);
+
+
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+        String fileName = now + ".jpg";
+        File dir = new File(dirPath);
+        if(!dir.exists())
+            dir.mkdirs();
+        File imageFile = new File(dirPath, fileName);
         try {
-            Date now = new Date();
-            android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
-            File imageFile = new File(mPath);
-            verifyStoragePermissions(MainActivity.this);
-
-            //TO SUPPORT THE NON ROOTED DEVICES
-            Process sh = Runtime.getRuntime().exec("su", null, null);
-            OutputStream os = sh.getOutputStream();
-            os.write(("/system/bin/screencap -p "+"/sdcard/"+mPath).getBytes("ASCII"));
-
-            //CREATE THE FILE ON EXTERNAL STORAGE
-            FileOutputStream fos = new FileOutputStream(imageFile);
-            fos.write(bytes.toByteArray());
-            fos.flush();
-            fos.close();
+            FileOutputStream fOut = new FileOutputStream(imageFile);
+            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
             shareScreenshot(imageFile);
         } catch (Exception e) {
-            Log.e("ERROR IS ", String.valueOf(e));
+            e.printStackTrace();
         }
+
     }
 
     private void shareScreenshot(File imageFile) {
@@ -603,13 +670,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Checks if the app has permission to write to device storage
      *
      * @param activity *
-     *                 If the app does not has permission then the user will be prompted to grant permissions to use External Storage
+     * If the app does not has permission then the user will be prompted to grant permissions to use External Storage
      */
 
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permission != PackageManager.PERMISSION_GRANTED) {
+
             // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
                     activity,

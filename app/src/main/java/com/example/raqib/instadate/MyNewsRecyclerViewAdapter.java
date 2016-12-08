@@ -42,9 +42,8 @@ Context context;
     private static String bookmarkNewsDate;
     private static String imageUrl;
     private DisplayImageOptions options;
-    private ImageLoader imageLoader;
 
-    public MyNewsRecyclerViewAdapter(List<NewsItems> items) {
+    MyNewsRecyclerViewAdapter(List<NewsItems> items) {
         mValues = items;
     }
 
@@ -71,6 +70,7 @@ Context context;
             String dateToFormat = mValues.get(position).getDate();
 
             holder.time.setText(mValues.get(position).getDate());
+
 
 
         //SETTING THE NAME OF THE WEBSITE AT THE "MORE AT LINK"
@@ -140,7 +140,7 @@ Context context;
         if(imageUrl == null)
             return;
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context).build();
-        imageLoader = ImageLoader.getInstance();    //COMMENTED FOR TESTING
+        ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
 
         //T0 KEEP THE DOWNLOADED IMAGES IN THE CACHE WE ARE IMPLEMENTING THE BELOW CODE

@@ -85,5 +85,6 @@
     <string name="NewYorkTimes">NYT</string>
     <string name="OneIndia">OI</string>
     <string name="ScienceDaily">SD</string>
+    <string name="drawer_log_out">Log Out</string>
 
 </resources>
