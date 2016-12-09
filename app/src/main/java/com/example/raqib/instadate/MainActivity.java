@@ -643,6 +643,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fOut.flush();
             fOut.close();
             shareScreenshot(imageFile);
+            imageFile.deleteOnExit();
         } catch (Exception e) {
             e.printStackTrace();
         }
