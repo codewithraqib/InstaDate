@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView setNameInDrawer, setEmailInDrawer;
     SwipeRefreshLayout mySwipeRefreshLayout;
     TextView LogoutButton;
+    private static final String TAG = "Main Activity";
 
 
     // Storage Permissions
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         Backendless.initApp(this, APP_ID, SECRET_KEY, VERSION);
 
@@ -292,9 +294,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             displayNews();
         }
     }
-
-
-
 
 
     //MENU OPTIONS OVERRIDDEN
