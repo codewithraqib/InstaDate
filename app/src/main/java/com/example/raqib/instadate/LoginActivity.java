@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,15 +19,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements  View.OnClickListener{
-    static EditText emailField;
-    static EditText passwordField;
-    static Button LoginButton;
-    static TextView RegisterHere, ForgetPassword;
+    EditText emailField;
+    EditText passwordField;
+    Button LoginButton;
+    TextView RegisterHere, ForgetPassword;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private static final String TAG = "Login Activity";
    // static TextView setNameInDrawer, setEmailInDrawer;
 
 
@@ -52,6 +60,22 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
 //        Log.e("Background call", "Working...");
 //        goForLogin.execute();
 //        Log.e("Background call", "Done!");
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
 
         LoginButton.setOnClickListener(this);
         RegisterHere.setOnClickListener(this);
@@ -166,30 +190,70 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
 //                        progressDialog.setCancelable(false);
                         progressDialog.show();
 
-                        Backendless.UserService.login(email, password, new AsyncCallback<BackendlessUser>() {
+//                        Backendless.UserService.login(email, password, new AsyncCallback<BackendlessUser>() {
+//
+//                                    @Override
+//                                    public void handleResponse(BackendlessUser response) {
+//                                        Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_LONG).show();
+//                                        progressDialog.dismiss();
+//
+//                                        //TO SET THE NAME IN THE DRAWER BUT FAILS DUE TO NPE
+////                                        setNameInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
+////                                        setEmailInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getEmail()));
+////                                        Log.e("LOGIN ISSUE*****:",String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
+//                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                        startActivity(intent);
+//                                    }
+//
+//                                    @Override
+//                                    public void handleFault(BackendlessFault fault) {
+//                                        Toast.makeText(LoginActivity.this, "Hey Log In Failed " + String.valueOf(fault), Toast.LENGTH_LONG).show();
+//                                        Log.e("HandleFault: ",String.valueOf(fault) );
+//                                        progressDialog.dismiss();
+//                                    }
+//                                }
+//                                ,true  //TRUE IS HERE TO REMEMBER THE CURRENTLY LOGGED IN USER
+//                        );
 
+                        mAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                     @Override
-                                    public void handleResponse(BackendlessUser response) {
-                                        Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_LONG).show();
-                                        progressDialog.dismiss();
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        mAuth = FirebaseAuth.getInstance();
 
-                                        //TO SET THE NAME IN THE DRAWER BUT FAILS DUE TO NPE
-//                                        setNameInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
-//                                        setEmailInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getEmail()));
-//                                        Log.e("LOGIN ISSUE*****:",String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
+                                        mAuthListener = new FirebaseAuth.AuthStateListener() {
+                                            @Override
+                                            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                                                FirebaseUser user = firebaseAuth.getCurrentUser();
+                                                if (user != null) {
+                                                    // User is signed in
+                                                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                                                } else {
+                                                    // User is signed out
+                                                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                                                }
+                                            }
+                                        };
+                                        Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                                        Toast toast = Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_SHORT);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
+                                        progressDialog.dismiss();
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
-                                    }
 
-                                    @Override
-                                    public void handleFault(BackendlessFault fault) {
-                                        Toast.makeText(LoginActivity.this, "Hey Log In Failed " + String.valueOf(fault), Toast.LENGTH_LONG).show();
-                                        Log.e("HandleFault: ",String.valueOf(fault) );
-                                        progressDialog.dismiss();
+                                        // If sign in fails, display a message to the user. If sign in succeeds
+                                        // the auth state listener will be notified and logic to handle the
+                                        // signed in user can be handled in the listener.
+                                        if (!task.isSuccessful()) {
+                                            Log.e(TAG, "signInWithEmail:failed", task.getException());
+                                            Toast toast2 = Toast.makeText(LoginActivity.this, "Hey Log In Failed", Toast.LENGTH_SHORT);
+                                            toast2.setGravity(Gravity.CENTER, 0, 0);
+                                            toast2.show();
+                                            progressDialog.dismiss();
+                                        }
                                     }
-                                }
-                                ,true  //TRUE IS HERE TO REMEMBER THE CURRENTLY LOGGED IN USER
-                        );
+                                });
                     }
 
                     break;
