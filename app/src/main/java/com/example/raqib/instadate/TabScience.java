@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserScience2;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserScienceDaily;
+
 import java.util.ArrayList;
 import java.util.List;
 

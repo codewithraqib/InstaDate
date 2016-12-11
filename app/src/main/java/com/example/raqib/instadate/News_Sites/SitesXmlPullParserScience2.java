@@ -1,6 +1,8 @@
-package com.example.raqib.instadate;
+package com.example.raqib.instadate.News_Sites;
 
 import android.content.Context;
+
+import com.example.raqib.instadate.NewsItems;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SitesXmlPullParserHealth {
+public class SitesXmlPullParserScience2 {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
@@ -41,7 +43,7 @@ public class SitesXmlPullParserHealth {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("HealthService.xml");
+            FileInputStream fis = ctx.openFileInput("Science2.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -100,6 +102,7 @@ public class SitesXmlPullParserHealth {
                         } else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
                             // if </description> use setDescription() on curSite
 //                            Log.e("DESCRIPTION IS ",curText);
+
                             final Pattern pattern = Pattern.compile("<p>(.+?)</p>");
                             final Matcher matcher = pattern.matcher(curText);
                             matcher.find();
@@ -111,7 +114,9 @@ public class SitesXmlPullParserHealth {
                             // if </image> use setImgUrl() on curSite
 //                            Log.e("IMAGE URL IS  : ",curText);
 
+
                             curNewsItems.setDate(curText);
+
                         }
                         break;
 

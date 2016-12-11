@@ -1,6 +1,8 @@
-package com.example.raqib.instadate;
+package com.example.raqib.instadate.News_Sites;
 
 import android.content.Context;
+
+import com.example.raqib.instadate.NewsItems;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -10,15 +12,17 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class SitesXmlPullParserEspnCricinfo {
+public class SitesXmlPullParserHealth {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
     static final String KEY_LINK = "link";
     static final String KEY_ABOUT = "description";
+    static final String KEY_IMAGE_URL = "media:content";
     static final String KEY_DATE = "pubDate";
-    static  int end = 1;
 
 
     public static List<NewsItems> getStackSitesFromFile(Context ctx) {
@@ -32,7 +36,6 @@ public class SitesXmlPullParserEspnCricinfo {
 
         // Temporary Holder for current text value while parsing
         String curText = "";
-        String imageAt = "http://i.forbesimg.com/media/lists/companies/espn_416x416.jpg";
 
         try {
             // Get our factory and PullParser
@@ -40,7 +43,7 @@ public class SitesXmlPullParserEspnCricinfo {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("EspnCricinfo.xml");
+            FileInputStream fis = ctx.openFileInput("HealthService.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -63,13 +66,18 @@ public class SitesXmlPullParserEspnCricinfo {
                 switch (eventType) {
                     case XmlPullParser.START_TAG:
                         if (tagName.equalsIgnoreCase(KEY_SITE)) {
-                            // If we are starting a new <site> block we need
-                            //a new StackSite object to represent it
-                            curNewsItems = new NewsItems();
-                            actual_work = true;
+                            // If we are starting a new <news> block we need
+                            //a new NewsItems object to represent it
+                                actual_work = true;
+                                curNewsItems = new NewsItems();
                         }
 
+                        if (tagName.equalsIgnoreCase(KEY_IMAGE_URL) && actual_work){
 
+                            String url = xpp.getAttributeValue(null, "url");
+                            curNewsItems.setImgUrl(url);
+
+                        }
                         break;
 
                     case XmlPullParser.TEXT:
@@ -94,18 +102,18 @@ public class SitesXmlPullParserEspnCricinfo {
                         } else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
                             // if </description> use setDescription() on curSite
 //                            Log.e("DESCRIPTION IS ",curText);
-                            curNewsItems.setDescription(curText);
-                        } else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
+                            final Pattern pattern = Pattern.compile("<p>(.+?)</p>");
+                            final Matcher matcher = pattern.matcher(curText);
+                            matcher.find();
+                            System.out.println(matcher.group(1));
+
+                            curNewsItems.setDescription(matcher.group(1));
+                        }
+                            else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
                             // if </image> use setImgUrl() on curSite
 //                            Log.e("IMAGE URL IS  : ",curText);
 
                             curNewsItems.setDate(curText);
-                            end = 2;
-                        }
-                        if(end == 2){
-                            if (curNewsItems != null) {
-                                curNewsItems.setImgUrl(imageAt);
-                            }
                         }
                         break;
 

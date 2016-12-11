@@ -1,6 +1,8 @@
-package com.example.raqib.instadate;
+package com.example.raqib.instadate.News_Sites;
 
 import android.content.Context;
+
+import com.example.raqib.instadate.NewsItems;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SitesXmlPullParserTheFinancialExpress {
+public class SitesXmlPullParserTheFinancialExpressTech {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
@@ -41,7 +43,7 @@ public class SitesXmlPullParserTheFinancialExpress {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("TFE.xml");
+            FileInputStream fis = ctx.openFileInput("TFETech.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -74,8 +76,8 @@ public class SitesXmlPullParserTheFinancialExpress {
 
                             String url = xpp.getAttributeValue(null, "url");
                             curNewsItems.setImgUrl(url);
-                        }
 
+                        }
                         break;
 
                     case XmlPullParser.TEXT:
@@ -97,8 +99,7 @@ public class SitesXmlPullParserTheFinancialExpress {
                             // if </link> use setLink() on curSite
 //                            Log.e("LINK IS ",curText);
                             curNewsItems.setLink(curText);
-                        }
-                        else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
+                        } else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
                             // if </description> use setDescription() on curSite
 //                            Log.e("DESCRIPTION IS ",curText);
                             final Pattern pattern = Pattern.compile("<p>(.+?)</p>");

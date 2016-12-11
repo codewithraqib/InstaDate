@@ -1,6 +1,8 @@
-package com.example.raqib.instadate;
+package com.example.raqib.instadate.News_Sites;
 
 import android.content.Context;
+
+import com.example.raqib.instadate.NewsItems;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -11,13 +13,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SitesXmlPullParserBingKashmir {
+public class SitesXmlPullParserNYTTechnology {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
     static final String KEY_LINK = "link";
     static final String KEY_ABOUT = "description";
-    static final String KEY_IMAGE_URL = "News:Image";
+    static final String KEY_IMAGE_URL = "media:content";
     static final String KEY_DATE = "pubDate";
 
 
@@ -39,7 +41,7 @@ public class SitesXmlPullParserBingKashmir {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("BingKashmir.xml");
+            FileInputStream fis = ctx.openFileInput("NYTTechnology.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -68,6 +70,12 @@ public class SitesXmlPullParserBingKashmir {
                                 curNewsItems = new NewsItems();
                         }
 
+                        if (tagName.equalsIgnoreCase(KEY_IMAGE_URL) && actual_work){
+
+                            String url = xpp.getAttributeValue(null, "url");
+                            curNewsItems.setImgUrl(url);
+
+                        }
                         break;
 
                     case XmlPullParser.TEXT:
@@ -95,12 +103,10 @@ public class SitesXmlPullParserBingKashmir {
                             curNewsItems.setDescription(curText);
                         }
                             else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
+                            // if </image> use setImgUrl() on curSite
+//                            Log.e("IMAGE URL IS  : ",curText);
 
                             curNewsItems.setDate(curText);
-                        }
-                        else if (tagName.equalsIgnoreCase(KEY_IMAGE_URL) && actual_work) {
-//                            Log.e("IMAGE URL IS  : ",curText);
-                            curNewsItems.setImgUrl(curText);
                         }
                         break;
 

@@ -1,6 +1,8 @@
-package com.example.raqib.instadate;
+package com.example.raqib.instadate.News_Sites;
 
 import android.content.Context;
+
+import com.example.raqib.instadate.NewsItems;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -10,16 +12,14 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class SitesXmlPullParserWorldSports {
+public class SitesXmlPullParserScienceDaily {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
     static final String KEY_LINK = "link";
     static final String KEY_ABOUT = "description";
-    static final String KEY_IMAGE_URL = "media:content";
+    static final String KEY_IMAGE_URL = "media:thumbnail";
     static final String KEY_DATE = "pubDate";
 
 
@@ -41,7 +41,7 @@ public class SitesXmlPullParserWorldSports {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("WorldSports.xml");
+            FileInputStream fis = ctx.openFileInput("ScienceDaily.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -100,12 +100,7 @@ public class SitesXmlPullParserWorldSports {
                         } else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
                             // if </description> use setDescription() on curSite
 //                            Log.e("DESCRIPTION IS ",curText);
-                            final Pattern pattern = Pattern.compile("<p>(.+?)</p>");
-                            final Matcher matcher = pattern.matcher(curText);
-                            matcher.find();
-                            System.out.println(matcher.group(1));
-
-                            curNewsItems.setDescription(matcher.group(1));
+                            curNewsItems.setDescription(curText);
                         }
                             else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
                             // if </image> use setImgUrl() on curSite

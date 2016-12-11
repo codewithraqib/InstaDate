@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -513,6 +514,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 toast.show();
             }
         });
+        FirebaseAuth.getInstance().signOut();
+
     }
 
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {

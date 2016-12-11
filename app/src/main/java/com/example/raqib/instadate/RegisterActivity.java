@@ -19,11 +19,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.BackendlessUser;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     EditText emailField;
@@ -35,6 +44,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final String TAG = "Register Activity";
+    private static final int RC_SIGN_IN = 1;
+    private GoogleApiClient mGoogleApiClient;
+    private static boolean signedInSuccessfully = false;
+//    final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
 
 
     @Override
@@ -44,14 +57,44 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
         mAuth = FirebaseAuth.getInstance();
+        SignInButton googleSignInButton = (SignInButton) findViewById(R.id.googleSignInButton);
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast toast =  Toast.makeText(RegisterActivity.this, "There is an error Signing In, Try again!", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER,0,0);
+                        toast.show();
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        assert googleSignInButton != null;
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
+
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                if (user != null && signedInSuccessfully) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Toast.makeText(RegisterActivity.this,"Hey You Have Been Successfully Registered", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    finish();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -70,6 +113,57 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registerButton.setOnClickListener(this);
         loginRedirection.setOnClickListener(this);
     }
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+//        progressDialog.setTitle("Please Wait!");
+//        progressDialog.setMessage("Signing up with Google...");
+//        progressDialog.setCancelable(false);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
+                signedInSuccessfully= true;
+//                progressDialog.dismiss();
+
+            } else {
+                // Google Sign In failed, update UI appropriately
+                Toast.makeText(RegisterActivity.this,"Signing up with Google failed, Try again!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                finish();            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 
     //ATTACH THE LISTENER TO YOUR FIREBASE AUTH INSTANCE IN THE ONSTART() METHOD AND REMOVE IT ON ONSTOP()
     @Override
@@ -85,6 +179,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
 
     @Override
     public void onClick(View v) {

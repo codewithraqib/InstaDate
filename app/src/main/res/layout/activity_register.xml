@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -131,7 +132,11 @@
                 android:layout_marginLeft="48dp"
                 android:layout_marginStart="48dp"
                 android:layout_height="1dp"
-                android:background="#4a5a71"> </LinearLayout>
+                android:background="#4a5a71">
+            </LinearLayout>
+
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -166,9 +171,25 @@
                 android:layout_marginLeft="48dp"
                 android:layout_marginStart="48dp"
                 android:layout_height="1dp"
-                android:background="#4a5a71"> </LinearLayout>
+                android:layout_gravity="top"
+                android:background="#4a5a71">
+            </LinearLayout>
 
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginBottom="420dp"
+        android:layout_marginTop="5dp"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:src="@drawable/main_image"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -180,18 +201,49 @@
         android:gravity="bottom"
         android:layout_marginBottom="20dp"
         >
-        <Button
-            android:id="@+id/RegisterButton"
-            android:background="#0097a7"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:text="@string/action_RegisterButton"
             android:layout_height="wrap_content"
-            android:textColor="#f5f5f5"
-            android:textStyle="italic"
-            android:gravity="center"
-            android:layout_marginBottom="35dp"
-            android:clickable="true"
-            android:typeface="serif" />
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <Button
+                android:id="@+id/RegisterButton"
+                android:layout_width="wrap_content"
+                android:text="@string/action_RegisterButton"
+                android:textColor="#707070"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:background = "@drawable/roundedbutton"
+                android:layout_marginTop="4dp"
+                android:layout_height="40dp" />
+
+
+            <customfonts.MyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/or"
+                android:layout_marginTop="4dp"
+                android:textColor="#ffffff"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                />
+
+
+            <com.google.android.gms.common.SignInButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/googleSignInButton"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="0.95">
+            </com.google.android.gms.common.SignInButton>
+
+
+        </LinearLayout>
+
 
 
         <customfonts.MyTextView
@@ -216,19 +268,6 @@
             android:layout_marginBottom="30dp"/>
 
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_marginBottom="420dp"
-        android:layout_marginTop="5dp"
-        >
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:src="@drawable/main_image"
-            />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 

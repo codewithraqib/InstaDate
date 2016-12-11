@@ -1,6 +1,8 @@
-package com.example.raqib.instadate;
+package com.example.raqib.instadate.News_Sites;
 
 import android.content.Context;
+
+import com.example.raqib.instadate.NewsItems;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -11,13 +13,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SitesXmlPullParserScienceDaily {
+public class SitesXmlPullParserInternationalNews {
 
     static final String KEY_SITE = "item";
     static final String KEY_NAME = "title";
     static final String KEY_LINK = "link";
     static final String KEY_ABOUT = "description";
-    static final String KEY_IMAGE_URL = "media:thumbnail";
+    static final String KEY_IMAGE_URL = "enclosure";
     static final String KEY_DATE = "pubDate";
 
 
@@ -39,7 +41,7 @@ public class SitesXmlPullParserScienceDaily {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("ScienceDaily.xml");
+            FileInputStream fis = ctx.openFileInput("InternationalNews.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -98,6 +100,7 @@ public class SitesXmlPullParserScienceDaily {
                         } else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
                             // if </description> use setDescription() on curSite
 //                            Log.e("DESCRIPTION IS ",curText);
+
                             curNewsItems.setDescription(curText);
                         }
                             else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {

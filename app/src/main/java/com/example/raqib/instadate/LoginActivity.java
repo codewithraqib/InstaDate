@@ -227,20 +227,21 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                                                 FirebaseUser user = firebaseAuth.getCurrentUser();
                                                 if (user != null) {
                                                     // User is signed in
-                                                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                                                    Log.e(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+//                                                    Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                                                    Toast toast = Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_SHORT);
+                                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                                    toast.show();
+                                                    progressDialog.dismiss();
+                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                    startActivity(intent);
                                                 } else {
                                                     // User is signed out
                                                     Log.d(TAG, "onAuthStateChanged:signed_out");
                                                 }
                                             }
                                         };
-                                        Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                                        Toast toast = Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_SHORT);
-                                        toast.setGravity(Gravity.CENTER, 0, 0);
-                                        toast.show();
-                                        progressDialog.dismiss();
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(intent);
+
 
                                         // If sign in fails, display a message to the user. If sign in succeeds
                                         // the auth state listener will be notified and logic to handle the
