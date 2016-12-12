@@ -18,14 +18,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.backendless.BackendlessUser;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -46,8 +47,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static final String TAG = "Register Activity";
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
-    private static boolean signedInSuccessfully = false;
-//    final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
 
 
     @Override
@@ -57,15 +56,34 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
         mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Toast.makeText(RegisterActivity.this,"You Have Signed Up With Google!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+
+
         SignInButton googleSignInButton = (SignInButton) findViewById(R.id.googleSignInButton);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestScopes(new Scope(Scopes.EMAIL))
                 .requestEmail()
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -85,24 +103,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null && signedInSuccessfully) {
-                    // User is signed in
-                    Toast.makeText(RegisterActivity.this,"Hey You Have Been Successfully Registered", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    finish();
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-
-
         emailField = (EditText) findViewById(R.id.UserEmail);
         nameField = (EditText) findViewById(R.id.UserName);
         passwordField = (EditText) findViewById(R.id.UserPassword);
@@ -113,12 +113,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registerButton.setOnClickListener(this);
         loginRedirection.setOnClickListener(this);
     }
+
+
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        Log.e("SignIn ",String.valueOf(signInIntent));
         startActivityForResult(signInIntent, RC_SIGN_IN);
-//        progressDialog.setTitle("Please Wait!");
-//        progressDialog.setMessage("Signing up with Google...");
-//        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -127,19 +127,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+
+
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                signedInSuccessfully= true;
-//                progressDialog.dismiss();
+
+                finish();
 
             } else {
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(RegisterActivity.this,"Signing up with Google failed, Try again!", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                finish();            }
+            }
         }
     }
 
@@ -263,7 +265,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
 
                 if(nameCheckEmpty && emailCheckEmpty && isInternetActive && passwordCheckEmpty && passwordCheck && emailCheck && confirmPasswordCheckEmpty ) {
-                    BackendlessUser backendlessUser = new BackendlessUser();
 
                     final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
                     progressDialog.setTitle("Please Wait!");
@@ -271,32 +272,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     progressDialog.setCancelable(false);
                     progressDialog.show();
 
-//                    backendlessUser.setEmail(email);
-//                    backendlessUser.setProperty("name", name);
-//                    backendlessUser.setPassword(password);
-
                     final String nameOfUser = name;
-
-
-
-                    //BACKENDLESS IMPLEMENTATION
-//                    Backendless.UserService.register(backendlessUser, new AsyncCallback<BackendlessUser>() {
-//
-//                        @Override
-//                        public void handleResponse(BackendlessUser response) {
-//                            Toast.makeText(RegisterActivity.this,"Hey "+ nameOfUser + "You Have Been Successfully Registered", Toast.LENGTH_LONG).show();
-//                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-//                            progressDialog.dismiss();
-//                            finish();
-//                        }
-//
-//                        @Override
-//                        public void handleFault(BackendlessFault fault) {
-//                            Toast.makeText(RegisterActivity.this,"Hey Registration Failed, Better Luck Again", Toast.LENGTH_LONG).show();
-//                            progressDialog.dismiss();
-//                        }
-//                    });
-
 
 
                     //FIREBASE IMPLEMENTATION
@@ -317,8 +293,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     Toast.makeText(RegisterActivity.this,"Hey Registration Failed, Better Luck Again", Toast.LENGTH_LONG).show();
                                     progressDialog.dismiss();
                                     }
-
-                                    // ...
                                 }
                             });
 

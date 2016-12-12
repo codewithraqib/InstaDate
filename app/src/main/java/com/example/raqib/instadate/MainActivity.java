@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -27,7 +27,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -39,10 +38,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.backendless.Backendless;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,16 +50,12 @@ import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    static String link;
-//    ActionBar actionBar;
     int uiOptions = 0;
-    public static final String APP_ID = "B325D49E-27BD-C5D6-FF3F-46457273B900";  // DON'T CHANGE IT EITHER YOU WILL LOST THE CONNECTIVITY WITH THE APP SERVER
-    public static final String SECRET_KEY = "E7D442EA-E108-4F9E-FF28-E010A8EB1700";  // DON'T CHANGE IT EITHER YOU WILL LOST THE CONNECTIVITY WITH THE APP SERVER
-    public static final String VERSION = "v1";
-    TextView setNameInDrawer, setEmailInDrawer;
     SwipeRefreshLayout mySwipeRefreshLayout;
     TextView LogoutButton;
     private static final String TAG = "Main Activity";
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     // Storage Permissions
@@ -80,38 +73,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Toast.makeText(MainActivity.this,"You Have Failed To Logout, Please Try Again!", Toast.LENGTH_LONG).show();
 
-        Backendless.initApp(this, APP_ID, SECRET_KEY, VERSION);
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Toast.makeText(MainActivity.this,"Logged Out Successfully!", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+
 
         //noinspection ConstantConditions
         getSupportActionBar().isHideOnContentScrollEnabled();
-
-//        startActivity(new Intent(this, GeneralNavigationTab.class));
-
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view) ;
-
-
-
-        //CHECK FOR CURRENTLY LOGGED IN USER
-
-//        LogoutButton = (TextView) findViewById(R.id.drawerLogOut);
-//        Log.e("OBJECT ", String.valueOf(LogoutButton));
-//
-//        String userToken = UserTokenStorageFactory.instance().getStorage().get();
-//
-//        if( userToken != null && !userToken.equals( "" ) )
-//        { // user login is available, do your work now
-//            Log.e("Inside IF of ", "Current User");
-//            assert LogoutButton != null;
-//            LogoutButton.setVisibility(View.VISIBLE);
-//        } else{
-//            Log.e("Inside ELSE of ", "Current User");
-//            assert LogoutButton != null;
-//            LogoutButton.setVisibility(View.INVISIBLE);
-//        }
-
-
 
         // SWIPE DOWN TO REFRESH IMPLEMENTATION
         mySwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshInMain);
@@ -150,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         assert navigationView != null;
@@ -176,19 +157,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //SETTING NAME AND EMAIL IN DRAWER
         // UserTokenStorageFactory is available in the com.backendless.persistence.local package
-
-        setNameInDrawer = (TextView) findViewById(R.id.drawerLogIn);
-        setEmailInDrawer = (TextView) findViewById(R.id.drawerUserEmail);
-        Log.e("***LOGIN ISSUE***: ", String.valueOf(setEmailInDrawer));  // why NPE
-        Log.e("***LOGIN ISSUE***: ", String.valueOf(setNameInDrawer));      //why NPE
-//        Log.e("***LOGIN ISSUE***: ", String.valueOf(Backendless.UserService.CurrentUser().getProperty("name")));
-
-        if(Backendless.UserService.CurrentUser() != null){
-//            setNameInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
-//            setEmailInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getEmail()));
-//            Log.e("NameInDrawer",String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
-        }
-
 
 
         //TO HIDE STATUS BAR AND ACTION BAR
@@ -296,6 +264,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mAuth.addAuthStateListener(mAuthListener);
+//    }
 
     //MENU OPTIONS OVERRIDDEN
     @Override
@@ -492,29 +465,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //SIMPLE LOGOUT API
     public void logOutCurrentUser(View view) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setTitle("Please Wait!");
-        progressDialog.setMessage("Logging Out...");
-        progressDialog.show();
-
-        Backendless.UserService.logout(new AsyncCallback<Void>() {
-            @Override
-            public void handleResponse(Void response) {
-                progressDialog.dismiss();
-                Toast toast = Toast.makeText(getApplicationContext(),"You Have Been Successfully Logged Out!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER,0,0);
-                toast.show();
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                progressDialog.dismiss();
-                Toast toast = Toast.makeText(getApplicationContext(),"Sorry! "+ String.valueOf(fault), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER,0,0);
-                toast.show();
-            }
-        });
-        FirebaseAuth.getInstance().signOut();
+        mAuth.signOut();
 
     }
 
