@@ -17,7 +17,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -35,7 +34,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,10 +50,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     int uiOptions = 0;
     SwipeRefreshLayout mySwipeRefreshLayout;
-    TextView LogoutButton;
     private static final String TAG = "Main Activity";
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     // Storage Permissions
@@ -74,21 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Toast.makeText(MainActivity.this,"You Have Failed To Logout, Please Try Again!", Toast.LENGTH_LONG).show();
 
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Toast.makeText(MainActivity.this,"Logged Out Successfully!", Toast.LENGTH_LONG).show();
-                }
-            }
-        };
 
 
 
@@ -465,7 +447,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //SIMPLE LOGOUT API
     public void logOutCurrentUser(View view) {
 
-        mAuth.signOut();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user == null){
+            Toast.makeText(MainActivity.this, "You Are Already Logged Out!", Toast.LENGTH_SHORT).show();
+        }else{
+            mAuth.signOut();
+            Toast.makeText(MainActivity.this, "Logged Out Successfully!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -485,9 +474,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 Downloader.DownloadFromUrl("http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml", openFileOutput("NYTNews.xml", Context.MODE_PRIVATE));
 
+                Downloader.DownloadFromUrl("http://feeds.bbci.co.uk/news/technology/rss.xml", openFileOutput("BBCTechnology.xml", Context.MODE_PRIVATE));
+
+                Downloader.DownloadFromUrl("http://feeds.bbci.co.uk/news/health/rss.xml", openFileOutput("BBCHealth.xml", Context.MODE_PRIVATE));
+
                 Downloader.DownloadFromUrl("http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml", openFileOutput("NYTTechnology.xml", Context.MODE_PRIVATE));
 
-                Downloader.DownloadFromUrl("http://www.espncricinfo.com/rss/content/story/feeds/6.xml", openFileOutput("EspnCricinfo.xml", Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl("http://www.rediff.com/rss/sportsrss.xml", openFileOutput("RediffSports.xml", Context.MODE_PRIVATE));
 
                 Downloader.DownloadFromUrl("http://www.tribuneindia.com/rss/feed.aspx?cat_id=5", openFileOutput("TribuneKashmir.xml", Context.MODE_PRIVATE));
 
@@ -571,7 +564,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bitmap myBitmap;
 
         //TO GET THE WHOLE SCREEN TO DISPLAY IN THE SCREENSHOT
-        View v1 = getWindow().getDecorView().getRootView();
+//        View v1 = getWindow().getDecorView().getRootView();
 
         //TO GET THE PARTICULAR SCREEN(only news chunk) TO DISPLAY IN THE SCREENSHOT
         View v2 = findViewById(R.id.wholeNewsChunk);
@@ -588,6 +581,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String fileName = now + ".jpg";
         File dir = new File(dirPath);
         if(!dir.exists())
+            //noinspection ResultOfMethodCallIgnored
             dir.mkdirs();
         File imageFile = new File(dirPath, fileName);
         try {

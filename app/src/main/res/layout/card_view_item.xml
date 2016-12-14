@@ -46,7 +46,8 @@
                 android:layout_height="250dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:contentDescription="@string/new_york_times" />
+                android:contentDescription="@string/new_york_times"
+                />
 
                 </RelativeLayout>
 

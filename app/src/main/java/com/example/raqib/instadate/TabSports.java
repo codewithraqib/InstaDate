@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.raqib.instadate.News_Sites.SitesXmlPullParserEspnCricinfo;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserRediffSports;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserWorldSports;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class TabSports extends Fragment {
 
     RecyclerView myRecyclerView;
     public List<NewsItems> NYT;
-    static public List<NewsItems> ESPN;
+    static public List<NewsItems> RediffSports;
     static public List<NewsItems> WorldSports;
 
 
@@ -33,13 +33,13 @@ public class TabSports extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        ESPN = SitesXmlPullParserEspnCricinfo.getStackSitesFromFile(getActivity().getBaseContext());
+        RediffSports = SitesXmlPullParserRediffSports.getStackSitesFromFile(getActivity().getBaseContext());
         WorldSports = SitesXmlPullParserWorldSports.getStackSitesFromFile(getActivity().getBaseContext());
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {
 
                 addAll(WorldSports);
-                addAll(ESPN);
+                addAll(RediffSports);
             }
         };
 

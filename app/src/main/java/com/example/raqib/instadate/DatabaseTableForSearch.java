@@ -91,7 +91,7 @@ class DatabaseTableForSearch {
             final List<NewsItems> Science2 = TabScience.Science2;
             final List<NewsItems> WorldSports = TabSports.WorldSports;
             final List<NewsItems> ESPN = TabSports.WorldSports;
-            final List<NewsItems> TFETech = TabTechnology.TFETech;
+            final List<NewsItems> TFETech = TabTechnology.BBCTechnology;
             final List<NewsItems> NYT = TabTopStories.NYT;
             final List<NewsItems> TFE = TabTopStories.TFE;
             List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){

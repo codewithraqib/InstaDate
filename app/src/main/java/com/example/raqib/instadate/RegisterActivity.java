@@ -34,6 +34,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     EditText emailField;
@@ -43,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     Button registerButton;
     TextView loginRedirection;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private static final String TAG = "Register Activity";
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
@@ -57,24 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         mAuth = FirebaseAuth.getInstance();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Toast.makeText(RegisterActivity.this,"You Have Signed Up With Google!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-
-
-        SignInButton googleSignInButton = (SignInButton) findViewById(R.id.googleSignInButton);
+        SignInButton googleSignInButton = (SignInButton) findViewById(R.id.googleSignUpButton);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -130,13 +113,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
-
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    for (UserInfo profile : user.getProviderData()) {
 
-                finish();
+                        String email = profile.getEmail();
+                        Toast.makeText(RegisterActivity.this,"Check your email" + email , Toast.LENGTH_LONG).show();
+
+                    }
+                }
+                Toast.makeText(RegisterActivity.this,"You Have Signed Up With Google!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 
             } else {
                 // Google Sign In failed, update UI appropriately
@@ -167,20 +158,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
-    //ATTACH THE LISTENER TO YOUR FIREBASE AUTH INSTANCE IN THE ONSTART() METHOD AND REMOVE IT ON ONSTOP()
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
+//    //ATTACH THE LISTENER TO YOUR FIREBASE AUTH INSTANCE IN THE ONSTART() METHOD AND REMOVE IT ON ONSTOP()
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mAuth.addAuthStateListener(mAuthListener);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if (mAuthListener != null) {
+//            mAuth.removeAuthStateListener(mAuthListener);
+//        }
+//    }
 
 
     @Override

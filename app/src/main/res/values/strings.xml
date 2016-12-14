@@ -87,5 +87,7 @@
     <string name="ScienceDaily">SD</string>
     <string name="drawer_log_out">Log Out</string>
     <string name="or">OR</string>
+    <string name="BBC">BBC</string>
+    <string name="Rediff">Rediff</string>
 
 </resources>

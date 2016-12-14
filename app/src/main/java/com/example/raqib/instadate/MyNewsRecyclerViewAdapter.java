@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder> {
-Context context;
+    Context context;
 
     private final List<NewsItems> mValues;
     static public List<NewsItems> bookmarkedNewsList;
@@ -63,13 +63,13 @@ Context context;
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-            holder.title.setText(mValues.get(position).getTitle());
+        holder.title.setText(mValues.get(position).getTitle());
 
-            holder.description.setText(mValues.get(position).getDescription());
+        holder.description.setText(mValues.get(position).getDescription());
 
-            String dateToFormat = mValues.get(position).getDate();
+        String dateToFormat = mValues.get(position).getDate();
 
-            holder.time.setText(mValues.get(position).getDate());
+        holder.time.setText(mValues.get(position).getDate());
 
 
 
@@ -80,6 +80,8 @@ Context context;
         String NYT = "www.nytimes.com";
         String OI = "www.oneindia.com";
         String SD = "www.sciencedaily.com";
+        String BBC = "www.bbc.co.uk";
+        String Rediff = "www.rediff.com";
 
         if(linkToCheck.toLowerCase().contains(FE.toLowerCase()))
             holder.moreAtLink.setText(R.string.FinancialExpress);
@@ -89,6 +91,10 @@ Context context;
             holder.moreAtLink.setText(R.string.OneIndia);
         else if(linkToCheck.toLowerCase().contains(SD.toLowerCase()))
             holder.moreAtLink.setText(R.string.ScienceDaily);
+        else if(linkToCheck.toLowerCase().contains(BBC.toLowerCase()))
+            holder.moreAtLink.setText(R.string.BBC);
+        else if(linkToCheck.toLowerCase().contains(Rediff.toLowerCase()))
+            holder.moreAtLink.setText(R.string.Rediff);
 
 
 

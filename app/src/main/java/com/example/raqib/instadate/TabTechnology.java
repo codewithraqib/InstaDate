@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCTechnology;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserNYTTechnology;
-import com.example.raqib.instadate.News_Sites.SitesXmlPullParserTheFinancialExpressTech;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class TabTechnology extends Fragment {
 
     RecyclerView myRecyclerView;
-    static public List<NewsItems> TFETech;
+    static public List<NewsItems> BBCTechnology;
     static public List<NewsItems> NYTTechnology;
 
 
@@ -30,12 +30,13 @@ public class TabTechnology extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        TFETech = SitesXmlPullParserTheFinancialExpressTech.getStackSitesFromFile(getActivity().getBaseContext());
+        BBCTechnology = SitesXmlPullParserBBCTechnology.getStackSitesFromFile(getActivity().getBaseContext());
         NYTTechnology = SitesXmlPullParserNYTTechnology.getStackSitesFromFile(getActivity().getBaseContext());
+        
         //FOR DIFFERENT CHANNELS ADD HERE IN LIST
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {
-                addAll(TFETech);
+                addAll(BBCTechnology);
                 addAll(NYTTechnology);
 
             }

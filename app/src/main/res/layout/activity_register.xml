@@ -235,7 +235,7 @@
             <com.google.android.gms.common.SignInButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/googleSignInButton"
+                android:id="@+id/googleSignUpButton"
                 android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="0.95">
