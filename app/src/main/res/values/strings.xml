@@ -30,7 +30,7 @@
     <string name="action_exit">Exit</string>
     <string name="image_parsing">parsing</string>
     <string name="action_RegisterUser">New User?</string>
-    <string name="action_AlreadyRegistered">Login Here</string>
+    <string name="action_AlreadyRegistered">Login</string>
     <string name="action_LoginHere">Login Here</string>
     <string name="action_moreAt">more at </string>
     <string name="action_moreAtLink">Here</string>
@@ -89,5 +89,7 @@
     <string name="or">OR</string>
     <string name="BBC">BBC</string>
     <string name="Rediff">Rediff</string>
+    <string name="facebook_app_id">1389191317758976</string>
+    <string name="or_sign_in_using">Or Sign In Using</string>
 
 </resources>

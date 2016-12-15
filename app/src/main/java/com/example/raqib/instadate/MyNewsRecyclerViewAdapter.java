@@ -3,7 +3,6 @@ package com.example.raqib.instadate;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,16 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +36,7 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
     private static String bookmarkImageUrl;
     private static String bookmarkNewsDate;
     private static String imageUrl;
-    private DisplayImageOptions options;
+    private ImageLoader imageLoader;
 
     MyNewsRecyclerViewAdapter(List<NewsItems> items) {
         mValues = items;
@@ -98,17 +93,6 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
 
 
 
-        //MAKE A DATE OBJECT OUT OF STRING
-//        String dtStart = "2010-10-15T09:27:37Z";
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-//        try {
-//            Date date = format.parse(dtStart);
-//            System.out.println(date);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
-
         //MORE AT HERE ON CLICK HANDLING
         holder.moreAtLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,38 +129,17 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
         imageUrl = mValues.get(position).getImgUrl();
         if(imageUrl == null)
             return;
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context).build();
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(config);
 
-        //T0 KEEP THE DOWNLOADED IMAGES IN THE CACHE WE ARE IMPLEMENTING THE BELOW CODE
-        options = new DisplayImageOptions.Builder()
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
+// RETRIEVES AN IMAGE SPECIFIED BY THE URL, DISPLAYS IT IN THE UI.
+        imageLoader = VolleySingleton.getInstance(context)
+                .getImageLoader();
 
-        ImageLoadingListener listener = new ImageLoadingListener(){
+        imageLoader.get(imageUrl, ImageLoader.getImageListener(holder.imageView,
+                R.drawable.main_image, android.R.drawable.ic_dialog_alert));
 
-            @Override
-            public void onLoadingStarted(String arg0, View arg1) {
-            }
+        holder.imageView.setImageUrl(imageUrl, imageLoader);
 
-            @Override
-            public void onLoadingCancelled(String arg0, View arg1) {
-            }
 
-            @Override
-            public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
-                holder.progressBar.setVisibility(View.INVISIBLE);
-                holder.imageView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-            }
-        };
-
-        imageLoader.displayImage(imageUrl, holder.imageView,options, listener);
     }
 
     @Override
@@ -193,7 +156,7 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
         TextView time;
         TextView moreAt;
         TextView moreAtLink;
-        ImageView imageView;
+        NetworkImageView imageView;
         ProgressBar progressBar;
         ImageButton bookmarkButton;
 
@@ -206,7 +169,7 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
             time = (TextView) view.findViewById(R.id.newsDate);
             moreAt = (TextView) view.findViewById(R.id.moreAtVirtual);
             moreAtLink = (TextView) view.findViewById(R.id.moreAtLink);
-            imageView = (ImageView) view.findViewById(R.id.image);
+            imageView = (NetworkImageView) view.findViewById(R.id.image);
             progressBar = (ProgressBar)view.findViewById(R.id.progressBarNews);
             bookmarkButton = (ImageButton) view.findViewById(R.id.bookmarkButton);
 

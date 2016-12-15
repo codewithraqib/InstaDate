@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SwipeRefreshLayout mySwipeRefreshLayout;
     private static final String TAG = "Main Activity";
     private FirebaseAuth mAuth;
+    private String  KeyHashOfApp = "PJ1yOamUa/UgdPT8bDE3nUFYIfc=";
 
 
     // Storage Permissions
