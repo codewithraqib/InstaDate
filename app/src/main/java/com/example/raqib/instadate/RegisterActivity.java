@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static final String TAG = "Register Activity";
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
+    CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
 
     @Override
@@ -75,34 +76,31 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
         //FACEBOOK LOGIN
-        //FacebookSdk.sdkInitialize(this);
-        //AppEventsLogger.activateApp(this);
 
         // Initialize Facebook Login button
-        CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
         LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        Log.e("Log No.","1");
         loginButton.setReadPermissions("email", "public_profile");
+        Log.e("Log No.","2");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                Log.e(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "facebook:onCancel");
+                Log.e(TAG, "facebook:onCancel");
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "facebook:onError", error);
+                Log.e(TAG, "facebook:onError", error);
             }
         });
-
-
-
-
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -144,24 +142,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         registerButton.setOnClickListener(this);
         loginRedirection.setOnClickListener(this);
+
     }
+
 
     //FACEBOOK LOGIN
     private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
+        Log.e(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Log.e(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Toast.makeText(RegisterActivity.this,"You Have Signed Up With Facebook!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Log.e(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -196,7 +198,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     for (UserInfo profile : user.getProviderData()) {
 
                         String email = profile.getEmail();
-                        Toast.makeText(RegisterActivity.this,"Check your email" + email , Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this,"Check your email " + email , Toast.LENGTH_LONG).show();
 
                     }
                 }
@@ -207,6 +209,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(RegisterActivity.this,"Signing up with Google failed, Try again!", Toast.LENGTH_LONG).show();
             }
+        }else{
+            super.onActivityResult(requestCode, resultCode, data);
+
+            // Pass the activity result back to the Facebook SDK
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
