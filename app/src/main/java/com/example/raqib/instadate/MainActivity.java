@@ -453,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(user == null){
             Toast.makeText(MainActivity.this, "You Are Already Logged Out!", Toast.LENGTH_SHORT).show();
         }else{
-            mAuth.signOut();
+            FirebaseAuth.getInstance().signOut();
             Toast.makeText(MainActivity.this, "Logged Out Successfully!", Toast.LENGTH_SHORT).show();
         }
 

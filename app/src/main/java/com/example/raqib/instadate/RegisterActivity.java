@@ -80,9 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         // Initialize Facebook Login button
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
-        Log.e("Log No.","1");
         loginButton.setReadPermissions("email", "public_profile");
-        Log.e("Log No.","2");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
@@ -209,7 +207,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(RegisterActivity.this,"Signing up with Google failed, Try again!", Toast.LENGTH_LONG).show();
             }
-        }else{
+        }else
+        {
             super.onActivityResult(requestCode, resultCode, data);
 
             // Pass the activity result back to the Facebook SDK
@@ -352,8 +351,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                    //TO SEND USER A REGISTRATION EMAIL
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if (user != null) {
+                                        user.sendEmailVerification()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(RegisterActivity.this, nameOfUser + " A verification email has been sent to you, Follow the email", Toast.LENGTH_LONG).show();
+                                                            Log.d(TAG, "Email sent.");
+                                                        }
+                                                    }
+                                                });
+                                    }
+
+
                                     Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-                                    Toast.makeText(RegisterActivity.this,"Hey "+ nameOfUser + "You Have Been Successfully Registered", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RegisterActivity.this,"Hey "+ nameOfUser + ", You Have Been Successfully Registered", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                     progressDialog.dismiss();
                                     finish();

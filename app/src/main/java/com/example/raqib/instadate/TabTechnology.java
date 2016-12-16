@@ -42,6 +42,7 @@ public class TabTechnology extends Fragment {
             }
         };
 
+
         myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
 
         return view;

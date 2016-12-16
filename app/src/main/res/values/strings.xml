@@ -68,7 +68,7 @@
     <string name="health">Health</string>
     <string name="sports">Sports</string>
     <string name="support_us">Support Us</string>
-    <string name="forget_password">Forget password ?</string>
+    <string name="forget_password">Forget password?</string>
     <string name="register_link_on_login_page">Register Here</string>
     <string name="settings_main_menu">Settings</string>
     <string name="save_customization_to_database">Save</string>
@@ -90,6 +90,8 @@
     <string name="BBC">BBC</string>
     <string name="Rediff">Rediff</string>
     <string name="facebook_app_id">1389191317758976</string>
-    <string name="or_sign_in_using">Or Sign In Using</string>
+    <string name="or_Sign_Up_using">Or Sign In Using</string>
+    <string name="fb_login">FB Login</string>
+    <string name="or_sign_in_using">or Sign In using</string>
 
 </resources>

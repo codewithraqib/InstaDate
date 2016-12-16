@@ -3,10 +3,13 @@ package com.example.raqib.instadate;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,9 +21,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.backendless.Backendless;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -34,6 +42,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -49,13 +58,54 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final String TAG = "Login Activity";
+    private CoordinatorLayout loginCoordinatorLayout;
+    CallbackManager mCallbackManager = CallbackManager.Factory.create();
    // static TextView setNameInDrawer, setEmailInDrawer;
 
 
     @Override
+    protected void onStart(){
+        super.onStart();
+        Log.e("onStart: logged out","successfully" );
+        mAuth.signOut();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        loginCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.loginCoordinatorLayout);
+
+
+        // Initialize Facebook Login button
+
+        com.facebook.login.widget.LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.e(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e(TAG, "facebook:onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e(TAG, "facebook:onError", error);
+            }
+        });
 
         emailField = (EditText) findViewById(R.id.UserEmailLogin);
         passwordField = (EditText) findViewById(R.id.UserLoginPassword);
@@ -77,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
 
         mAuth = FirebaseAuth.getInstance();
 
-        SignInButton googleSignInButton = (SignInButton) findViewById(R.id.googleSignInButton);
+        SignInButton googleSignInButton = (SignInButton) findViewById(R.id.googleSignUpButton);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -111,6 +161,32 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
         ForgetPassword.setOnClickListener(this);
 
     }
+
+    //FACEBOOK LOGIN
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.e(TAG, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.e(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Toast.makeText(LoginActivity.this,"You Have Signed Up With Facebook!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.e(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         Log.e("SignIn ",String.valueOf(signInIntent));
@@ -146,6 +222,12 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(LoginActivity.this,"Signing up with Google failed, Try again!", Toast.LENGTH_LONG).show();
             }
+        }else
+        {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            // Pass the activity result back to the Facebook SDK
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -183,45 +265,6 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
-
-    //PRIVATE CLASS FOR LOGGING IN A NEW USER
-//    private class GoForLogin extends AsyncTask<Void, Void, Void> implements View.OnClickListener {
-//        ProgressDialog pdl = new ProgressDialog(getApplicationContext());
-//
-//        @Override
-//        protected void onPreExecute() {
-//
-//            Log.e("onPreExecute", "Working...");
-//
-////            if(isNetworkAvailable()){
-////
-////                pdl.setTitle("Logging In...");
-////                pdl.setMessage("Please Wait!");
-////                pdl.show();
-////            }
-//
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-////            pdl.dismiss();
-//            super.onPostExecute(aVoid);
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//
-//            Log.e("doInBackground", "Working...");
-//
-////            LoginButton.setOnClickListener(this);
-////            Log.e("LoginButton", "Working...");
-////            RegisterHere.setOnClickListener(this);
-////            ForgetPassword.setOnClickListener(this);
-//
-//            return null;
-//        }
-//    }
 
         @Override
         public void onClick(View v) {
@@ -275,33 +318,8 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
                         progressDialog.setTitle("Please Wait!");
                         progressDialog.setMessage("Logging In...");
-//                        progressDialog.setCancelable(false);
                         progressDialog.show();
 
-//                        Backendless.UserService.login(email, password, new AsyncCallback<BackendlessUser>() {
-//
-//                                    @Override
-//                                    public void handleResponse(BackendlessUser response) {
-//                                        Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_LONG).show();
-//                                        progressDialog.dismiss();
-//
-//                                        //TO SET THE NAME IN THE DRAWER BUT FAILS DUE TO NPE
-////                                        setNameInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
-////                                        setEmailInDrawer.setText(String.valueOf( Backendless.UserService.CurrentUser().getEmail()));
-////                                        Log.e("LOGIN ISSUE*****:",String.valueOf( Backendless.UserService.CurrentUser().getProperty("name")));
-//                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                        startActivity(intent);
-//                                    }
-//
-//                                    @Override
-//                                    public void handleFault(BackendlessFault fault) {
-//                                        Toast.makeText(LoginActivity.this, "Hey Log In Failed " + String.valueOf(fault), Toast.LENGTH_LONG).show();
-//                                        Log.e("HandleFault: ",String.valueOf(fault) );
-//                                        progressDialog.dismiss();
-//                                    }
-//                                }
-//                                ,true  //TRUE IS HERE TO REMEMBER THE CURRENTLY LOGGED IN USER
-//                        );
 
                         mAuth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -309,34 +327,34 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         mAuth = FirebaseAuth.getInstance();
 
-                                        mAuthListener = new FirebaseAuth.AuthStateListener() {
-                                            @Override
-                                            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                                                FirebaseUser user = firebaseAuth.getCurrentUser();
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                                 if (user != null) {
                                                     // User is signed in
-                                                    Log.e(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-//                                                    Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
                                                     Toast toast = Toast.makeText(LoginActivity.this, "Hey You Have Been Successfully Logged In", Toast.LENGTH_SHORT);
                                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                                     toast.show();
+
                                                     progressDialog.dismiss();
+
                                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                     startActivity(intent);
-                                                } else {
-                                                    // User is signed out
-                                                    Log.d(TAG, "onAuthStateChanged:signed_out");
                                                 }
-                                            }
-                                        };
 
-
-                                        // If sign in fails, display a message to the user. If sign in succeeds
-                                        // the auth state listener will be notified and logic to handle the
-                                        // signed in user can be handled in the listener.
+                                        //ON SIGN IN FAILED
                                         if (!task.isSuccessful()) {
-                                            Log.e(TAG, "signInWithEmail:failed", task.getException());
-                                            Toast toast2 = Toast.makeText(LoginActivity.this, "Hey Log In Failed", Toast.LENGTH_SHORT);
+                                            Snackbar snackbar = Snackbar.make( loginCoordinatorLayout,"Hey Log In Failed, make sure you have entered correct email!", Snackbar.LENGTH_INDEFINITE)
+                                                    .setAction("OKAY", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                        }
+                                                    });
+                                            snackbar.setActionTextColor(Color.CYAN);
+                                            View sbView = snackbar.getView();
+                                            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                                            textView.setTextColor(Color.WHITE);
+
+                                            snackbar.show();
+                                            Toast toast2 = Toast.makeText(LoginActivity.this, "Hey Log In Failed, make sure you have entered correct email!", Toast.LENGTH_SHORT);
                                             toast2.setGravity(Gravity.CENTER, 0, 0);
                                             toast2.show();
                                             progressDialog.dismiss();
@@ -354,36 +372,6 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                     break;
 
                 case R.id.forgetPassword:
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-//                builder.setTitle("Reset Your Password");
-//                final EditText enterMail = new EditText(getApplicationContext());
-//                builder.setView(enterMail);
-//                builder.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        String email = enterMail.getText().toString();
-//                        Backendless.UserService.restorePassword( email, new AsyncCallback<Void>() {
-//                                    public void handleResponse( Void response )
-//                                    {
-//                                        Toast.makeText(getApplicationContext(), "Please Check Your Mail For The Reset Email!", Toast.LENGTH_LONG).show();
-//                                    }
-//                                    public void handleFault( BackendlessFault fault )
-//                                    {
-//                                        int errorCode = Integer.parseInt(fault.getCode());
-//                                        if(errorCode == 3020){
-//                                            Toast.makeText(getApplicationContext(), "This Email Doesn't Belong To Any User, Rather You can Register with This Email! ", Toast.LENGTH_LONG).show();
-//                                        }else if(errorCode == 3025){
-//                                            Toast.makeText(getApplicationContext(), "You Have Probably Misspelled The Email, Please Try Again!", Toast.LENGTH_LONG).show();
-//                                        }else if(errorCode == 2002){
-//                                            Toast.makeText(getApplicationContext(), "You Must Update Your App, You Are Using An Older Version! ", Toast.LENGTH_LONG).show();
-//                                        }else{
-//                                            Toast.makeText(getApplicationContext(), "An Unknown Error Has Occurred, Please Try Again! ", Toast.LENGTH_LONG).show();
-//                                        }
-//                                    }
-//                                });
-//                    }
-//                });
-//                builder.show();
 
                     String emailToReset = emailField.getText().toString();
 
@@ -423,31 +411,27 @@ public class LoginActivity extends AppCompatActivity implements  View.OnClickLis
                         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
                         progressDialog.setTitle("Please Wait!");
                         progressDialog.setMessage("Logging In...");
-//                        progressDialog.setCancelable(false);
                         progressDialog.show();
-                        Backendless.UserService.restorePassword(emailToReset, new AsyncCallback<Void>() {
 
-                            public void handleResponse(Void response) {
-                                progressDialog.cancel();
-                                Toast.makeText(getApplicationContext(), "Please Check Your Mail For The Reset Email!", Toast.LENGTH_LONG).show();
-                            }
-
-                            public void handleFault(BackendlessFault fault) {
-                                if (fault.equals(3020)) {
-                                    progressDialog.cancel();
-                                    Toast.makeText(getApplicationContext(), "This Email Doesn't Belong To Any User, Rather You can Register with This Email! ", Toast.LENGTH_LONG).show();
-                                } else if (fault.equals(3025)) {
-                                    progressDialog.cancel();
-                                    Toast.makeText(getApplicationContext(), "You Have Probably Misspelled The Email, Please Try Again!", Toast.LENGTH_LONG).show();
-                                } else if (fault.equals(2002)) {
-                                    progressDialog.cancel();
-                                    Toast.makeText(getApplicationContext(), "You Must Update Your App, You Are Using An Older Version! ", Toast.LENGTH_LONG).show();
-                                } else {
-                                    progressDialog.cancel();
-                                    Toast.makeText(getApplicationContext(), "An Unknown Error Has Occurred, Please Try Again! ", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
+                        FirebaseAuth auth = FirebaseAuth.getInstance();
+                        auth.sendPasswordResetEmail(emailToReset)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast toast = Toast.makeText(LoginActivity.this, "Check your mail address for password reset email!", Toast.LENGTH_SHORT);
+                                            toast.setGravity(Gravity.CENTER, 0, 0);
+                                            toast.show();
+                                            Log.d(TAG, "Email sent.");
+                                            progressDialog.dismiss();
+                                        }else{
+                                            Toast toast = Toast.makeText(LoginActivity.this, "There is an error, Make sure this is a valid email", Toast.LENGTH_SHORT);
+                                            toast.setGravity(Gravity.CENTER, 0, 0);
+                                            toast.show();
+                                            progressDialog.dismiss();
+                                        }
+                                    }
+                                });
                     }
 
             }
