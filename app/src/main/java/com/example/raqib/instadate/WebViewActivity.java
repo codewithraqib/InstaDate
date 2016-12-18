@@ -1,6 +1,8 @@
 package com.example.raqib.instadate;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,27 +12,41 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.List;
 
 public class WebViewActivity extends AppCompatActivity {
     static  String link;
     WebView myWebView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         link = getIntent().getExtras().getString("WebPage Link");
+
 //        getSupportActionBar().setElevation(0);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarWebView);
+        String linkToDisplayOnToolbar = link.substring(11);
+        toolbar.setTitle(linkToDisplayOnToolbar);
         setSupportActionBar(toolbar);
+        try{
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }catch(NullPointerException e){
+            Log.e("SearchActivity Toolbar", "You have got a NULL POINTER EXCEPTION");
+        }
+
+
 
 
 //        Log.e("LINK is ", link);
@@ -65,7 +81,24 @@ public class WebViewActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+
+//        myWebView.setWebChromeClient(new WebChromeClient() {
+//            public void onProgressChanged(WebView view, int progress) {
+//                progressBar.setProgress(progress);
+//                if (progress == 100) {
+//                    progressBar.setVisibility(View.GONE);
+//
+//                } else {
+//                    progressBar.setVisibility(View.VISIBLE);
+//
+//                }
+//            }
+//        });
+
     }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -122,5 +155,15 @@ public class WebViewActivity extends AppCompatActivity {
         if(isIntentSafe) {
             startActivity(sendIntent);
         }
+    }
+
+    public void copyToClipboard(MenuItem item) {
+        getBaseContext();
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Link", link);
+        clipboard.setPrimaryClip(clip);
+        Toast toast = Toast.makeText(WebViewActivity.this, "Link Copied!", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }

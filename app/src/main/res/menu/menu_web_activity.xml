@@ -5,22 +5,32 @@
     tools:context=".MainActivity">
 
 
+    <item android:title="@string/add_ons"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/menu_dots">
+        <menu>
     <item android:id="@+id/menu_openInBrowser"
         android:title="@string/open_in_browser"
         android:orderInCategory="50"
-        app:showAsAction="never"
+        app:showAsAction="ifRoom"
         android:onClick="openInBrowser"
-        />
+        android:icon="@drawable/webactivity_openinbrowser" />
 
     <item android:id="@+id/menu_copyLink"
         android:title="@string/copy_link"
         android:orderInCategory="51"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom"
+        android:onClick="copyToClipboard"
+        android:icon="@drawable/webactivity_copylink" />
 
     <item android:id="@+id/menu_shareLnk"
         android:title="@string/share_link_web_activity"
         android:orderInCategory="52"
-        app:showAsAction="never"
-        android:onClick="shareLinkOutside"/>
+        app:showAsAction="ifRoom"
+        android:onClick="shareLinkOutside"
+        android:icon="@drawable/webactivity_sharelink"
+        />
 
+    </menu>
+</item>
 </menu>

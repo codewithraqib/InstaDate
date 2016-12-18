@@ -30,12 +30,14 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".WebViewActivity">
-            android:parentActivityName=".MainActivity"
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.raqib.instadate.MainActivity" />
         </activity>
-        <activity android:name=".RegisterActivity"></activity>
+
+        <activity android:name=".RegisterActivity">
+
+        </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".Customization" />
         <activity android:name=".GeneralNavigationTab">
@@ -50,7 +52,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.raqib.instadate.MainActivity" />
-
         </activity>
     </application>
 
