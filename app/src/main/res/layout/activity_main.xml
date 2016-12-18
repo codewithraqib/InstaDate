@@ -14,17 +14,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:theme="@style/AppTheme.AppBarOverlay"
     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:scrollbarStyle="outsideOverlay"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
             />
+
+
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:searchBackground="@color/colorPrimary"
+            app:searchSuggestionBackground="@color/colorPrimary"
+            app:searchCloseIcon="@drawable/ic_action_navigation_close_inverted"
+            app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
+            app:searchSuggestionIcon="@drawable/ic_suggestion"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mainNewsLinearLayout"
+        android:orientation="vertical">
 
         <com.example.raqib.instadate.CustomTabLayout
             android:id="@+id/tabHost"
@@ -37,39 +61,71 @@
             app:tabSelectedTextColor="#ffffff"
             />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/swipeRefreshInMain"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:filterTouchesWhenObscured="true"
-        android:theme="@style/AppTheme.PopupOverlay"
-        >
-
-        <android.support.v4.view.ViewPager
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/pager"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_height="wrap_content">
 
-            <!-- TO USE A STRIP TO REPRESENT TABS -->
-        <!--<android.support.v4.view.PagerTitleStrip-->
-            <!--android:id="@+id/pager_title_strip"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="top"-->
-            <!--android:background="#33b5e5"-->
-            <!--android:textColor="#fff"-->
-            <!--android:paddingTop="4dp"-->
-            <!--android:paddingBottom="4dp" />-->
 
-        </android.support.v4.view.ViewPager>
+            <android.support.v4.widget.SwipeRefreshLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/swipeRefreshInMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:filterTouchesWhenObscured="true"
+                >
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+                <android.support.v4.view.ViewPager
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <!-- TO USE A STRIP TO REPRESENT TABS -->
+                    <!--<android.support.v4.view.PagerTitleStrip-->
+                    <!--android:id="@+id/pager_title_strip"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="top"-->
+                    <!--android:background="#33b5e5"-->
+                    <!--android:textColor="#fff"-->
+                    <!--android:paddingTop="4dp"-->
+                    <!--android:paddingBottom="4dp" />-->
+
+                </android.support.v4.view.ViewPager>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
 
 </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/searchInMainLinearLayout">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="56dp"
+            android:id="@+id/searchListView"
+            android:divider = "#616161"
+            android:visibility="invisible"
+            android:dividerHeight="1dp">
+        </ListView>
+
+    </LinearLayout>
+
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -94,6 +150,5 @@
         />
 
 </android.support.v4.widget.DrawerLayout>
-
 
 

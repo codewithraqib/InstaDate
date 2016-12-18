@@ -27,12 +27,12 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-
+        link = getIntent().getExtras().getString("WebPage Link");
 //        getSupportActionBar().setElevation(0);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarWebView);
         setSupportActionBar(toolbar);
 
-        link = getIntent().getExtras().getString("WebPage Link");
+
 //        Log.e("LINK is ", link);
         myWebView = (WebView) findViewById(R.id.webview);
         try{

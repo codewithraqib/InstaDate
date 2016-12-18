@@ -4,12 +4,12 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -33,15 +33,26 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCHealth;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCTechnology;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserNYT;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserNYTTechnology;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserRediffSports;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserTheFinancialExpress;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +63,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SwipeRefreshLayout mySwipeRefreshLayout;
     private static final String TAG = "Main Activity";
     private FirebaseAuth mAuth;
-    private String  KeyHashOfApp = "PJ1yOamUa/UgdPT8bDE3nUFYIfc=";
-
+    ListView searchListView;
+    ArrayAdapter arrayAdapter;
+    static List<NewsItems> newsItemsList;
+    static List<String> listToSearch;
+    static List<NewsItems> searchNewsItems;
+    MaterialSearchView searchView;
+    static int locationOfSearchedItem = 0;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -62,13 +78,95 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "Resumed...");
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(Color.parseColor("#263238"));
+        toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
+
+        createListOfNews();
+
+
+
+
+        final LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
+
+        //SETTING THE LIST FOR SEARCH
+        searchListView = (ListView) findViewById(R.id.searchListView);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listToSearch);
+        searchListView.setAdapter(arrayAdapter);
+
+
+        //MATERIAL SEARCH VIEW IMPLEMENTATION
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener(){
+
+            @Override
+            public void onSearchViewShown() {
+                searchListView.setVisibility(View.VISIBLE);
+                mainNewsLinearLayout.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+                searchListView = (ListView) findViewById(R.id.searchListView);
+                arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,listToSearch);
+                searchListView.setAdapter(arrayAdapter);
+                searchListView.setVisibility(View.INVISIBLE);
+                mainNewsLinearLayout.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //WE DON'T NEED TO USE THIS AS WE USE ON TEXT CHANGE METHOD BELOW
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null && !newText.isEmpty()){
+
+                    String newTextInLowerCase = newText.toLowerCase();
+                    List<String> listFound = new ArrayList<String>();
+                    for(String item:listToSearch){
+                        if(item.toLowerCase().contains(newText))
+                            listFound.add(item);
+                    }
+                    arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,listFound);
+                    searchListView.setAdapter(arrayAdapter);
+                }else{
+                    //IF SEARCH QUERY DOESN'T MATCH
+                    //RETURN DEFAULT
+                    arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,listToSearch);
+                    searchListView.setAdapter(arrayAdapter);
+                }
+                return  true;
+            }
+        });
+
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -247,6 +345,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //CREATE THE LIST OF ALL AVAILABLE NEWS AT THE MOMENT
+    private void createListOfNews() {
+
+        final List<NewsItems> list1 = SitesXmlPullParserBBCHealth.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list2 = SitesXmlPullParserBBCTechnology.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list3 = SitesXmlPullParserNYT.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list4 = SitesXmlPullParserNYTTechnology.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list5 = SitesXmlPullParserRediffSports.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list6 = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getBaseContext());
+
+        newsItemsList = new ArrayList<NewsItems>(){
+            {
+                addAll(list1);
+                addAll(list2);
+                addAll(list3);
+                addAll(list4);
+                addAll(list5);
+                addAll(list6);
+            }
+        };
+
+        //SUCCESSFULLY GOT THE LIST
+//        for(int i =0; i< newsItemsList.size(); i++){
+//            Log.e("Title of Item "+ i, String.valueOf(newsItemsList.get(i).getTitle()));
+//
+//        }
+
+        listToSearch = new ArrayList<>();
+
+        for(int i =0; i< newsItemsList.size(); i++){
+            listToSearch.add(i,newsItemsList.get(i).getTitle());
+        }
+
+        //SUCCESSFULLY GOT THE LIST
+        for(int i =0; i< listToSearch.size(); i++){
+            Log.e("Title of Items "+ i, String.valueOf(listToSearch.get(i)));
+        }
+
+    }
+
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
@@ -257,38 +395,79 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        // Inflate the menu; this adds items to the action bar if it is present.
-//         LayoutInflater.from(getApplicationContext())
-//                .inflate(R.layout.right_drawer_layout, getParent(), false);
         getMenuInflater().inflate(R.menu.options_menu, menu);
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.searchInMain).getActionView();
-        searchView.setIconifiedByDefault(false);
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-
-//        searchView.setSubmitButtonEnabled(true);
-
-
-//        if(onSearchRequested()){
-//           CharSequence query = searchView.getQuery();
-//            Intent intent = new Intent();
-//            intent.setAction(Intent.ACTION_SEARCH);
-//            intent.putExtra("Search Query",searchView.getQuery());
-//            startActivity(new Intent(this, SearchResultsActivity.class).putExtra("Query Is",query));
-//
-//        }
-//        searchView.setOnSearchClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(MainActivity.this, SearchResultsActivity.class).putExtra("Query Is",query));
-//            }
-//        });
-
+//        MenuItem menuItem = menu.findItem(R.id.searchInMain);
+//        searchView.setMenuItem(menuItem);
         return true;
+    }
+
+    public void goForSearchInNewsList(MenuItem item) {
+        final ListView list = (ListView) findViewById(R.id.searchListView);
+        LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
+
+
+        //WANT TO HIDE THE LIST WHEN THE BACK BUTTON IS PRESSED: BELOW LOGIC IS NOT WORKING
+//        boolean isSearchOpen = searchView.isSearchOpen();
+//        if(!isSearchOpen)
+//            list.setVisibility(View.INVISIBLE);
+        searchView.setMenuItem(item);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("indexOfSearchResult ", " " + position);
+                int flag =0;
+
+                String stringToCheckInList = list.getItemAtPosition(position).toString();
+
+                Log.e("Outside for loop ", stringToCheckInList);
+
+                for(int i =0; i<newsItemsList.size(); i++){
+                    if(stringToCheckInList.equalsIgnoreCase(newsItemsList.get(i).getTitle())){
+                        locationOfSearchedItem = i;
+                        Log.e("stringToCheckInList ", stringToCheckInList);
+                        Log.e("newsItemsList Title  ", newsItemsList.get(i).getTitle());
+                        flag = 1;
+
+                    }
+
+                    if (flag == 1)
+                    break;
+
+                }
+                Log.e("Title is  ", String.valueOf(list.getItemAtPosition(position)));
+                populateTheSearchResult(locationOfSearchedItem);
+
+            }
+        });
+    }
+    private void populateTheSearchResult(int searchResultPosition){
+
+        NewsItems curNewsItems = new NewsItems();
+
+        searchNewsItems = new ArrayList<NewsItems>();
+
+        String searchTitle = newsItemsList.get(searchResultPosition).getTitle();
+        String searchDescription = newsItemsList.get(searchResultPosition).getDescription();
+        String searchLink = newsItemsList.get(searchResultPosition).getLink();
+        String searchImageUrl = newsItemsList.get(searchResultPosition).getImgUrl();
+        String searchDate = newsItemsList.get(searchResultPosition).getDate();
+
+        curNewsItems.setTitle(searchTitle);
+        curNewsItems.setDescription(searchDescription);
+        curNewsItems.setLink(searchLink);
+        curNewsItems.setImgUrl(searchImageUrl);
+        curNewsItems.setDate(searchDate);
+        searchNewsItems.add(curNewsItems);
+
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("position", searchResultPosition);
+        startActivity(intent);
+//        Log.e("SearchTitle is ",searchTitle);
+//        Log.e("SearchDescription is ",searchDescription);
+//        Log.e("SearchLink is ",searchLink);
+//        Log.e("SearchImageUrl is ",searchImageUrl);
+//        Log.e("SearchDate is ",searchDate);
     }
 
     public void RegisterUser(MenuItem item) {
@@ -339,11 +518,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
+        ListView list = (ListView) findViewById(R.id.searchListView);
+        LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
         assert drawer != null;
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+
+        //CODE FOR GOING BACK FROM SEARCH VIEW
+        int listVisibility = list.getVisibility();
+        int mainNewsLinearLayoutVisibility = mainNewsLinearLayout.getVisibility();
+
+        if(listVisibility > 0 && mainNewsLinearLayoutVisibility ==0){
+            list.setVisibility(View.INVISIBLE);
+            mainNewsLinearLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -458,6 +648,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
 
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {
 

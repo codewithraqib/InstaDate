@@ -7,15 +7,14 @@
         android:title="@string/refresh_feed"
         android:orderInCategory="2"
         app:showAsAction="never"
-        android:icon="@drawable/refresh_button"
+        android:icon="@drawable/refresh_button_black"
         android:onClick="refreshFeed"
         />
     <item android:id="@+id/searchInMain"
         android:title="@string/search_in_main_menu"
         android:orderInCategory="1"
-        android:icon="@drawable/search_icon"
-        android:queryHint="Search"
-        app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/search_icon_black"
+        app:showAsAction="ifRoom"
+        android:onClick="goForSearchInNewsList"
         />
 </menu>

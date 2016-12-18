@@ -51,7 +51,7 @@
 
                 </RelativeLayout>
 
-            <customfonts.MyTextView
+            <TextView
                 android:id="@+id/newsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
 
 
 
-            <customfonts.MyTextView
+            <TextView
                 android:id="@+id/newsDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
 
 
 
-                <customfonts.MyTextView
+                <TextView
                     android:id="@+id/moreAtVirtual"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
                     android:paddingTop="6dp"
                     />
 
-                <customfonts.MyTextView
+                <TextView
                     android:id="@+id/moreAtLink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                     android:layout_marginStart="5dp"
                     />
 
-                <customfonts.MyTextView
+                <TextView
                     android:id="@+id/newsDate"
                     android:layout_width="75dp"
                     android:layout_height="15dp"
