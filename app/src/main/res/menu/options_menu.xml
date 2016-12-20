@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/refresh_button"
-        android:title="@string/refresh_feed"
+    <item android:id="@+id/notification_button"
+        android:title="Notification"
         android:orderInCategory="2"
         app:showAsAction="never"
         android:icon="@drawable/refresh_button_black"

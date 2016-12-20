@@ -24,7 +24,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="#a5d6a7"
             />
 
 
@@ -56,7 +56,7 @@
             android:layout_height="?attr/actionBarSize"
             app:tabIndicatorColor="#51a3df"
             app:tabIndicatorHeight="3.9dp"
-            android:background="#263238"
+            android:background="#a5d6a7"
             app:tabTextColor="#9e9e9e"
             app:tabSelectedTextColor="#ffffff"
             app:tabMode="scrollable"

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "852339306188",
+    "firebase_url": "https://instadate-c2593.firebaseio.com",
+    "project_id": "instadate-c2593",
+    "storage_bucket": "instadate-c2593.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852339306188:android:b5739fef1a0b7009",
+        "android_client_info": {
+          "package_name": "com.example.raqib.instadate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852339306188-ja8aodmvn4o0nl325p5kr9ouhg88q331.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6rELw79BdlTjQQe6sZe4Z4COybjR3ZRQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

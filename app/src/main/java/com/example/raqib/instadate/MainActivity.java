@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "Resumed...");
 
     }
 
@@ -101,9 +100,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
 
         createListOfNews();
-
-
-
 
         final LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
 
@@ -151,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String newTextInLowerCase = newText.toLowerCase();
                     List<String> listFound = new ArrayList<String>();
                     for(String item:listToSearch){
-                        if(item.toLowerCase().contains(newText))
+                        if(item.toLowerCase().contains(newTextInLowerCase))
                             listFound.add(item);
                     }
                     arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,listFound);
@@ -394,7 +390,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //MENU OPTIONS OVERRIDDEN
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.options_menu, menu);
 //        MenuItem menuItem = menu.findItem(R.id.searchInMain);
 //        searchView.setMenuItem(menuItem);
@@ -528,13 +523,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //CODE FOR GOING BACK FROM SEARCH VIEW
-        int listVisibility = list.getVisibility();
-        int mainNewsLinearLayoutVisibility = mainNewsLinearLayout.getVisibility();
 
-        if(listVisibility > 0 && mainNewsLinearLayoutVisibility ==0){
             list.setVisibility(View.INVISIBLE);
             mainNewsLinearLayout.setVisibility(View.VISIBLE);
-        }
+
     }
 
 
@@ -715,6 +707,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
+        ListView list = (ListView) findViewById(R.id.searchListView);
 
             /**
              * Retrieve the repeat count of the event.  For both key up and key down
@@ -739,6 +732,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     toast.show();
                 }
             }
+
+        int searchListVisibility = list.getVisibility();
+        Log.e("searchListVisibility", String.valueOf(searchListVisibility));
+
+        if(searchListVisibility == 0) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
 
 
 
