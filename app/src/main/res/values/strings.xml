@@ -94,5 +94,8 @@
     <string name="fb_login">FB Login</string>
     <string name="or_sign_in_using">or Sign In using</string>
     <string name="add_ons">Add ons</string>
+    <string name="refresh">Refresh</string>
+    <string name="gathering_data">Gathering the data,please be patient</string>
+    <string name="splash_message">Sit tight, Setting things for you!</string>
 
 </resources>

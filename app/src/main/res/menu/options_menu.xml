@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/notification_button"
-        android:title="Notification"
+        android:title="@string/refresh"
         android:orderInCategory="2"
         app:showAsAction="never"
         android:icon="@drawable/refresh_button_black"

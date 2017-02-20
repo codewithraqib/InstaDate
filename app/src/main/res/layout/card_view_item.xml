@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        card_view:cardCornerRadius="6dp"
+        card_view:cardCornerRadius="10dp"
         card_view:contentPadding="5dp"
-        card_view:paddingEnd="10dp"
+        card_view:paddingEnd="15dp"
         card_view:cardElevation="10dp"
         card_view:cardPreventCornerOverlap="true"
         >
@@ -30,15 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <ProgressBar
-                android:id="@+id/progressBarNews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_marginTop="90dp"
-                android:layout_marginLeft="135dp"
-                android:layout_marginStart="140dp"
-                android:layout_gravity="center" />
 
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/image"
@@ -56,20 +47,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title"
-                android:textSize="25sp"
+                android:textSize="22sp"
+                android:textStyle="normal"
                 android:background="#ffffff"
                 android:textColor="#000000"
-                android:textStyle="bold" />
-
-
+                />
 
             <TextView
                 android:id="@+id/newsDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/news_details"
-                android:textSize="21sp"
+                android:textSize="19sp"
                 android:textColor="#1b1919"
+                android:textStyle="normal"
                 android:includeFontPadding="true"
                 android:paddingTop="5dp"
                 android:layout_marginTop="5dp"
@@ -91,6 +82,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/action_moreAt"
                     android:textColor="#1b1919"
+                    android:textStyle="normal"
                     android:textSize="12sp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
@@ -104,6 +96,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/action_moreAtLink"
+                    android:textStyle="normal"
                     android:textColor="#05515b"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="5dp"
@@ -115,6 +108,7 @@
                     android:layout_width="75dp"
                     android:layout_height="15dp"
                     android:text="@string/today"
+                    android:textStyle="normal"
                     android:textColor="#1b1919"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="15dp"

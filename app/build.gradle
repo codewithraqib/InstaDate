@@ -37,6 +37,7 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
     compile 'com.github.paolorotolo:appintro:4.1.0'
+    compile 'com.webianks.library:popup-bubble:1.0.2'
     testCompile 'junit:junit:4.12'
 }
 android {

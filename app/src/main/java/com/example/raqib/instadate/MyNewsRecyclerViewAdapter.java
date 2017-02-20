@@ -3,40 +3,35 @@ package com.example.raqib.instadate;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder> {
+import static android.content.Context.MODE_PRIVATE;
+
+class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder> {
     Context context;
 
     private final List<NewsItems> mValues;
-    static public List<NewsItems> bookmarkedNewsList;
-    NewsItems bookmarkNewsItems;
-    int sizeOfBookmarkedNewsList;
-    private static SharedPreferences sharedPreferences;
-    static String link;
-    private static String bookmarkHeading;
-    private static String bookmarkDetailedNews;
-    private static String bookmarkLink;
-    private static String bookmarkImageUrl;
-    private static String bookmarkNewsDate;
-    private static String imageUrl;
-    private ImageLoader imageLoader;
+    static List<NewsItems> bookmarkedNewsList;     //LIST OF BOOKMARKED FEEDS
+
+    static  int i = 0;
+    public static  String title ;
+    private static NewsItems bookmarkNewsItems;
+
+
+
+    static SharedPreferences bookmarkSharedPreference;
+    private static String link;
 
     MyNewsRecyclerViewAdapter(List<NewsItems> items) {
         mValues = items;
@@ -47,8 +42,11 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
         context = parent.getContext();
 
 
+        bookmarkNewsItems = new NewsItems();
         bookmarkedNewsList = new ArrayList<NewsItems>();
-        sharedPreferences = context.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
+
+        bookmarkSharedPreference = context.getSharedPreferences("com.example.raqib.instadate", MODE_PRIVATE);
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_view_item, parent, false);
         return new ViewHolder(view);
@@ -106,32 +104,53 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
         //BOOKMARK ONCLICK HANDLING
         holder.bookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-                holder.bookmarkButton.setColorFilter(Color.MAGENTA);
-
-                Toast.makeText(context,"Feed Bookmarked!", Toast.LENGTH_SHORT).show();
-
-                bookmarkImageUrl = mValues.get(position).getImgUrl();
-                bookmarkHeading = mValues.get(position).getTitle();
-                bookmarkDetailedNews = mValues.get(position).getDescription();
-                bookmarkLink = mValues.get(position).getLink();
-                bookmarkNewsDate = mValues.get(position).getDate();
-
-                MyNewsRecyclerViewAdapter.this.bookmarkCurrentFeed(bookmarkImageUrl,bookmarkHeading,bookmarkDetailedNews,bookmarkLink,bookmarkNewsDate);
+            public void onClick(View view) {
+                bookmarkTheFeed(holder,position) ;
             }
         });
+
         loadImage(holder,position);
 
     }
 
+    private void bookmarkTheFeed(final ViewHolder holder, final int position) {
+
+
+        String Data="";
+
+        title = mValues.get(position).getTitle();
+
+
+//              holder.bookmarkButton.setColorFilter(Color.MAGENTA);
+
+
+
+//        bookmarkSharedPreference.edit().putString("title", title).apply();
+//
+//        String wholeString = bookmarkSharedPreference.getAll().toString();
+//
+//        int  startString = wholeString.indexOf("title=");
+//        int  endString = wholeString.indexOf(',',50);
+//        String finalString = wholeString.substring(startString,endString);
+//
+//        Log.e("Title is ", finalString);
+//        List<String> bookmarkedListFinal = new ArrayList<String>();
+//        bookmarkedListFinal.add(finalString);
+//        Log.e("size is", String.valueOf(bookmarkedListFinal.size()));
+
+
+
+    }
+
+
+    // RETRIEVES AN IMAGE SPECIFIED BY THE URL, DISPLAYS IT IN THE UI.
+
     private void loadImage(final ViewHolder holder, int position) {
-        imageUrl = mValues.get(position).getImgUrl();
+        String imageUrl = mValues.get(position).getImgUrl();
         if(imageUrl == null)
             return;
 
-// RETRIEVES AN IMAGE SPECIFIED BY THE URL, DISPLAYS IT IN THE UI.
-        imageLoader = VolleySingleton.getInstance(context)
+        ImageLoader imageLoader = VolleySingleton.getInstance(context)
                 .getImageLoader();
 
         imageLoader.get(imageUrl, ImageLoader.getImageListener(holder.imageView,
@@ -148,6 +167,7 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
     }
 
 
+
     class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
@@ -157,8 +177,8 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
         TextView moreAt;
         TextView moreAtLink;
         NetworkImageView imageView;
-        ProgressBar progressBar;
         ImageButton bookmarkButton;
+
 
         ViewHolder(View view) {
 
@@ -170,7 +190,6 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
             moreAt = (TextView) view.findViewById(R.id.moreAtVirtual);
             moreAtLink = (TextView) view.findViewById(R.id.moreAtLink);
             imageView = (NetworkImageView) view.findViewById(R.id.image);
-            progressBar = (ProgressBar)view.findViewById(R.id.progressBarNews);
             bookmarkButton = (ImageButton) view.findViewById(R.id.bookmarkButton);
 
         }
@@ -183,35 +202,5 @@ public class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecycl
         context.startActivity(intent);
     }
 
-    private void bookmarkCurrentFeed(String bookmarkImageUrl, String bookmarkHeading, String bookmarkDetailedNews, String bookmarkLink, String bookmarkNewsDate) {
-
-        bookmarkNewsItems = new NewsItems();
-
-        bookmarkNewsItems.setImgUrl(bookmarkImageUrl);
-        bookmarkNewsItems.setTitle(bookmarkHeading);
-        bookmarkNewsItems.setDescription(bookmarkDetailedNews);
-        bookmarkNewsItems.setLink(bookmarkLink);
-        bookmarkNewsItems.setDate(bookmarkNewsDate);
-
-//        sizeOfBookmarkedNewsList = bookmarkedNewsList.size();
-//        Log.e("BookmarkedNewsListSize1", String.valueOf(sizeOfBookmarkedNewsList));
-
-
-        bookmarkedNewsList.add(bookmarkNewsItems);
-//        bookmarkedNewsList.clear();
-//        Log.e("BookmarkedNewsList Size", String.valueOf(sizeOfBookmarkedNewsList));
-        Log.e("BOOKMARKED News Details", bookmarkedNewsList.get(0).getTitle());
-        Log.e("BOOKMARKED News Details", String.valueOf(bookmarkedNewsList.size()));
-
-//        String []items = new String[5] ;
-//        items[0] = bookmarkImageUrl;
-//        items[1] = bookmarkHeading;
-//        items[2] = bookmarkDetailedNews;
-//        items[3] = bookmarkLink;
-//        items[4] = bookmarkNewsDate;
-////        sharedPreferences.edit().putStringSet("item1",items);
-//
-        Set<String> bookmarkedList = null;
-    }
 
 }

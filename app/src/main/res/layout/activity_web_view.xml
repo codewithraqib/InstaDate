@@ -14,7 +14,7 @@
         android:id="@+id/toolbarWebView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorMaterial"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -30,12 +30,9 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="497dp"
         />
 
-    <ZoomControls
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:id="@+id/zoomControls" />
+
 
 </LinearLayout>

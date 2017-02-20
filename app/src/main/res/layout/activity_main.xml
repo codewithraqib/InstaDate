@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:openDrawer="start"
-    android:id="@+id/myLinearLayout"
+    android:id="@+id/myDrawerLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
@@ -14,6 +14,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/mainNewsScreen"
     >
 
     <RelativeLayout
@@ -24,7 +25,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#a5d6a7"
+            android:background="@color/colorMaterial"
             />
 
 
@@ -32,8 +33,8 @@
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:searchBackground="@color/colorPrimary"
-            app:searchSuggestionBackground="@color/colorPrimary"
+            app:searchBackground="@color/colorMaterial"
+            app:searchSuggestionBackground="@color/colorMaterial"
             app:searchCloseIcon="@drawable/ic_action_navigation_close_inverted"
             app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
             app:searchSuggestionIcon="@drawable/ic_suggestion"
@@ -54,17 +55,20 @@
             android:id="@+id/tabHost"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:tabIndicatorColor="#51a3df"
-            app:tabIndicatorHeight="3.9dp"
-            android:background="#a5d6a7"
-            app:tabTextColor="#9e9e9e"
+            app:tabIndicatorHeight="2dp"
+            android:background="@color/colorMaterial"
+            app:tabIndicatorColor="#000000"
+            app:tabTextColor="#000000"
             app:tabSelectedTextColor="#ffffff"
             app:tabMode="scrollable"
             />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            >
 
 
             <android.support.v4.widget.SwipeRefreshLayout
@@ -98,9 +102,23 @@
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
+            <ImageButton
+                android:layout_marginTop="10dp"
+                android:id="@+id/floatingButton"
+                android:layout_width="140dp"
+                android:layout_height="31dp"
+                android:foregroundGravity="center_horizontal"
+                android:layout_marginLeft="120dp"
+                android:src="@drawable/new_feeds"
+                android:layout_marginStart="120dp"
+                android:background="@drawable/roundedbuttonrefreshfeed"
+                />
+            <!--app:srcCompat="@android:drawable/ic_dialog_email"-->
+
         </RelativeLayout>
 
     </LinearLayout>
+
 
 
 
@@ -114,6 +132,21 @@
         android:orientation="vertical"
         android:id="@+id/searchInMainLinearLayout">
 
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/recycler_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:scrollbars="vertical" />-->
+
+        <!--<com.webianks.library.PopupBubble-->
+            <!--android:id="@+id/popup_bubble"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="16dp"-->
+            <!--app:backgroundColor="@color/colorPrimary"-->
+            <!--app:iconColor="#ffffff"-->
+            <!--app:textColor="#ffffff" />-->
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -124,7 +157,10 @@
             android:dividerHeight="1dp">
         </ListView>
 
+
     </LinearLayout>
+
+
 
 
 
@@ -149,6 +185,8 @@
         android:fitsSystemWindows="true"
         app:menu="@menu/navigation_main_menu"
         />
+
+
 
 </android.support.v4.widget.DrawerLayout>
 

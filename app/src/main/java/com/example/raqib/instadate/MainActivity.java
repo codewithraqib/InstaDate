@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -17,7 +18,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -26,25 +29,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCHealth;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCTechnology;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserInternationalNews;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserNYT;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserNYTTechnology;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserRediffSports;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserScience2;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserScienceDaily;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserTheFinancialExpress;
+import com.example.raqib.instadate.News_Sites.SitesXmlPullParserWorldSports;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -55,6 +65,8 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.example.raqib.instadate.MyNewsRecyclerViewAdapter.bookmarkSharedPreference;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -70,6 +82,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static List<NewsItems> searchNewsItems;
     MaterialSearchView searchView;
     static int locationOfSearchedItem = 0;
+    boolean doubleBackToExitPressedOnce = false;
+    ImageButton shareButton;
+    DrawerLayout myDrawerLayout;
+    static SQLiteDatabase myDB = null;
+    static  int i = 0;
+    String TableName = "bookmarkedNews";
+    RecyclerView mRecyclerView;
+    ImageButton floatingButton;
+
+
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -96,12 +118,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setBackgroundColor(Color.parseColor("#263238"));
-        toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
+//        toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
+        floatingButton = (ImageButton) findViewById(R.id.floatingButton);
+        floatingButton.setVisibility(View.INVISIBLE);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         createListOfNews();
 
         final LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
+        myDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
+
+        myDB = this.openOrCreateDatabase("BookmarkedFeedsDatabase", MODE_PRIVATE, null);
+
+//        //SETTING UP THE SHARE BUTTON
+//        shareButton = (ImageButton) findViewById(R.id.shareButton);
+//        shareButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                shareWith();
+//            }
+//        });
+
 
         //SETTING THE LIST FOR SEARCH
         searchListView = (ListView) findViewById(R.id.searchListView);
@@ -162,11 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
-
         mAuth = FirebaseAuth.getInstance();
-
-
 
 
         //noinspection ConstantConditions
@@ -201,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         //SETTING LEFT NAVIGATION DRAWER
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myDrawerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         assert drawer != null;
@@ -306,6 +345,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         }
+
+
 //        myViewPager.setOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
 //            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -333,6 +374,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 //        displayNews();
 
+        //TO CHECK THE BOOKMARKED NEWS ITEMS
+        try{
+            bookmarkSharedPreference = this.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
+            String wholeString = bookmarkSharedPreference.getAll().toString();
+
+            int  startString = wholeString.indexOf("title=");
+            int  endString = wholeString.indexOf(',',50);
+            String finalString = wholeString.substring(startString,endString);
+
+            Log.e("Title is ", finalString);
+
+        }catch (StringIndexOutOfBoundsException e){
+            Log.e("Error is :", String.valueOf(e));
+        }
+
+
         if (isNetworkAvailable()) {
             SitesDownloadTask download = new SitesDownloadTask();
             download.execute();
@@ -346,10 +403,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final List<NewsItems> list1 = SitesXmlPullParserBBCHealth.getStackSitesFromFile(getBaseContext());
         final List<NewsItems> list2 = SitesXmlPullParserBBCTechnology.getStackSitesFromFile(getBaseContext());
-        final List<NewsItems> list3 = SitesXmlPullParserNYT.getStackSitesFromFile(getBaseContext());
-        final List<NewsItems> list4 = SitesXmlPullParserNYTTechnology.getStackSitesFromFile(getBaseContext());
-        final List<NewsItems> list5 = SitesXmlPullParserRediffSports.getStackSitesFromFile(getBaseContext());
-        final List<NewsItems> list6 = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list3 = SitesXmlPullParserInternationalNews.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list4 = SitesXmlPullParserNYT.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list5 = SitesXmlPullParserNYTTechnology.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list6 = SitesXmlPullParserRediffSports.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list7 = SitesXmlPullParserScience2.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list8 = SitesXmlPullParserScienceDaily.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list9 = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getBaseContext());
+        final List<NewsItems> list10 = SitesXmlPullParserWorldSports.getStackSitesFromFile(getBaseContext());
 
         newsItemsList = new ArrayList<NewsItems>(){
             {
@@ -359,6 +420,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 addAll(list4);
                 addAll(list5);
                 addAll(list6);
+                addAll(list7);
+                addAll(list8);
+                addAll(list9);
+                addAll(list10);
             }
         };
 
@@ -436,6 +501,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
+
     private void populateTheSearchResult(int searchResultPosition){
 
         NewsItems curNewsItems = new NewsItems();
@@ -512,21 +579,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //BACK PRESS
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
-        ListView list = (ListView) findViewById(R.id.searchListView);
-        LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
-        assert drawer != null;
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed(); return;
         }
-
-        //CODE FOR GOING BACK FROM SEARCH VIEW
-
-            list.setVisibility(View.INVISIBLE);
-            mainNewsLinearLayout.setVisibility(View.VISIBLE);
-
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
 
@@ -596,7 +659,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myDrawerLayout);
         assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -640,6 +703,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
 
 
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {
@@ -693,66 +757,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void result) {
             mySwipeRefreshLayout.setRefreshing(false);
-            Toast toast = Toast.makeText(MainActivity.this, "Your Feeds Has Been Successfully Updated!", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
+            Snackbar snackbar = Snackbar.make( myDrawerLayout,"Your Feeds Has Been Successfully Updated!", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OKAY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-        }
+                        }
+                    });
 
-    }
+            floatingButton.setVisibility(View.VISIBLE);
+            floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                floatingButton.setVisibility(View.INVISIBLE);
+                try{
+                    mRecyclerView = (RecyclerView)  findViewById(R.id.my_recycler_view);
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView
+                            .getLayoutManager();
 
-    // BELOW CODE IS IMPLEMENTED TO FREEZE THE SINGLE BACK BUTTON PRESS TO EXIT THE APP AND
-    // TO MAKE THE APP TO EXIT ON LONG BACK BUTTON PRESS ONLY.
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+                    layoutManager.setSmoothScrollbarEnabled(true);
+                    layoutManager.scrollToPositionWithOffset(0, 0);
+                    mRecyclerView.smoothScrollToPosition(0);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.myLinearLayout);
-        ListView list = (ListView) findViewById(R.id.searchListView);
-
-            /**
-             * Retrieve the repeat count of the event.  For both key up and key down
-             * events, this is the number of times the key has repeated with the first
-             * down starting at 0 and counting up from there.  For multiple key
-             * events, this is the number of down/up pairs that have occurred.
-             *
-             * @return The number of times the key has repeated.
-             */
-
-            if ((event.getRepeatCount() != 0)) {
-                this.finish();
-                Log.e("BACK PRESSED IN MAIN 2C", "Successfully");
-            }else {
-                assert drawer != null;
-                if (drawer.isDrawerOpen(GravityCompat.START) && (event.getRepeatCount() == 0)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                } else {
-                    // THEN OBVIOUSLY THE KEY EVENT WAS THE BACK BUTTON AND THE DRAWER IS CLOSED
-                    Toast toast = Toast.makeText(getApplicationContext(), "Long Press Back Button To Exit The App", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CLIP_HORIZONTAL, 0, 0);
-                    toast.show();
+                }catch (NullPointerException NPE){
+                    Log.e("At PostExecuteOFMain", String.valueOf(NPE));
                 }
+
+
             }
+        });
+            snackbar.setActionTextColor(Color.CYAN);
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.WHITE);
 
-        int searchListVisibility = list.getVisibility();
-        Log.e("searchListVisibility", String.valueOf(searchListVisibility));
+            snackbar.show();
 
-        if(searchListVisibility == 0) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+
         }
 
-
-
-        // SYSTEM BEHAVIOR (PROBABLY EXIT THE ACTIVITY WITH A SINGLE TIME BACK BUTTON PRESSED)
-//        return super.onKeyDown(keyCode, event);
-
-        return true;
     }
-
 
 
     // BELOW ONCLICK METHODS FROM CARD VIEW ITEM
     public void shareWith(View view) {
+        verifyStoragePermissions(this);
 
         Bitmap myBitmap;
 
@@ -828,6 +877,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             );
         }
     }
+
+
+//     public void bookmarkIntoDatabase(String titleOfBookmarkedFeed){
+//
+//         String Data = "";
+//         try {
+//
+//
+////             myDB = this.openOrCreateDatabase("BookmarkedFeedsDatabase", MODE_PRIVATE, null);
+//             // Create a Table in the Database.
+//
+//             myDB.execSQL("CREATE TABLE IF NOT EXISTS "
+//                     + TableName
+//                     + " (Index INT(4), Title VARCHAR);");
+//
+//             //Insert data to a Table
+//             myDB.execSQL("INSERT INTO "
+//                     + TableName
+//                     + " (Index, Title)"
+//                     + " VALUES (1,titleOfBookmarkedFeed);");
+//
+//             //retrieve data from database *//*
+//             Cursor c = myDB.rawQuery("SELECT * FROM " + TableName , null);
+//
+//             int Column1 = c.getColumnIndex("Index");
+//             int Column2 = c.getColumnIndex("Title");
+//
+//             // Check if our result was valid.
+//             c.moveToFirst();
+//
+//             if (c != null) {
+//                 // Loop through all Results
+//                 do {
+//                     int Index = c.getInt(Column1);
+//                     String Title = c.getString(Column2);
+//
+//                     Data = Data +Title+"/"+Index+"\n";
+//                     Log.e("Data is ", " "+ Data);
+//                 }while(c.moveToNext());
+//             }
+//
+//         }
+//         catch(Exception e) {
+//             Log.e("Error", "Error", e);
+//         } finally {
+//             if (myDB != null)
+//                 myDB.close();
+//         }
+//
+//    }
 
 
 }

@@ -104,41 +104,6 @@ public class Customization extends AppCompatActivity {
 
     public void storeInDatabase(MenuItem item) {
 
-
-
-//        if(subscription[0]) {
-//            sharedPreferences.edit().putBoolean("topFeeds", true).apply();
-//            Log.e("TopFeeds in SP", String.valueOf(sharedPreferences.getBoolean("topFeeds", false)));
-////            Backendless.UserService.CurrentUser().setProperty("topFeeds", true);
-//        }if(subscription[1]) {
-//            sharedPreferences.edit().putBoolean("scienceFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("scienceFeeds", true);
-//        }if(subscription[2]) {
-//            sharedPreferences.edit().putBoolean("technologyFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("technologyFeeds", true);
-//        }if(subscription[3]) {
-//            sharedPreferences.edit().putBoolean("sportsFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("sportsFeeds", true);
-//        }if(subscription[4]) {
-//            sharedPreferences.edit().putBoolean("healthFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("healthFeeds", true);
-//        }if(subscription[5]) {
-//            sharedPreferences.edit().putBoolean("localFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("localFeeds", true);
-//        }if(subscription[6]) {
-//            sharedPreferences.edit().putBoolean("internationalFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("internationalFeeds", true);
-//        }if(subscription[7]) {
-//            sharedPreferences.edit().putBoolean("gadgetsFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("gadgetsFeeds", true);
-//        }if(subscription[8]) {
-//            sharedPreferences.edit().putBoolean("trendingFeeds", true).apply();
-////                Backendless.UserService.CurrentUser().setProperty("trendingFeeds", true);
-//        }if(subscription[9]) {
-//            sharedPreferences.edit().putBoolean("miscellaneousFeeds", true).apply();
-////            Backendless.UserService.CurrentUser().setProperty("miscellaneousFeeds", true);
-//        }
-
         Toast toast = Toast.makeText(getApplicationContext(),"Saving Your Experience...", Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER,0,0);
         toast.show();
