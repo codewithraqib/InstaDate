@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,7 +26,9 @@ import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder> {
+
     Context context;
 
     private final List<NewsItems> mValues;
@@ -40,7 +44,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public MyNewsRecyclerViewAdapter(List<NewsItems> items) {
+    MyNewsRecyclerViewAdapter(List<NewsItems> items) {
         mValues = items;
     }
 

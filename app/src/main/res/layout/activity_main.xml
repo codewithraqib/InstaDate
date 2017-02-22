@@ -96,7 +96,7 @@
 
                 </android.support.v4.widget.SwipeRefreshLayout>
 
-                <ImageButton
+                <ImageView
                     android:layout_marginTop="10dp"
                     android:id="@+id/floatingButton"
                     android:layout_width="140dp"

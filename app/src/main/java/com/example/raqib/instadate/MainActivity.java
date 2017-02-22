@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout myDrawerLayout;
     static  int i = 0;
     RecyclerView mRecyclerView;
-    ImageButton floatingButton;
+    ImageView floatingButton;
     static boolean searchOpened = false;
 
 
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        floatingButton = (ImageButton) findViewById(R.id.floatingButton);
+        floatingButton = (ImageView) findViewById(R.id.floatingButton);
         floatingButton.setVisibility(View.INVISIBLE);
 
 
