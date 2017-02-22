@@ -263,6 +263,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                mRecyclerView = (RecyclerView)  findViewById(R.id.my_recycler_view);
+                mRecyclerView.smoothScrollToPosition(0);
+
             }
         });
                 //TO HIDE THE APP BAR AND STATUS BAR ON SWIPING UP AND DOWN THE RECYCLER VIEW
@@ -333,10 +336,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             listToSearch.add(i,newsItemsList.get(i).getTitle());
         }
 
-        //SUCCESSFULLY GOT THE LIST
-        for(int i =0; i< listToSearch.size(); i++){
-            Log.e("Title of Items "+ i, String.valueOf(listToSearch.get(i)));
-        }
+//        //SUCCESSFULLY GOT THE LIST
+//        for(int i =0; i< listToSearch.size(); i++){
+//            Log.e("Title of Items "+ i, String.valueOf(listToSearch.get(i)));
+//        }
 
     }
 
@@ -677,18 +680,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             .getLayoutManager();
 
                     layoutManager.setSmoothScrollbarEnabled(true);
-                    layoutManager.scrollToPositionWithOffset(0, 0);
+//                    layoutManager.scrollToPositionWithOffset(0, 0);
                     mRecyclerView.smoothScrollToPosition(0);
+
+//                    mRecyclerView.setOnScrollListener();
 
                 }catch (NullPointerException NPE){
                     Log.e("At PostExecuteOFMain", String.valueOf(NPE));
                 }
-
-
             }
         });
         }
-
     }
 
 

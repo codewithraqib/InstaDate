@@ -33,8 +33,9 @@ public class TabTopStories extends Fragment {
         TFE = SitesXmlPullParserTheFinancialExpress.getStackSitesFromFile(getActivity().getBaseContext());
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
             {
-                addAll(NYT);
+
                 addAll(TFE);
+                addAll(NYT);
 
             }
         };
