@@ -4,11 +4,11 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/notification_button"
-        android:title="@string/refresh"
+        android:title="@string/rightdrawer"
         android:orderInCategory="2"
-        app:showAsAction="never"
-        android:icon="@drawable/refresh_button_black"
-        android:onClick="refreshFeed"
+        app:showAsAction="always"
+        android:icon="@drawable/right_side_logo_circle"
+        android:onClick="openRightDrawer"
         />
     <item android:id="@+id/searchInMain"
         android:title="@string/search_in_main_menu"

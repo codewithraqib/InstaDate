@@ -97,5 +97,6 @@
     <string name="refresh">Refresh</string>
     <string name="gathering_data">Gathering the data,please be patient</string>
     <string name="splash_message">Sit tight, Setting things for you!</string>
+    <string name="rightdrawer">rightDrawer</string>
 
 </resources>

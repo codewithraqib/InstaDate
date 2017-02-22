@@ -1,28 +1,20 @@
 package com.example.raqib.instadate;
 
-import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -42,7 +34,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCHealth;
@@ -59,14 +50,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.example.raqib.instadate.MyNewsRecyclerViewAdapter.bookmarkSharedPreference;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -85,20 +72,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     boolean doubleBackToExitPressedOnce = false;
     ImageButton shareButton;
     DrawerLayout myDrawerLayout;
-    static SQLiteDatabase myDB = null;
     static  int i = 0;
-    String TableName = "bookmarkedNews";
     RecyclerView mRecyclerView;
     ImageButton floatingButton;
+    static boolean searchOpened = false;
 
-
-
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     @Override
     protected void onResume() {
@@ -111,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onPause();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,32 +97,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
+
         floatingButton = (ImageButton) findViewById(R.id.floatingButton);
         floatingButton.setVisibility(View.INVISIBLE);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+
 
         createListOfNews();
 
         final LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
         myDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
-
-        myDB = this.openOrCreateDatabase("BookmarkedFeedsDatabase", MODE_PRIVATE, null);
-
-//        //SETTING UP THE SHARE BUTTON
-//        shareButton = (ImageButton) findViewById(R.id.shareButton);
-//        shareButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                shareWith();
-//            }
-//        });
 
 
         //SETTING THE LIST FOR SEARCH
@@ -160,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onSearchViewShown() {
                 searchListView.setVisibility(View.VISIBLE);
                 mainNewsLinearLayout.setVisibility(View.INVISIBLE);
+                searchOpened = true;
 
             }
 
@@ -253,28 +216,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        //SETTING RIGHT NAVIGATION DRAWER
-//        DrawerLayout rightDrawer = (DrawerLayout) findViewById(R.id.myLinearLayout2);
-//        ActionBarDrawerToggle rightToggle = new ActionBarDrawerToggle(
-//                this, rightDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        assert rightDrawer != null;
-//        rightDrawer.setDrawerListener(rightToggle);
-//        rightToggle.syncState();
-//
-//        NavigationView rightNavigationView = (NavigationView) findViewById(R.id.right_nav_view);
-//        assert rightNavigationView != null;
-//        rightNavigationView.setNavigationItemSelectedListener(this);
-
-        //SETTING BACKENDLESS
-
-
-
-
-        //SETTING NAME AND EMAIL IN DRAWER
-        // UserTokenStorageFactory is available in the com.backendless.persistence.local package
-
-
         //TO HIDE STATUS BAR AND ACTION BAR
 //        View decorView = getWindow().getDecorView();
 //        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -347,48 +288,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-//        myViewPager.setOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                if (scroll_down) {
-//                    actionBar.hide();
-//                } else {
-//                    actionBar.show();
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (dy > 5) {
-//                    //scroll down
-//                    scroll_down = true;
-//
-//                } else if (dy < -5) {
-//                    //scroll up
-//                    scroll_down = false;
-//                }
-//            }
-//        });
-
-//        displayNews();
-
-        //TO CHECK THE BOOKMARKED NEWS ITEMS
-        try{
-            bookmarkSharedPreference = this.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
-            String wholeString = bookmarkSharedPreference.getAll().toString();
-
-            int  startString = wholeString.indexOf("title=");
-            int  endString = wholeString.indexOf(',',50);
-            String finalString = wholeString.substring(startString,endString);
-
-            Log.e("Title is ", finalString);
-
-        }catch (StringIndexOutOfBoundsException e){
-            Log.e("Error is :", String.valueOf(e));
-        }
-
 
         if (isNetworkAvailable()) {
             SitesDownloadTask download = new SitesDownloadTask();
@@ -427,11 +326,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
-        //SUCCESSFULLY GOT THE LIST
-//        for(int i =0; i< newsItemsList.size(); i++){
-//            Log.e("Title of Item "+ i, String.valueOf(newsItemsList.get(i).getTitle()));
-//
-//        }
 
         listToSearch = new ArrayList<>();
 
@@ -446,30 +340,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
-//    }
 
     //MENU OPTIONS OVERRIDDEN
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu);
-//        MenuItem menuItem = menu.findItem(R.id.searchInMain);
-//        searchView.setMenuItem(menuItem);
+
         return true;
     }
 
     public void goForSearchInNewsList(MenuItem item) {
         final ListView list = (ListView) findViewById(R.id.searchListView);
-        LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
-
+        searchOpened = true;
 
         //WANT TO HIDE THE LIST WHEN THE BACK BUTTON IS PRESSED: BELOW LOGIC IS NOT WORKING
-//        boolean isSearchOpen = searchView.isSearchOpen();
-//        if(!isSearchOpen)
-//            list.setVisibility(View.INVISIBLE);
         searchView.setMenuItem(item);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -490,7 +374,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         flag = 1;
 
                     }
-
                     if (flag == 1)
                     break;
 
@@ -525,11 +408,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("position", searchResultPosition);
         startActivity(intent);
-//        Log.e("SearchTitle is ",searchTitle);
-//        Log.e("SearchDescription is ",searchDescription);
-//        Log.e("SearchLink is ",searchLink);
-//        Log.e("SearchImageUrl is ",searchImageUrl);
-//        Log.e("SearchDate is ",searchDate);
+
     }
 
     public void RegisterUser(MenuItem item) {
@@ -584,12 +463,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed(); return;
         }
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
+
+        final ListView list = (ListView) findViewById(R.id.searchListView);
+        LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
+
+        if(searchOpened){
+            list.setVisibility(View.INVISIBLE);
+            mainNewsLinearLayout.setVisibility(View.VISIBLE);
+            searchView.closeSearch();
+            searchOpened = false;
+        }
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
             @Override public void run() {
-                doubleBackToExitPressedOnce=false;
+                    doubleBackToExitPressedOnce=false;
             }
-        }, 2000);
+            }, 1000);
+
     }
 
 
@@ -675,19 +565,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(MainActivity.this, Customization.class));
         this.finish();
     }
+    public void openRightDrawer(MenuItem item) {
+
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
+
+        if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT))
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        else
+            mDrawerLayout.openDrawer(GravityCompat.END);
+
+
+    }
 
     //TO REFRESH THE NEWS FEED
-    public void refreshFeed(MenuItem item) {
-        if (isNetworkAvailable()) {
-            SitesDownloadTask download = new SitesDownloadTask();
-            download.execute();
-        }
-        else{
-            Toast toast = Toast.makeText(getApplicationContext(),"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
-            toast.show();
-        }
-    }
+//    public void refreshFeed(MenuItem item) {
+//        if (isNetworkAvailable()) {
+//            SitesDownloadTask download = new SitesDownloadTask();
+//            download.execute();
+//        }
+//        else{
+//            Toast toast = Toast.makeText(getApplicationContext(),"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Toast.LENGTH_LONG);
+//            toast.setGravity(Gravity.CENTER,0,0);
+//            toast.show();
+//        }
+//    }
 
 
     //SIMPLE LOGOUT API
@@ -786,147 +687,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-            snackbar.setActionTextColor(Color.CYAN);
-            View sbView = snackbar.getView();
-            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(Color.WHITE);
-
-            snackbar.show();
-
-
         }
 
     }
 
 
-    // BELOW ONCLICK METHODS FROM CARD VIEW ITEM
-    public void shareWith(View view) {
-        verifyStoragePermissions(this);
-
-        Bitmap myBitmap;
-
-        //TO GET THE WHOLE SCREEN TO DISPLAY IN THE SCREENSHOT
-//        View v1 = getWindow().getDecorView().getRootView();
-
-        //TO GET THE PARTICULAR SCREEN(only news chunk) TO DISPLAY IN THE SCREENSHOT
-        View v2 = findViewById(R.id.wholeNewsChunk);
-
-        assert v2 != null;
-        v2.setDrawingCacheEnabled(true);
-        myBitmap = Bitmap.createBitmap(v2.getDrawingCache());
-        v2.setDrawingCacheEnabled(false);
-
-
-        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-        String fileName = now + ".jpg";
-        File dir = new File(dirPath);
-        if(!dir.exists())
-            //noinspection ResultOfMethodCallIgnored
-            dir.mkdirs();
-        File imageFile = new File(dirPath, fileName);
-        try {
-            FileOutputStream fOut = new FileOutputStream(imageFile);
-            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-            shareScreenshot(imageFile);
-            imageFile.deleteOnExit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void shareScreenshot(File imageFile) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-
-        Uri uri = Uri.fromFile(imageFile);
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-
-        PackageManager packageManager = getPackageManager();
-        List activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        boolean isIntentSafe = activities.size() > 0;
-
-        if (isIntentSafe) {
-            Log.e("ON SHARE ", String.valueOf(uri));
-            startActivity(Intent.createChooser(intent, "Share via.."));
-        }
-    }
-
-    /**
-     * Checks if the app has permission to write to device storage
-     *
-     * @param activity *
-     * If the app does not has permission then the user will be prompted to grant permissions to use External Storage
-     */
-
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
-    }
-
-
-//     public void bookmarkIntoDatabase(String titleOfBookmarkedFeed){
-//
-//         String Data = "";
-//         try {
-//
-//
-////             myDB = this.openOrCreateDatabase("BookmarkedFeedsDatabase", MODE_PRIVATE, null);
-//             // Create a Table in the Database.
-//
-//             myDB.execSQL("CREATE TABLE IF NOT EXISTS "
-//                     + TableName
-//                     + " (Index INT(4), Title VARCHAR);");
-//
-//             //Insert data to a Table
-//             myDB.execSQL("INSERT INTO "
-//                     + TableName
-//                     + " (Index, Title)"
-//                     + " VALUES (1,titleOfBookmarkedFeed);");
-//
-//             //retrieve data from database *//*
-//             Cursor c = myDB.rawQuery("SELECT * FROM " + TableName , null);
-//
-//             int Column1 = c.getColumnIndex("Index");
-//             int Column2 = c.getColumnIndex("Title");
-//
-//             // Check if our result was valid.
-//             c.moveToFirst();
-//
-//             if (c != null) {
-//                 // Loop through all Results
-//                 do {
-//                     int Index = c.getInt(Column1);
-//                     String Title = c.getString(Column2);
-//
-//                     Data = Data +Title+"/"+Index+"\n";
-//                     Log.e("Data is ", " "+ Data);
-//                 }while(c.moveToNext());
-//             }
-//
-//         }
-//         catch(Exception e) {
-//             Log.e("Error", "Error", e);
-//         } finally {
-//             if (myDB != null)
-//                 myDB.close();
-//         }
-//
-//    }
 
 
 }

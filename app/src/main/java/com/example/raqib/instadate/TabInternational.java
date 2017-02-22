@@ -29,8 +29,6 @@ public class TabInternational extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         myRecyclerView.hasFixedSize();
 
-        List<NewsItems> Bookmarks = MyNewsRecyclerViewAdapter.bookmarkedNewsList;
-
 //        BingKashmir = SitesXmlPullParserBingKashmir.getStackSitesFromFile(getActivity().getBaseContext());
 //        TribuneKashmir = SitesXmlPullParserTribuneKashmir.getStackSitesFromFile(getActivity().getBaseContext());
         OneIndiaInternationalNews = SitesXmlPullParserInternationalNews.getStackSitesFromFile(getActivity().getBaseContext());

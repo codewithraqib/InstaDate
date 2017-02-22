@@ -130,7 +130,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/share"
-                    android:onClick="shareWith"
                     android:background="#ffffff"
                     android:contentDescription="@string/share"
                     android:layout_marginStart="20dp"

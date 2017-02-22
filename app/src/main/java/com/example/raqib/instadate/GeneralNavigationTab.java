@@ -188,37 +188,37 @@ public class GeneralNavigationTab extends AppCompatActivity implements Navigatio
 
         if (id == R.id.nav_top_feeds) {
 
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pagerInGeneralNavigationTab);
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(0);
             Toast.makeText(getApplicationContext(), "We Are In Top Feeds Drawer", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_science) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pagerInGeneralNavigationTab);
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(1);
             Toast.makeText(getApplicationContext(), "We Are In Science Feeds Drawer", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_national) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pagerInGeneralNavigationTab);
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(5);
             Toast.makeText(getApplicationContext(), "We Are In National Feeds Drawer", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_international) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pagerInGeneralNavigationTab);
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(2);
             Toast.makeText(getApplicationContext(), "We Are In International Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_health) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pagerInGeneralNavigationTab);
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(4);
             Toast.makeText(getApplicationContext(), "We Are In Health Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_sports) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pagerInGeneralNavigationTab);
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(3);
             Toast.makeText(getApplicationContext(), "We Are In Sports Feeds Drawer", Toast.LENGTH_LONG).show();

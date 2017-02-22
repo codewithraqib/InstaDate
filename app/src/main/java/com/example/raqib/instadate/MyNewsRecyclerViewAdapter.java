@@ -1,9 +1,15 @@
 package com.example.raqib.instadate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,39 +19,35 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder> {
     Context context;
 
     private final List<NewsItems> mValues;
-    static List<NewsItems> bookmarkedNewsList;     //LIST OF BOOKMARKED FEEDS
 
     static  int i = 0;
     public static  String title ;
-    private static NewsItems bookmarkNewsItems;
-
-
-
-    static SharedPreferences bookmarkSharedPreference;
     private static String link;
 
-    MyNewsRecyclerViewAdapter(List<NewsItems> items) {
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    public MyNewsRecyclerViewAdapter(List<NewsItems> items) {
         mValues = items;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-
-
-        bookmarkNewsItems = new NewsItems();
-        bookmarkedNewsList = new ArrayList<NewsItems>();
-
-        bookmarkSharedPreference = context.getSharedPreferences("com.example.raqib.instadate", MODE_PRIVATE);
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_view_item, parent, false);
@@ -101,11 +103,11 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         });
 
 
-        //BOOKMARK ONCLICK HANDLING
-        holder.bookmarkButton.setOnClickListener(new View.OnClickListener() {
+        //SHARE SCREENSHOT ONCLICK HANDLING
+        holder.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bookmarkTheFeed(holder,position) ;
+                shareWith(holder,position) ;
             }
         });
 
@@ -113,34 +115,6 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
 
     }
 
-    private void bookmarkTheFeed(final ViewHolder holder, final int position) {
-
-
-        String Data="";
-
-        title = mValues.get(position).getTitle();
-
-
-//              holder.bookmarkButton.setColorFilter(Color.MAGENTA);
-
-
-
-//        bookmarkSharedPreference.edit().putString("title", title).apply();
-//
-//        String wholeString = bookmarkSharedPreference.getAll().toString();
-//
-//        int  startString = wholeString.indexOf("title=");
-//        int  endString = wholeString.indexOf(',',50);
-//        String finalString = wholeString.substring(startString,endString);
-//
-//        Log.e("Title is ", finalString);
-//        List<String> bookmarkedListFinal = new ArrayList<String>();
-//        bookmarkedListFinal.add(finalString);
-//        Log.e("size is", String.valueOf(bookmarkedListFinal.size()));
-
-
-
-    }
 
 
     // RETRIEVES AN IMAGE SPECIFIED BY THE URL, DISPLAYS IT IN THE UI.
@@ -167,7 +141,6 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
     }
 
 
-
     class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
@@ -178,6 +151,8 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         TextView moreAtLink;
         NetworkImageView imageView;
         ImageButton bookmarkButton;
+        ImageButton shareButton;
+        View screenShotView ;
 
 
         ViewHolder(View view) {
@@ -191,6 +166,8 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
             moreAtLink = (TextView) view.findViewById(R.id.moreAtLink);
             imageView = (NetworkImageView) view.findViewById(R.id.image);
             bookmarkButton = (ImageButton) view.findViewById(R.id.bookmarkButton);
+            shareButton = (ImageButton) view.findViewById(R.id.shareButton);
+            screenShotView = view.findViewById(R.id.wholeNewsChunk);
 
         }
     }
@@ -201,6 +178,78 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         intent.putExtra("WebPage Link", linkNews);
         context.startActivity(intent);
     }
+
+
+
+    // BELOW ONCLICK METHODS FROM CARD VIEW ITEM
+    private void shareWith(ViewHolder holder, int position) {
+//        verifyStoragePermissions(this);
+
+        Bitmap myBitmap;
+
+        assert holder.screenShotView != null;
+        holder.screenShotView.setDrawingCacheEnabled(true);
+        myBitmap = Bitmap.createBitmap(holder.screenShotView.getDrawingCache());
+        holder.screenShotView.setDrawingCacheEnabled(false);
+
+
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+        String fileName = now + ".jpg";
+        File dir = new File(dirPath);
+        if(!dir.exists())
+            //noinspection ResultOfMethodCallIgnored
+            dir.mkdirs();
+        File imageFile = new File(dirPath, fileName);
+        try {
+            FileOutputStream fOut = new FileOutputStream(imageFile);
+            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            shareScreenshot(imageFile);
+            imageFile.deleteOnExit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    private void shareScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+
+        PackageManager packageManager = context.getPackageManager();
+        List activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        boolean isIntentSafe = activities.size() > 0;
+
+        if (isIntentSafe) {
+            Log.e("ON SHARE ", String.valueOf(uri));
+            context.startActivity(Intent.createChooser(intent, "Share via.."));
+        }
+    }
+
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
 
 
 }
