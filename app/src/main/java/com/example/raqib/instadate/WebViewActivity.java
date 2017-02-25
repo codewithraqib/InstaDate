@@ -1,5 +1,6 @@
 package com.example.raqib.instadate;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -7,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,7 +23,14 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.List;
 
@@ -28,12 +38,64 @@ public class WebViewActivity extends AppCompatActivity {
     static  String link;
     WebView myWebView;
     ProgressBar progressBar;
+    private InterstitialAd mInterstitialAd;
+    private String android_id;
+    RelativeLayout webViewLayout;
+    boolean addShownIsTrue = true;
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         link = getIntent().getExtras().getString("WebPage Link");
+
+        android_id = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Log.e("Dev Id", android_id);
+
+        webViewLayout = (RelativeLayout) findViewById(R.id.webViewLayout);
+
+
+
+        //ADS DISPLAY ON APP'S WEB ACTIVITY
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+            }
+        });
+
+        requestNewInterstitial();
+
+        //DISPLAY AN INTERSTITIAL(FULL SCREEN) AD IF ALREADY LOADED
+
+//        showAd();
+        webViewLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+
+                int dy = i3 - i1;
+                if(dy > 20){
+
+                    if (mInterstitialAd.isLoaded() && addShownIsTrue) {
+                        mInterstitialAd.show();
+                        addShownIsTrue = false;
+                    }
+                }
+
+            }
+        });
+
 
 //        getSupportActionBar().setElevation(0);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarWebView);
@@ -96,6 +158,24 @@ public class WebViewActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
+
+    }
+
+    private void requestNewInterstitial() {
+
+        AdRequest adRequestInterstitial = new AdRequest.Builder()
+                .addTestDevice(android_id)
+                .build();
+
+        mInterstitialAd.loadAd(adRequestInterstitial);
+
+
+    }
+
+    private void showAd() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
 
     }
 

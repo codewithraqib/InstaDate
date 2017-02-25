@@ -79,7 +79,7 @@
     <string name="saving_experience">Saving Experience</string>
     <string name="information_about_app">Information About App</string>
     <string name="want_to_leave">Want To Leave?</string>
-    <string name="search_in_main_menu">Search...</string>
+    <string name="search_in_main_menu">Search…</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
     <string name="FinancialExpress">FE</string>
     <string name="NewYorkTimes">NYT</string>
@@ -98,5 +98,7 @@
     <string name="gathering_data">Gathering the data,please be patient</string>
     <string name="splash_message">Sit tight, Setting things for you!</string>
     <string name="rightdrawer">rightDrawer</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="Message_before_loading">Setting Data In Order, Please Wait… Slide Through Tabs To Refresh</string>
 
 </resources>

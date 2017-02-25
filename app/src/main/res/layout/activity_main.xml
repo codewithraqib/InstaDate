@@ -11,10 +11,6 @@
     tools:context=".MainActivity">
 
 
-<android.support.design.widget.CoordinatorLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,14 +20,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/mainToolbar">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorMaterial"
-                app:layout_scrollFlags="scroll|enterAlways"
                 />
 
 
@@ -48,15 +44,6 @@
                 android:textColorHint="#FFFFFF"
                 />
 
-        </RelativeLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/mainNewsLinearLayout"
-            android:orientation="vertical">
-
             <com.example.raqib.instadate.CustomTabLayout
                 android:id="@+id/tabHost"
                 android:layout_width="match_parent"
@@ -64,15 +51,25 @@
                 app:tabIndicatorHeight="2dp"
                 android:background="@color/colorMaterial"
                 app:tabIndicatorColor="#000000"
+                android:layout_below="@+id/toolbar"
                 app:tabTextColor="#000000"
                 app:tabSelectedTextColor="#ffffff"
                 app:tabMode="scrollable"
+                app:tabGravity="center"
+                app:tabMaxWidth="0dp"
                 />
+
+        </RelativeLayout>
+
+
+
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:id="@+id/mainNewsLinearLayout"
                 android:gravity="center"
                 >
 
@@ -90,9 +87,11 @@
                         android:id="@+id/pager"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:tag=""
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         >
                     </android.support.v4.view.ViewPager>
+
 
                 </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -110,11 +109,10 @@
 
             </RelativeLayout>
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
 
 
 
@@ -122,6 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/searchInMainLinearLayout">
 
         <ListView

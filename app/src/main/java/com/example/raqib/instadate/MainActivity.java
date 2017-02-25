@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +13,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -33,8 +36,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCHealth;
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView mRecyclerView;
     ImageView floatingButton;
     static boolean searchOpened = false;
+    static boolean itIsTheFirstTimeInMainActivity = true;
 
 
     @Override
@@ -91,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    @TargetApi(Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,15 +105,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final ViewPager viewPager2 = (ViewPager) findViewById(R.id.pager);
+        assert viewPager2 != null;
+        viewPager2.setCurrentItem(0);
+
         floatingButton = (ImageView) findViewById(R.id.floatingButton);
         floatingButton.setVisibility(View.INVISIBLE);
 
 
         createListOfNews();
 
-        final LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
+        final RelativeLayout mainNewsLinearLayout = (RelativeLayout) findViewById(R.id.mainNewsLinearLayout);
         myDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
-
 
         //SETTING THE LIST FOR SEARCH
         searchListView = (ListView) findViewById(R.id.searchListView);
@@ -229,6 +238,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         assert tabLayout != null;
         Customization.sharedPreferences = this.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
 
+
+        //SETTING ALL THE TABS FOR THE FIRST TIME THEN AFTERWARDS DEPENDS ON USER CHOICE
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!prefs.getBoolean("firstTime", false)) {
+
+            // run your one time code
+            Customization.sharedPreferences.edit().putBoolean("topFeeds", true).apply();
+            Customization.sharedPreferences.edit().putBoolean("scienceFeeds", true).apply();
+            Customization.sharedPreferences.edit().putBoolean("technologyFeeds", true).apply();
+            Customization.sharedPreferences.edit().putBoolean("sportsFeeds", true).apply();
+            Customization.sharedPreferences.edit().putBoolean("healthFeeds", true).apply();
+            Customization.sharedPreferences.edit().putBoolean("internationalFeeds", true).apply();
+            Customization.sharedPreferences.edit().putBoolean("localFeeds", true).apply();
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTime", true);
+            editor.apply();
+        }
+
+
         tabLayout.addTab(tabLayout.newTab().setText("Top National"));
         if(Customization.sharedPreferences.getBoolean("scienceFeeds", false))
         tabLayout.addTab(tabLayout.newTab().setText("Science"));
@@ -270,26 +300,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
                 //TO HIDE THE APP BAR AND STATUS BAR ON SWIPING UP AND DOWN THE RECYCLER VIEW
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            viewPager.setOnScrollChangeListener(new ViewPager.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                  int dy = scrollY - oldScrollY;
-                    if(dy > 5){
-                        getSupportActionBar().hide();
-                        View decorView = getWindow().getDecorView();
-                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                        decorView.setSystemUiVisibility(uiOptions);
 
-                    }else if(dy < - 5) {
-                        getSupportActionBar().show();
-                        int uiOptionsNormalScreen = 0;
-                        View decorView = getWindow().getDecorView();
-                        decorView.setSystemUiVisibility(uiOptionsNormalScreen);
-                    }
+        viewPager.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                int dy = i1 - i3;
+                if(dy > 5){
+                    getSupportActionBar().hide();
+                    View decorView = getWindow().getDecorView();
+                    uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                    decorView.setSystemUiVisibility(uiOptions);
+
+                }else if(dy < - 5) {
+                    getSupportActionBar().show();
+                    int uiOptionsNormalScreen = 0;
+                    View decorView = getWindow().getDecorView();
+                    decorView.setSystemUiVisibility(uiOptionsNormalScreen);
                 }
-            });
-        }
+            }
+        });
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            viewPager.setOnScrollChangeListener(new ViewPager.OnScrollChangeListener() {
+//                @Override
+//                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                  int dy = scrollY - oldScrollY;
+//                    if(dy > 5){
+//                        getSupportActionBar().hide();
+//                        View decorView = getWindow().getDecorView();
+//                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+//                        decorView.setSystemUiVisibility(uiOptions);
+//
+//                    }else if(dy < - 5) {
+//                        getSupportActionBar().show();
+//                        int uiOptionsNormalScreen = 0;
+//                        View decorView = getWindow().getDecorView();
+//                        decorView.setSystemUiVisibility(uiOptionsNormalScreen);
+//                    }
+//                }
+//            });
+//        }
 
 
 
@@ -297,8 +346,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             SitesDownloadTask download = new SitesDownloadTask();
             download.execute();
         } else {
-            displayNews();
+            Toast toast = Toast.makeText(getApplicationContext(),"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER,0,0);
+            toast.show();
+            Snackbar snackbar = Snackbar.make( myDrawerLayout,"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OKAY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+            snackbar.show();
         }
+
+
+        try{
+            mRecyclerView = (RecyclerView)  findViewById(R.id.my_recycler_view);
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                    if(dy > 80){
+
+                        getSupportActionBar().hide();
+//                        View decorView = getWindow().getDecorView();
+//                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+//                        decorView.setSystemUiVisibility(uiOptions);
+
+                    }else if(dy < - 80) {
+                        getSupportActionBar().show();
+//                        int uiOptionsNormalScreen = 0;
+//                        View decorView = getWindow().getDecorView();
+//                        decorView.setSystemUiVisibility(uiOptionsNormalScreen);
+                    }
+
+                    super.onScrolled(recyclerView, dx, dy);
+                }
+            });
+
+        }catch (NullPointerException e){
+            Log.e("RecyclerViewScrollMain", String.valueOf(e));
+//            Toast toast =Toast.makeText(this, "There is Some Error In Scrolling Effect", Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.CENTER_HORIZONTAL,0,0);
+//            toast.show();
+        }
+
     }
 
     //CREATE THE LIST OF ALL AVAILABLE NEWS AT THE MOMENT
@@ -469,7 +561,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.doubleBackToExitPressedOnce = true;
 
         final ListView list = (ListView) findViewById(R.id.searchListView);
-        LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsLinearLayout);
+        RelativeLayout mainNewsLinearLayout = (RelativeLayout) findViewById(R.id.mainNewsLinearLayout);
 
         if(searchOpened){
             list.setVisibility(View.INVISIBLE);
@@ -691,10 +783,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+
+
+//            mRecyclerView = (RecyclerView)  findViewById(R.id.my_recycler_view);
+//            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//                @Override
+//                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//
+//                    if(dy > 20){
+//
+//                        getSupportActionBar().hide();
+////                        View decorView = getWindow().getDecorView();
+////                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+////                        decorView.setSystemUiVisibility(uiOptions);
+//
+//                    }else if(dy < - 20) {
+//                        getSupportActionBar().show();
+////                        int uiOptionsNormalScreen = 0;
+////                        View decorView = getWindow().getDecorView();
+////                        decorView.setSystemUiVisibility(uiOptionsNormalScreen);
+//                    }
+//
+//                    super.onScrolled(recyclerView, dx, dy);
+//                }
+//            });
         }
     }
-
-
-
 
 }

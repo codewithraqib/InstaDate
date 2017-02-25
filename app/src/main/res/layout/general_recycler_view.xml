@@ -13,6 +13,7 @@
         android:layout_weight="1"
         android:scrollbars="vertical"
         android:scrollbarStyle="outsideOverlay"
+        android:scrollbarSize="10dp"
         />
 
 </LinearLayout>
