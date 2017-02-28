@@ -5,28 +5,30 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_top_feeds"
-            android:icon="@drawable/top_feeds"
+            android:icon="@drawable/national_icon2"
             android:title="@string/top_feeds" />
         <item
             android:id="@+id/nav_science"
-            android:icon="@drawable/science_icon"
+            android:icon="@drawable/science_icon2"
             android:title="@string/science" />
         <item
-            android:id="@+id/nav_national"
-            android:icon="@drawable/national_icon"
+            android:id="@+id/nav_technology"
+            android:icon="@drawable/technology_icon2"
             android:title="@string/national" />
         <item
-            android:id="@+id/nav_international"
-            android:icon="@drawable/international_icon"
-            android:title="@string/international" />
+            android:id="@+id/nav_sports"
+            android:icon="@drawable/sports_icon2"
+            android:title="@string/sports" />
         <item
             android:id="@+id/nav_health"
-            android:icon="@drawable/health_icon"
+            android:icon="@drawable/health_icon2"
             android:title="@string/health" />
         <item
-            android:id="@+id/nav_sports"
-            android:icon="@drawable/sports_icon"
-            android:title="@string/sports" />
+            android:id="@+id/nav_international"
+            android:icon="@drawable/international_icon2"
+            android:title="@string/international" />
+
+
         <item
             android:id="@+id/nav_bookmarked_feeds"
             android:icon="@drawable/bookmark_icon"

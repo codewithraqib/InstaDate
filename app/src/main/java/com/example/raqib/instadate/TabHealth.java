@@ -1,5 +1,7 @@
 package com.example.raqib.instadate;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +14,8 @@ import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCHealth;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserHealth;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TabHealth extends Fragment {
@@ -23,6 +27,7 @@ public class TabHealth extends Fragment {
 
 
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.general_recycler_view,container, false);
@@ -40,6 +45,15 @@ public class TabHealth extends Fragment {
             }
         };
 
+        Collections.sort(newsItemsList, new Comparator<NewsItems>() {
+
+            @Override
+            public int compare(NewsItems newsItems, NewsItems t1) {
+                if (newsItems.getDate() == null || t1.getDate() == null)
+                    return 0;
+                return newsItems.getDate().compareTo(t1.getDate());
+            }
+        });
         myRecyclerView.setAdapter(new MyNewsRecyclerViewAdapter(newsItemsList));
         return view;
     }

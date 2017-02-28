@@ -120,7 +120,6 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
     }
 
 
-
     // RETRIEVES AN IMAGE SPECIFIED BY THE URL, DISPLAYS IT IN THE UI.
 
     private void loadImage(final ViewHolder holder, int position) {
@@ -253,7 +252,5 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
             );
         }
     }
-
-
 
 }

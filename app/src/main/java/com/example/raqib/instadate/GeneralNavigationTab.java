@@ -199,7 +199,7 @@ public class GeneralNavigationTab extends AppCompatActivity implements Navigatio
             viewPager.setCurrentItem(1);
             Toast.makeText(getApplicationContext(), "We Are In Science Feeds Drawer", Toast.LENGTH_LONG).show();
 
-        } else if (id == R.id.nav_national) {
+        } else if (id == R.id.nav_technology) {
             final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(5);

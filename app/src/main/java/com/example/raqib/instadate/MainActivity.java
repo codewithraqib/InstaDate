@@ -115,8 +115,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         createListOfNews();
 
-        final RelativeLayout mainNewsLinearLayout = (RelativeLayout) findViewById(R.id.mainNewsLinearLayout);
+        final RelativeLayout mainNewsRelativeLayout = (RelativeLayout) findViewById(R.id.mainNewsRelativeLayout);
         myDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
+
+        //SETTING THE SCROLL LISTENER FOR THE MAIN NEWS SCREEN
+        myDrawerLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                int dy = i3 - i1;
+                if(dy >10){
+                    Log.e("Inside Scrolling UP1", String.valueOf(dy));
+                    getSupportActionBar().hide();
+                    Log.e("Inside Scrolling UP2", String.valueOf(dy));
+
+                }else if(dy < -10){
+                    Log.e("Inside Scrolling UP3", String.valueOf(dy));
+                    getSupportActionBar().show();
+                    Log.e("Inside Scrolling UP4", String.valueOf(dy));
+                }
+            }
+        });
 
         //SETTING THE LIST FOR SEARCH
         searchListView = (ListView) findViewById(R.id.searchListView);
@@ -131,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onSearchViewShown() {
                 searchListView.setVisibility(View.VISIBLE);
-                mainNewsLinearLayout.setVisibility(View.INVISIBLE);
+                mainNewsRelativeLayout.setVisibility(View.INVISIBLE);
                 searchOpened = true;
 
             }
@@ -143,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,listToSearch);
                 searchListView.setAdapter(arrayAdapter);
                 searchListView.setVisibility(View.INVISIBLE);
-                mainNewsLinearLayout.setVisibility(View.VISIBLE);
+                mainNewsRelativeLayout.setVisibility(View.VISIBLE);
 
 
             }
@@ -561,7 +579,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.doubleBackToExitPressedOnce = true;
 
         final ListView list = (ListView) findViewById(R.id.searchListView);
-        RelativeLayout mainNewsLinearLayout = (RelativeLayout) findViewById(R.id.mainNewsLinearLayout);
+        RelativeLayout mainNewsLinearLayout = (RelativeLayout) findViewById(R.id.mainNewsRelativeLayout);
 
         if(searchOpened){
             list.setVisibility(View.INVISIBLE);
@@ -599,17 +617,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             viewPager.setCurrentItem(1);
             Toast.makeText(getApplicationContext(), "We Are In Science Feeds Drawer", Toast.LENGTH_LONG).show();
 
-        } else if (id == R.id.nav_national) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            assert viewPager != null;
-            viewPager.setCurrentItem(5);
-            Toast.makeText(getApplicationContext(), "We Are In National Feeds Drawer", Toast.LENGTH_LONG).show();
-
-        } else if (id == R.id.nav_international) {
+        } else if (id == R.id.nav_technology) {
             final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(2);
-            Toast.makeText(getApplicationContext(), "We Are In International Feeds Drawer", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "We Are In National Feeds Drawer", Toast.LENGTH_LONG).show();
+
+        }else if (id == R.id.nav_sports) {
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            assert viewPager != null;
+            viewPager.setCurrentItem(3);
+            Toast.makeText(getApplicationContext(), "We Are In Sports Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_health) {
             final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -617,11 +635,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             viewPager.setCurrentItem(4);
             Toast.makeText(getApplicationContext(), "We Are In Health Feeds Drawer", Toast.LENGTH_LONG).show();
 
-        }else if (id == R.id.nav_sports) {
+        }else if (id == R.id.nav_international) {
             final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
-            viewPager.setCurrentItem(3);
-            Toast.makeText(getApplicationContext(), "We Are In Sports Feeds Drawer", Toast.LENGTH_LONG).show();
+            viewPager.setCurrentItem(5);
+            Toast.makeText(getApplicationContext(), "We Are In International Feeds Drawer", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_bookmarked_feeds) {
             startActivity(new Intent(getApplicationContext(), GeneralNavigationTab.class));
