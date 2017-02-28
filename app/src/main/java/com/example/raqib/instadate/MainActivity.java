@@ -286,8 +286,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.addTab(tabLayout.newTab().setText("Sports"));
         if(Customization.sharedPreferences.getBoolean("healthFeeds", false))
         tabLayout.addTab(tabLayout.newTab().setText("Health"));
-        if(Customization.sharedPreferences.getBoolean("localFeeds", false))
+        if(Customization.sharedPreferences.getBoolean("internationalFeeds", false))
         tabLayout.addTab(tabLayout.newTab().setText("International"));
+        if(Customization.sharedPreferences.getBoolean("localFeeds", false))
+            tabLayout.addTab(tabLayout.newTab().setText("Local"));
         tabLayout.setTabGravity(TabLayout.MODE_SCROLLABLE);
 
 
@@ -317,46 +319,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-                //TO HIDE THE APP BAR AND STATUS BAR ON SWIPING UP AND DOWN THE RECYCLER VIEW
-
-        viewPager.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                int dy = i1 - i3;
-                if(dy > 5){
-                    getSupportActionBar().hide();
-                    View decorView = getWindow().getDecorView();
-                    uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                    decorView.setSystemUiVisibility(uiOptions);
-
-                }else if(dy < - 5) {
-                    getSupportActionBar().show();
-                    int uiOptionsNormalScreen = 0;
-                    View decorView = getWindow().getDecorView();
-                    decorView.setSystemUiVisibility(uiOptionsNormalScreen);
-                }
-            }
-        });
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            viewPager.setOnScrollChangeListener(new ViewPager.OnScrollChangeListener() {
-//                @Override
-//                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                  int dy = scrollY - oldScrollY;
-//                    if(dy > 5){
-//                        getSupportActionBar().hide();
-//                        View decorView = getWindow().getDecorView();
-//                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-//                        decorView.setSystemUiVisibility(uiOptions);
-//
-//                    }else if(dy < - 5) {
-//                        getSupportActionBar().show();
-//                        int uiOptionsNormalScreen = 0;
-//                        View decorView = getWindow().getDecorView();
-//                        decorView.setSystemUiVisibility(uiOptionsNormalScreen);
-//                    }
-//                }
-//            });
-//        }
 
 
 
@@ -377,37 +339,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             snackbar.show();
         }
 
-
-        try{
-            mRecyclerView = (RecyclerView)  findViewById(R.id.my_recycler_view);
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
-                    if(dy > 80){
-
-                        getSupportActionBar().hide();
-//                        View decorView = getWindow().getDecorView();
-//                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-//                        decorView.setSystemUiVisibility(uiOptions);
-
-                    }else if(dy < - 80) {
-                        getSupportActionBar().show();
-//                        int uiOptionsNormalScreen = 0;
-//                        View decorView = getWindow().getDecorView();
-//                        decorView.setSystemUiVisibility(uiOptionsNormalScreen);
-                    }
-
-                    super.onScrolled(recyclerView, dx, dy);
-                }
-            });
-
-        }catch (NullPointerException e){
-            Log.e("RecyclerViewScrollMain", String.valueOf(e));
-//            Toast toast =Toast.makeText(this, "There is Some Error In Scrolling Effect", Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.CENTER_HORIZONTAL,0,0);
-//            toast.show();
-        }
 
     }
 
@@ -446,11 +377,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i =0; i< newsItemsList.size(); i++){
             listToSearch.add(i,newsItemsList.get(i).getTitle());
         }
-
-//        //SUCCESSFULLY GOT THE LIST
-//        for(int i =0; i< listToSearch.size(); i++){
-//            Log.e("Title of Items "+ i, String.valueOf(listToSearch.get(i)));
-//        }
 
     }
 
@@ -642,7 +568,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(getApplicationContext(), "We Are In International Feeds Drawer", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_bookmarked_feeds) {
-            startActivity(new Intent(getApplicationContext(), GeneralNavigationTab.class));
+            startActivity(new Intent(getApplicationContext(), BookmarksActivity.class));
             Toast.makeText(getApplicationContext(), "We Are In Sports Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_share) {
@@ -679,6 +605,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(MainActivity.this, Customization.class));
         this.finish();
     }
+    public void aboutActivity(MenuItem item) {
+        startActivity(new Intent(MainActivity.this, About.class));
+
+    }
+
     public void openRightDrawer(MenuItem item) {
 
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
@@ -690,19 +621,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
-
-    //TO REFRESH THE NEWS FEED
-//    public void refreshFeed(MenuItem item) {
-//        if (isNetworkAvailable()) {
-//            SitesDownloadTask download = new SitesDownloadTask();
-//            download.execute();
-//        }
-//        else{
-//            Toast toast = Toast.makeText(getApplicationContext(),"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Toast.LENGTH_LONG);
-//            toast.setGravity(Gravity.CENTER,0,0);
-//            toast.show();
-//        }
-//    }
 
 
     //SIMPLE LOGOUT API
@@ -745,10 +663,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 Downloader.DownloadFromUrl("http://www.rediff.com/rss/sportsrss.xml", openFileOutput("RediffSports.xml", Context.MODE_PRIVATE));
 
-                Downloader.DownloadFromUrl("http://www.tribuneindia.com/rss/feed.aspx?cat_id=5", openFileOutput("TribuneKashmir.xml", Context.MODE_PRIVATE));
-
-                Downloader.DownloadFromUrl("http://www.bing.com/news/search?q=Kashmir&qs=n&form=QBNT&pq=Kashmir&sc=0-0&sp=-1&sk=&format=RSS", openFileOutput("BingKashmir.xml", Context.MODE_PRIVATE));
-
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/feed/", openFileOutput("TFE.xml", Context.MODE_PRIVATE));
 
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/section/industry/tech/feed/", openFileOutput("TFETech.xml", Context.MODE_PRIVATE));
@@ -762,6 +676,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Downloader.DownloadFromUrl("http://www.financialexpress.com/section/lifestyle/science/feed/", openFileOutput("Science2.xml", Context.MODE_PRIVATE));
 
                 Downloader.DownloadFromUrl("http://www.oneindia.com/rss/news-international-fb.xml", openFileOutput("InternationalNews.xml", Context.MODE_PRIVATE));
+
+                Downloader.DownloadFromUrl("http://kashmirglobal.com/feed",openFileOutput("KashmirGlobal.xml",Context.MODE_PRIVATE));
+
+                Downloader.DownloadFromUrl("http://www.dailyexcelsior.com/feed",openFileOutput("Dailyexcelsior.xml",Context.MODE_PRIVATE));
 
             } catch (FileNotFoundException e) {
                 Log.e("ERROR at DoInBackground", String.valueOf(e));

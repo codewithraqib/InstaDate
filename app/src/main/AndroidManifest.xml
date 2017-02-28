@@ -21,7 +21,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
 
             <meta-data
@@ -33,9 +33,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.raqib.instadate.MainActivity" />
         </activity>
-        <activity android:name=".RegisterActivity">
-
-        </activity>
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".Customization" />
         <activity android:name=".GeneralNavigationTab">
@@ -65,9 +63,34 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".BookmarksActivity" />
+
+
+        <activity android:name=".B_MarkActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.raqib.instadate.MainActivity" />
+        </activity>
+
+        <activity android:name=".About">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.raqib.instadate.MainActivity" />
+        </activity>
+
+
+        <activity android:name=".WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

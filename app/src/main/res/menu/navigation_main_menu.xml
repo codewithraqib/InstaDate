@@ -35,11 +35,13 @@
     <item android:title="@string/information_about_app">
         <menu>
 
-    <item android:id="@+id/menu_about"
-        android:title="@string/action_about"
-        android:orderInCategory="53"
-        android:icon="@drawable/about_icon"
-        app:showAsAction="never" />
+            <item android:id="@+id/menu_about"
+                android:title="@string/action_about"
+                android:orderInCategory="53"
+                android:icon="@drawable/about_icon"
+                android:onClick="aboutActivity"
+                app:showAsAction="never"
+                />
 
         </menu>
     </item>

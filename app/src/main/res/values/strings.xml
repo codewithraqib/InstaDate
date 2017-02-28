@@ -100,5 +100,25 @@
     <string name="rightdrawer">rightDrawer</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="Message_before_loading">Setting Data In Order, Please Wait… Slide Through Tabs To Refresh</string>
+    <string name="kashmirglobal.com">KG</string>
+    <string name="dailyexcelsior">DE</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="first_screen_intro">App that keeps you upto date</string>
+    <string name="intro_message_2">Multi News categories</string>
+    <string name="intro_message_1">RSS based news app</string>
+        <string name="Introduction">RSS(rich site summary)to collect NEWS from different sources and websites in xml format and displays them in the InstaDate.
+       The notifications are relevant and they don’t seem irritating. Breaking and trending news are presented instantly in real-time. All these news can be read in less than a minute. Relevant Push Notifications are received, i.e., only those which matter to you. It is completely ad-free! -Bookmarking. If you ever come across a short that you’d like to keep for easy access- you can use the ‘Bookmark’ option this app offers. Just tap on the headline, and you’re good to go.
+       </string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google+</string>
+    <string name="gmail">Gmail</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="about">About</string>
+    <string name="introduction1">(I) The user doesn’t have to remember websites of every news channel.</string>
+    <string name="introduction2">(II) The news flashes of the news will be available on the same page or in the same window.</string>
+    <string name="introduction3">(III) And if the user wants to read all the news he/she can click on the link and whole news will be displayed to the user.</string>
+    <string name="introduction4">(IV) The news will getautomatically updated according to that very particular news website/App so that user can get the latest news happening.</string>
 
 </resources>

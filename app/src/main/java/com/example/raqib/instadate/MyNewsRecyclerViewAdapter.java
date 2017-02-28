@@ -3,8 +3,10 @@ package com.example.raqib.instadate;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -34,8 +37,17 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
     private final List<NewsItems> mValues;
 
     static  int i = 0;
-    public static  String title ;
+    static SharedPreferences sharedPreferencesBookmark;
+    public static String title;
     private static String link;
+    private static String bookmarkHeading;
+    private static String bookmarkDetailedNews;
+    private static String bookmarkLink;
+    private static String bookmarkImageUrl;
+    private static String bookmarkNewsDate;
+    public static int val;
+    NewsItems bookmarkNewsItems;
+    public static List<NewsItems> bookmarkedNewsList;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -81,6 +93,8 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         String SD = "www.sciencedaily.com";
         String BBC = "www.bbc.co.uk";
         String Rediff = "www.rediff.com";
+        String KG = "kashmirglobal.com";
+        String DE = "www.dailyexcelsior.com";
 
         if(linkToCheck.toLowerCase().contains(FE.toLowerCase()))
             holder.moreAtLink.setText(R.string.FinancialExpress);
@@ -94,6 +108,10 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
             holder.moreAtLink.setText(R.string.BBC);
         else if(linkToCheck.toLowerCase().contains(Rediff.toLowerCase()))
             holder.moreAtLink.setText(R.string.Rediff);
+        else if (linkToCheck.toLowerCase().contains(KG.toLowerCase()))
+            holder.moreAtLink.setText(R.string.kashmirglobal_com);
+        else if (linkToCheck.toLowerCase().contains(DE.toLowerCase()))
+            holder.moreAtLink.setText(R.string.dailyexcelsior);
 
 
 
@@ -106,6 +124,30 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
             }
         });
 
+        //BOOKMARK ON CLICKING
+        holder.bookmarkButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                Log.e("POSITION","is"+ String.valueOf(position));
+                holder.bookmarkButton.setColorFilter(Color.BLUE);
+
+                bookmarkImageUrl = mValues.get(position).getImgUrl();
+                bookmarkHeading = mValues.get(position).getTitle();
+                // holder.description.setTextColor(Color.CYAN);
+                bookmarkDetailedNews = mValues.get(position).getDescription();
+                bookmarkLink = mValues.get(position).getLink();
+                bookmarkNewsDate = mValues.get(position).getDate();
+
+
+                MyNewsRecyclerViewAdapter.this.bookmarkCurrentFeed(bookmarkImageUrl, bookmarkHeading, bookmarkDetailedNews, bookmarkLink, bookmarkNewsDate, position);
+                // holder.bookmarkButton.setColorFilter(Color.BLUE);
+                Toast.makeText(context, "Feed Bookmarked!", Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
 
         //SHARE SCREENSHOT ONCLICK HANDLING
         holder.shareButton.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +159,47 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
 
         loadImage(holder,position);
 
+    }
+
+    private void bookmarkCurrentFeed(String bookmarkImageUrl, String bookmarkHeading, String bookmarkDetailedNews, String bookmarkLink, String bookmarkNewsDate, int pos) {
+//BM_count+=1;
+
+//bt.clearColorFilter();
+//if(!BM_Subscribed){
+        sharedPreferencesBookmark = context.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
+        // Log.e("sixeof","bm:::::"+sharedPreferencesBookmark.getInt("sizeOfBM",1));
+        if (sharedPreferencesBookmark.getInt("sizeOfBM", 0) == 0) {
+            Log.e("sixeof", "bmlist::::" + sharedPreferencesBookmark.getInt("sizeOfBM", 0));
+            sharedPreferencesBookmark.edit().putInt("sizeOfBM", 1).commit();
+            val = sharedPreferencesBookmark.getInt("sizeOfBM", 1);
+            Log.e("value", "is" + val);
+        } else {
+            val = sharedPreferencesBookmark.getInt("sizeOfBM", 1);
+            Log.e("value", "is" + val);
+            sharedPreferencesBookmark.edit().putInt("sizeOfBM", ++val).commit();
+
+            Log.e("value", "is" + val);
+        }
+        try {
+            bookmarkNewsItems = new NewsItems();
+
+            bookmarkNewsItems.setImgUrl(bookmarkImageUrl);
+            bookmarkNewsItems.setTitle(bookmarkHeading);
+            bookmarkNewsItems.setDescription(bookmarkDetailedNews);
+            bookmarkNewsItems.setLink(bookmarkLink);
+            bookmarkNewsItems.setDate(bookmarkNewsDate);
+            bookmarkedNewsList.add(bookmarkNewsItems);}catch (Exception e){Log.e("after news created","to"+e);}
+        sharedPreferencesBookmark.edit().putString("BMImageUrl" + String.valueOf(val), bookmarkImageUrl).apply();
+        sharedPreferencesBookmark.edit().putString("BMHeading" + String.valueOf(val), bookmarkHeading).apply();
+        Log.e("BMHEADING", "is:::" + sharedPreferencesBookmark.getString("BMHeading" + String.valueOf(val), null));
+        sharedPreferencesBookmark.edit().putString("BMDetailedNews" + String.valueOf(val), bookmarkDetailedNews).apply();
+        sharedPreferencesBookmark.edit().putString("BMLink" + String.valueOf(val), bookmarkLink).apply();
+        sharedPreferencesBookmark.edit().putString("BMNewsDate" + String.valueOf(val), bookmarkNewsDate).apply();
+        Log.e(sharedPreferencesBookmark.getString("BMImageUrl" + String.valueOf(val), null), "STRING BOOKMARK");
+
+        sharedPreferencesBookmark.edit().commit();
+        //Toast.makeText(getApplicationContext(),"Top News Feeds Subscribed", Toast.LENGTH_SHORT).show();
+        Log.e("feed is", "Subscribed");
     }
 
 
