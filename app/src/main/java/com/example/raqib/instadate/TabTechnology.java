@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,15 @@ import android.view.ViewGroup;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCTechnology;
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserNYTTechnology;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class TabTechnology extends Fragment {
 
@@ -37,6 +43,9 @@ public class TabTechnology extends Fragment {
 
         BBCTechnology = SitesXmlPullParserBBCTechnology.getStackSitesFromFile(getActivity().getBaseContext());
         NYTTechnology = SitesXmlPullParserNYTTechnology.getStackSitesFromFile(getActivity().getBaseContext());
+
+        BBCTechnology = setTimeZone(BBCTechnology);
+        NYTTechnology = setTimeZone(NYTTechnology);
         
         //FOR DIFFERENT CHANNELS ADD HERE IN LIST
         List<NewsItems> newsItemsList = new ArrayList<NewsItems>(){
@@ -48,11 +57,17 @@ public class TabTechnology extends Fragment {
         };
 
         Collections.sort(newsItemsList, new Comparator<NewsItems>() {
+
+            Date first = null, second = null;
+
             @Override
             public int compare(NewsItems newsItems, NewsItems t1) {
-                if (newsItems.getDate() == null || t1.getDate() == null)
+//
+                first = new Date(newsItems.getDate());
+                second = new Date(t1.getDate());
+                if (first == null || second == null)
                     return 0;
-                return newsItems.getDate().compareTo(t1.getDate());
+                return second.compareTo(first);
             }
         });
 
@@ -61,6 +76,27 @@ public class TabTechnology extends Fragment {
         return view;
     }
 
+    private List<NewsItems> setTimeZone(List<NewsItems> listReference) {
+
+
+        Date date = null;
+        DateFormat format = new SimpleDateFormat("EE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+        for(int i = 0 ; i < listReference.size(); i++){
+
+            try {
+                date = format.parse(listReference.get(i).getDate());
+            } catch (Exception e) {
+                Log.e("Exception while parsing", e.toString());
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("dd, MMM yyyy HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+            String firstDate = sdf.format(date);
+            listReference.get(i).setDate(firstDate);
+            listReference.set(i, listReference.get(i));
+        }
+        return listReference;
+
+    }
 
 
 }

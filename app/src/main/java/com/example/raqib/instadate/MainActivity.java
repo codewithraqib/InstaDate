@@ -34,7 +34,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MaterialSearchView searchView;
     static int locationOfSearchedItem = 0;
     boolean doubleBackToExitPressedOnce = false;
-    ImageButton shareButton;
     DrawerLayout myDrawerLayout;
     static  int i = 0;
     RecyclerView mRecyclerView;

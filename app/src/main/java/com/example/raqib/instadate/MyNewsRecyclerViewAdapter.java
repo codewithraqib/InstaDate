@@ -45,9 +45,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
     private static String bookmarkLink;
     private static String bookmarkImageUrl;
     private static String bookmarkNewsDate;
-    public static int val;
-    NewsItems bookmarkNewsItems;
-    public static List<NewsItems> bookmarkedNewsList;
+    private static List<NewsItems> bookmarkedNewsList;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -77,8 +75,6 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         holder.title.setText(mValues.get(position).getTitle());
 
         holder.description.setText(mValues.get(position).getDescription());
-
-        String dateToFormat = mValues.get(position).getDate();
 
         holder.time.setText(mValues.get(position).getDate());
 
@@ -168,20 +164,21 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
 //if(!BM_Subscribed){
         sharedPreferencesBookmark = context.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
         // Log.e("sixeof","bm:::::"+sharedPreferencesBookmark.getInt("sizeOfBM",1));
+        int val;
         if (sharedPreferencesBookmark.getInt("sizeOfBM", 0) == 0) {
-            Log.e("sixeof", "bmlist::::" + sharedPreferencesBookmark.getInt("sizeOfBM", 0));
-            sharedPreferencesBookmark.edit().putInt("sizeOfBM", 1).commit();
+//            Log.e("sixeof", "bmlist::::" + sharedPreferencesBookmark.getInt("sizeOfBM", 0));
+            sharedPreferencesBookmark.edit().putInt("sizeOfBM", 1).apply();
             val = sharedPreferencesBookmark.getInt("sizeOfBM", 1);
-            Log.e("value", "is" + val);
+//            Log.e("value", "is" + val);
         } else {
             val = sharedPreferencesBookmark.getInt("sizeOfBM", 1);
-            Log.e("value", "is" + val);
-            sharedPreferencesBookmark.edit().putInt("sizeOfBM", ++val).commit();
+//            Log.e("value", "is" + val);
+            sharedPreferencesBookmark.edit().putInt("sizeOfBM", ++val).apply();
 
-            Log.e("value", "is" + val);
+//            Log.e("value", "is" + val);
         }
         try {
-            bookmarkNewsItems = new NewsItems();
+            NewsItems bookmarkNewsItems = new NewsItems();
 
             bookmarkNewsItems.setImgUrl(bookmarkImageUrl);
             bookmarkNewsItems.setTitle(bookmarkHeading);
@@ -197,7 +194,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         sharedPreferencesBookmark.edit().putString("BMNewsDate" + String.valueOf(val), bookmarkNewsDate).apply();
         Log.e(sharedPreferencesBookmark.getString("BMImageUrl" + String.valueOf(val), null), "STRING BOOKMARK");
 
-        sharedPreferencesBookmark.edit().commit();
+        sharedPreferencesBookmark.edit().apply();
         //Toast.makeText(getApplicationContext(),"Top News Feeds Subscribed", Toast.LENGTH_SHORT).show();
         Log.e("feed is", "Subscribed");
     }
@@ -230,8 +227,8 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
     class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
-        TextView title;
-        TextView description;
+        customfonts.MyTextViewTitle title;
+        customfonts.MyTextViewDescription description;
         TextView time;
         TextView moreAt;
         TextView moreAtLink;
@@ -245,15 +242,15 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
 
             super(view);
             mView = view;
-            title = (TextView) view.findViewById(R.id.newsTitle);
-            description = (TextView) view.findViewById(R.id.newsDetails);
+            title = (customfonts.MyTextViewTitle) view.findViewById(R.id.newsTitle);
+            description = (customfonts.MyTextViewDescription) view.findViewById(R.id.newsDetails);
             time = (TextView) view.findViewById(R.id.newsDate);
             moreAt = (TextView) view.findViewById(R.id.moreAtVirtual);
             moreAtLink = (TextView) view.findViewById(R.id.moreAtLink);
             imageView = (NetworkImageView) view.findViewById(R.id.image);
             bookmarkButton = (ImageButton) view.findViewById(R.id.bookmarkButton);
             shareButton = (ImageButton) view.findViewById(R.id.shareButton);
-            screenShotView = view.findViewById(R.id.wholeNewsChunk);
+            screenShotView = view.findViewById(R.id.card_view);
 
         }
     }
