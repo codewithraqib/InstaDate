@@ -50,7 +50,7 @@
     <string name="title">title</string>
     <string name="news_details">news details</string>
     <string name="share">share</string>
-    <string name="log_in">Log In</string>
+    <string name="log_in">Sign Up</string>
     <string name="exit">Exit</string>
     <string name="customization">Customization</string>
 
@@ -61,7 +61,7 @@
     <string name="title_activity_navigation_drawer">InstaDate</string>
     <string name="name_of_user">Welcome</string>
     <string name="share_app">Share App</string>
-    <string name="top_feeds">Top Feeds</string>
+    <string name="top_feeds">Top Stories</string>
     <string name="science">Science</string>
     <string name="international">International</string>
     <string name="national">Technology</string>
@@ -95,21 +95,21 @@
     <string name="or_sign_in_using">or Sign In using</string>
     <string name="add_ons">Add ons</string>
     <string name="refresh">Refresh</string>
-    <string name="gathering_data">Gathering the data,please be patient</string>
+    <string name="gathering_data">Gathering the data, please be patient</string>
     <string name="splash_message">Sit tight, Setting things for you!</string>
     <string name="rightdrawer">rightDrawer</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="Message_before_loading">Setting Data In Order, Please Wait… Slide Through Tabs To Refresh</string>
     <string name="kashmirglobal.com">KG</string>
-    <string name="dailyexcelsior">DE</string>
+    <string name="kashmirlife">KL</string>
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
     <string name="first_screen_intro">App that keeps you upto date</string>
     <string name="intro_message_2">Multi News categories</string>
     <string name="intro_message_1">RSS based news app</string>
-        <string name="Introduction">RSS(rich site summary)to collect NEWS from different sources and websites in xml format and displays them in the InstaDate.
-       The notifications are relevant and they don’t seem irritating. Breaking and trending news are presented instantly in real-time. All these news can be read in less than a minute. Relevant Push Notifications are received, i.e., only those which matter to you. It is completely ad-free! -Bookmarking. If you ever come across a short that you’d like to keep for easy access- you can use the ‘Bookmark’ option this app offers. Just tap on the headline, and you’re good to go.
+        <string name="Introduction">InstaDate is an RSS(rich site summary) based NEWS App, collects NEWS from different sources and displays them in elegant way in InstaDate.
+       The notifications are relevant and they don’t seem irritating. Breaking and trending news are presented instantly in real-time. Relevant Push Notifications are received. There is also a feature of Bookmarking, If you ever come across a NEWS Feed that you’d like to keep for easy access, you can Bookmark the NEWS Feed.
        </string>
     <string name="facebook">Facebook</string>
     <string name="google">Google+</string>
@@ -120,5 +120,12 @@
     <string name="introduction2">(II) The news flashes of the news will be available on the same page or in the same window.</string>
     <string name="introduction3">(III) And if the user wants to read all the news he/she can click on the link and whole news will be displayed to the user.</string>
     <string name="introduction4">(IV) The news will getautomatically updated according to that very particular news website/App so that user can get the latest news happening.</string>
+    <string name="local">Local</string>
+    <string name="gadgets">Gadgets</string>
+    <string name="trending">Trending</string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="drawer_open">Drawer Opened</string>
+    <string name="drawer_close">Drawer Closed</string>
+    <string name="delete_the_bookmark">Delete</string>
 
 </resources>

@@ -73,7 +73,7 @@ public class SitesXmlPullParserDailyexcelsior {
 
             // get initial eventType
             int eventType = xpp.getEventType();
-            Log.e("TAG NAME is","::"+eventType);
+//            Log.e("TAG NAME is","::"+eventType);
 
             //To get the actual location to start parsing from
             boolean actual_work = false;
@@ -81,11 +81,11 @@ public class SitesXmlPullParserDailyexcelsior {
             // Loop through pull events until we reach END_DOCUMENT
             while (eventType != XmlPullParser.END_DOCUMENT) {
 
-                Log.e("TAG NAME is","WHILE");
+//                Log.e("TAG NAME is","WHILE");
 
                 // Get the current tag
                 String tagName = xpp.getName();
-                Log.e("TAG NAME is",":"+tagName);
+//                Log.e("TAG NAME is",":"+tagName);
 
                 // React to different event types appropriately
                 switch (eventType) {
@@ -94,7 +94,7 @@ public class SitesXmlPullParserDailyexcelsior {
                             // If we are starting a new <site> block we need
                             //a new StackSite object to represent it
                             curNewsItems = new NewsItems();
-                            Log.e("TAG NAME is","Start_tag"+eventType);
+//                            Log.e("TAG NAME is","Start_tag"+eventType);
                             actual_work = true;
                         }
 
@@ -103,19 +103,20 @@ public class SitesXmlPullParserDailyexcelsior {
 
                     case XmlPullParser.TEXT:
                         //grab the current text so we can use it in END_TAG event
-                        curText = xpp.getText();Log.e("TAG NAME is","text"+eventType);
+                        curText = xpp.getText();
+//                        Log.e("TAG NAME is","text"+eventType);
                         break;
 
 
                     case XmlPullParser.END_TAG:
-                        Log.e("TAG NAME is","end_tag"+eventType);
+//                        Log.e("TAG NAME is","end_tag"+eventType);
                         if (tagName.equalsIgnoreCase(KEY_SITE) && actual_work) {
                             // if </item> then we are done with current Site
                             // add it to the list.
                             newsItems.add(curNewsItems);
                         } else if (tagName.equalsIgnoreCase(KEY_NAME) && actual_work) {
                             // if </title> use setTitle() on curSite
-                            Log.e("TITLE IS ",curText);
+//                            Log.e("TITLE IS ",curText);
                             curNewsItems.setTitle(curText);
 
                         } else if (tagName.equalsIgnoreCase(KEY_LINK) && actual_work) {
@@ -130,7 +131,7 @@ public class SitesXmlPullParserDailyexcelsior {
                             final Matcher matcher = pattern.matcher(curText);
                             matcher.find();
                             System.out.println(matcher.group(1));
-                            Log.e("matcher","1="+matcher.group(1));
+//                            Log.e("matcher","1="+matcher.group(1));
                             curNewsItems.setDescription(matcher.group(1));
                         } else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
                             // if </image> use setImgUrl() on curSite
@@ -147,14 +148,14 @@ public class SitesXmlPullParserDailyexcelsior {
                         break;
 
                     default:
-                        Log.e("TAG NAME is","default"+eventType);
+//                        Log.e("TAG NAME is","default"+eventType);
 
                         // skip(xpp);
                         break;
                 }
                 //move on to next iteration
                 // skip(xpp);
-                Log.e("EventType is",":"+eventType);
+//                Log.e("EventType is",":"+eventType);
                 /*
                 if(depth==0&&(eventType==XmlPullParser.TEXT||eventType==XmlPullParser.CDSECT||eventType==XmlPullParser.ENTITY_REF)){
 
@@ -162,13 +163,12 @@ public class SitesXmlPullParserDailyexcelsior {
                 }*/
                 //    Log.e("valueee","is"+xpp.next());
                 eventType = xpp.next();
-                Log.e("valueee","next"+eventType);
+//                Log.e("value","next"+eventType);
                 // depth=depth+1;
                 // Log.e("DEPTH is","VAL"+depth);
             }
         } catch (Exception e) {
             Log.e("exceptiom", "is"+e);
-            e.printStackTrace();
         }
 
         // return the populated list.
@@ -188,14 +188,14 @@ public class SitesXmlPullParserDailyexcelsior {
         catch (Exception e) {
             e.printStackTrace();
 
-            Log.e("convert","string:::"+e);
+//            Log.e("convert","string:::"+e);
         }
         return null;
     }
 
     private static void skip(XmlPullParser xpp) {
         try {
-            Log.e("inside", "skip");
+//            Log.e("inside", "skip");
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 //throw new IllegalStateException();
 
@@ -203,7 +203,7 @@ public class SitesXmlPullParserDailyexcelsior {
             }
             int depth = 1;
             while (depth != 0) {
-                Log.e("inside", "skip while");
+//                Log.e("inside", "skip while");
                 switch (xpp.next()) {
                     case XmlPullParser.END_TAG:
                         depth--;
@@ -213,9 +213,9 @@ public class SitesXmlPullParserDailyexcelsior {
                         break;
                 }
             }
-            Log.e("after ", "skip");
+//            Log.e("after ", "skip");
         } catch (Exception e) {
-            Log.e("excep in skip", "is" + e);
+//            Log.e("excep in skip", "is" + e);
         }
     }
 }

@@ -9,7 +9,6 @@
         android:id="@+id/save_customization_to_database"
         android:title="@string/save_customization_to_database"
         app:showAsAction="always"
-        android:icon="@drawable/save_button"
         android:onClick="storeInDatabase"
         />
 

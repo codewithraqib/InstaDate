@@ -1,6 +1,7 @@
 package com.example.raqib.instadate.News_Sites;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.raqib.instadate.NewsItems;
 
@@ -51,6 +52,7 @@ public class SitesXmlPullParserTheFinancialExpress {
 
             // get initial eventType
             int eventType = xpp.getEventType();
+            Log.e("TagName TopStories", String.valueOf(eventType));
 
             //To get the actual location to start parsing from
             boolean actual_work = false;

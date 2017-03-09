@@ -2,18 +2,18 @@ package com.example.raqib.instadate;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -24,7 +24,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -34,9 +33,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raqib.instadate.News_Sites.SitesXmlPullParserBBCHealth;
@@ -54,6 +53,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +61,6 @@ import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    int uiOptions = 0;
     SwipeRefreshLayout mySwipeRefreshLayout;
     private static final String TAG = "Main Activity";
     private FirebaseAuth mAuth;
@@ -76,9 +75,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout myDrawerLayout;
     static  int i = 0;
     RecyclerView mRecyclerView;
-    ImageView floatingButton;
     static boolean searchOpened = false;
-    static boolean itIsTheFirstTimeInMainActivity = true;
+    SplashScreenFragment frag;
+    FragmentManager manager;
+    static boolean firstTimeInONCreate = true;
+    boolean []subscribedTabs = new boolean[7];
+    static  int unSelectedTab = 0;
+    TextView loginText,logoutText;
+    ActionBarDrawerToggle mDrawerToggle;
 
 
     @Override
@@ -103,39 +107,91 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabHost);
+
+        searchListView = (ListView) findViewById(R.id.searchListView);
+
+        // TO SHOW SPLASH FRAGMENT
+        frag = new SplashScreenFragment();
+        manager = getFragmentManager();
+
+
+        //SET THE SUBSCRIBED ARRAY TO FALSE INITIALLY
+        for( int i = 0; i< subscribedTabs.length; i++){
+            subscribedTabs[i] = false;
+        }
+
+        final LinearLayout mainNewsRelativeLayout = (LinearLayout) findViewById(R.id.mainNewsRelativeLayout);
+        myDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, myDrawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close) {
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+        myDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+
         final ViewPager viewPager2 = (ViewPager) findViewById(R.id.pager);
         assert viewPager2 != null;
         viewPager2.setCurrentItem(0);
 
-        floatingButton = (ImageView) findViewById(R.id.floatingButton);
-        floatingButton.setVisibility(View.INVISIBLE);
+        //Check For Logged In User To Set UP Drawer Items Accordingly
+        loginText = (TextView) findViewById(R.id.drawerLogIn);
+        logoutText = (TextView) findViewById(R.id.drawerLogOut);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        try{
+            if(user != null){
+
+                loginText.setAlpha(0);
+                logoutText.setAlpha(1);
+            }
+
+            //LOGGING IN AND LOGGING OUT
+//            loginText.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                }
+//            });
+
+//            logoutText.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                    if(user == null){
+//                        Toast.makeText(MainActivity.this, "You Are Already Logged Out!", Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        FirebaseAuth.getInstance().signOut();
+//                        Toast.makeText(MainActivity.this, "Logged Out Successfully!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+
+        }catch(NullPointerException e){
+            Log.e("Login/Logout", "NullPointerException");
+        }
 
 
+
+        //CREATE A LIST AF ALL NEWS TO MAKE IT READY FOR SEARCH
         createListOfNews();
 
-        final RelativeLayout mainNewsRelativeLayout = (RelativeLayout) findViewById(R.id.mainNewsRelativeLayout);
-        myDrawerLayout = (DrawerLayout) findViewById(R.id.myDrawerLayout);
 
-        //SETTING THE SCROLL LISTENER FOR THE MAIN NEWS SCREEN
-        myDrawerLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                int dy = i3 - i1;
-                if(dy >10){
-                    Log.e("Inside Scrolling UP1", String.valueOf(dy));
-                    getSupportActionBar().hide();
-                    Log.e("Inside Scrolling UP2", String.valueOf(dy));
-
-                }else if(dy < -10){
-                    Log.e("Inside Scrolling UP3", String.valueOf(dy));
-                    getSupportActionBar().show();
-                    Log.e("Inside Scrolling UP4", String.valueOf(dy));
-                }
-            }
-        });
 
         //SETTING THE LIST FOR SEARCH
-        searchListView = (ListView) findViewById(R.id.searchListView);
+
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listToSearch);
         searchListView.setAdapter(arrayAdapter);
 
@@ -147,6 +203,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onSearchViewShown() {
                 searchListView.setVisibility(View.VISIBLE);
+                getSupportActionBar().show();
+                tabLayout.setVisibility(View.VISIBLE);
                 mainNewsRelativeLayout.setVisibility(View.INVISIBLE);
                 searchOpened = true;
 
@@ -157,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 searchListView = (ListView) findViewById(R.id.searchListView);
                 arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,listToSearch);
+//                getSupportActionBar().show();
+//                tabLayout.setVisibility(View.VISIBLE);
                 searchListView.setAdapter(arrayAdapter);
                 searchListView.setVisibility(View.INVISIBLE);
                 mainNewsRelativeLayout.setVisibility(View.VISIBLE);
@@ -209,19 +269,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             mySwipeRefreshLayout.setOnRefreshListener(
             new SwipeRefreshLayout.OnRefreshListener() {
+
         // METHOD WHICH IS CALLED WHEN THE USER IS ALREADY ON THE TOP AND SWIPES DOWN TO REFRESH THE DATA
         @Override
         public void onRefresh(){
-            if (isNetworkAvailable()) {
-                SitesDownloadTask download = new SitesDownloadTask();
-                download.execute();
-            }
-            else{
-                mySwipeRefreshLayout.setRefreshing(false);
-                Toast toast = Toast.makeText(getApplicationContext(),"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER,0,0);
-                toast.show();
-            }
+
+            getTheCurrentFeeds();
         }
 
 
@@ -249,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //      getSupportActionBar().hide();
 
         //NEW IMPLEMENTATION OF SWIPE TABS
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabHost);
+
 
         assert tabLayout != null;
         Customization.sharedPreferences = this.getSharedPreferences("com.example.raqib.instadate", Context.MODE_PRIVATE);
@@ -276,18 +329,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         tabLayout.addTab(tabLayout.newTab().setText("Top National"));
-        if(Customization.sharedPreferences.getBoolean("scienceFeeds", false))
-        tabLayout.addTab(tabLayout.newTab().setText("Science"));
-        if(Customization.sharedPreferences.getBoolean("technologyFeeds", false))
-        tabLayout.addTab(tabLayout.newTab().setText("Technology"));
-        if(Customization.sharedPreferences.getBoolean("sportsFeeds", false))
-        tabLayout.addTab(tabLayout.newTab().setText("Sports"));
-        if(Customization.sharedPreferences.getBoolean("healthFeeds", false))
-        tabLayout.addTab(tabLayout.newTab().setText("Health"));
-        if(Customization.sharedPreferences.getBoolean("internationalFeeds", false))
-        tabLayout.addTab(tabLayout.newTab().setText("International"));
-        if(Customization.sharedPreferences.getBoolean("localFeeds", false))
+        subscribedTabs[0] = true;
+
+        if(Customization.sharedPreferences.getBoolean("scienceFeeds", false)){
+            subscribedTabs[1] = true;
+            tabLayout.addTab(tabLayout.newTab().setText("Science"));
+        }
+        if(Customization.sharedPreferences.getBoolean("technologyFeeds", false)){
+            subscribedTabs[2] = true;
+            tabLayout.addTab(tabLayout.newTab().setText("Technology"));
+        }
+        if(Customization.sharedPreferences.getBoolean("sportsFeeds", false)){
+            subscribedTabs[3] = true;
+            tabLayout.addTab(tabLayout.newTab().setText("Sports"));
+        }
+        if(Customization.sharedPreferences.getBoolean("healthFeeds", false)){
+            subscribedTabs[4] = true;
+            tabLayout.addTab(tabLayout.newTab().setText("Health"));
+        }
+        if(Customization.sharedPreferences.getBoolean("internationalFeeds", false)){
+            subscribedTabs[4] = true;
+            tabLayout.addTab(tabLayout.newTab().setText("International"));
+        }
+        if(Customization.sharedPreferences.getBoolean("localFeeds", false)){
+            subscribedTabs[6] = true;
             tabLayout.addTab(tabLayout.newTab().setText("Local"));
+        }
         tabLayout.setTabGravity(TabLayout.MODE_SCROLLABLE);
 
 
@@ -298,15 +365,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         assert viewPager != null;
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
+//                int tabPositionForward = unSelectedTab + 1;
+//                int flag = 0;
+//                int tabPositionBackward = unSelectedTab - 1;
+//                if(unSelectedTab < tabPositionForward){
+////                    int limit = subscribedTabs.length - tabPosition;
+//                    for(int i = tabPositionForward; i < subscribedTabs.length ; i++){
+//                        if(subscribedTabs[i]){
+//                            viewPager.setCurrentItem(i);
+//                            break;
+//                        }
+//
+//                    }
+//                }else
                 viewPager.setCurrentItem(tab.getPosition());
+//                viewPager.setCurrentItem(tab.getText().);
 
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                unSelectedTab = tab.getPosition();
 
             }
 
@@ -318,26 +402,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        if(firstTimeInONCreate){
+            firstTimeInONCreate = false;
+            getTheCurrentFeeds();
+        }
 
+    }
 
+    //METHOD TO GET THE CURRENTLY AVAILABLE FEEDS FROM SOURCES
+    private void getTheCurrentFeeds() {
         if (isNetworkAvailable()) {
             SitesDownloadTask download = new SitesDownloadTask();
             download.execute();
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(),"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
-            toast.show();
-            Snackbar snackbar = Snackbar.make( myDrawerLayout,"You Don't Have An Active Internet Connection, Please Connect With Internet And Try Again!", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("OKAY", new View.OnClickListener() {
+            mySwipeRefreshLayout.setRefreshing(false);
+
+            Snackbar snackbar = Snackbar.make( myDrawerLayout,"No Internet , Can't Connect at the moment ", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Retry", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
+                            getTheCurrentFeeds();
+                            mySwipeRefreshLayout.setRefreshing(true);
                         }
                     });
             snackbar.show();
+
         }
-
-
     }
 
     //CREATE THE LIST OF ALL AVAILABLE NEWS AT THE MOMENT
@@ -428,7 +518,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NewsItems curNewsItems = new NewsItems();
 
-        searchNewsItems = new ArrayList<NewsItems>();
+        searchNewsItems = new ArrayList<>();
 
         String searchTitle = newsItemsList.get(searchResultPosition).getTitle();
         String searchDescription = newsItemsList.get(searchResultPosition).getDescription();
@@ -441,6 +531,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         curNewsItems.setLink(searchLink);
         curNewsItems.setImgUrl(searchImageUrl);
         curNewsItems.setDate(searchDate);
+
         searchNewsItems.add(curNewsItems);
 
         Intent intent = new Intent(this, SearchActivity.class);
@@ -479,16 +570,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void displayNews() {
-        // thinking
-    }
-
     //HELPER METHOD TO DETERMINE WHETHER NETWORK IS AVAILABLE OR NOT
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        }
+        catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+
+//        //ALTERNATE WAY  TO CHECK INTERNET CONNECTION
+//        ConnectivityManager connectivityManager
+//                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+//        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
@@ -503,7 +605,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.doubleBackToExitPressedOnce = true;
 
         final ListView list = (ListView) findViewById(R.id.searchListView);
-        RelativeLayout mainNewsLinearLayout = (RelativeLayout) findViewById(R.id.mainNewsRelativeLayout);
+        LinearLayout mainNewsLinearLayout = (LinearLayout) findViewById(R.id.mainNewsRelativeLayout);
 
         if(searchOpened){
             list.setVisibility(View.INVISIBLE);
@@ -524,50 +626,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //NAVIGATION DRAWER
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
         if (id == R.id.nav_top_feeds) {
 
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+
             assert viewPager != null;
             viewPager.setCurrentItem(0);
-            Toast.makeText(getApplicationContext(), "We Are In Top Feeds Drawer", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_science) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(1);
-            Toast.makeText(getApplicationContext(), "We Are In Science Feeds Drawer", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_technology) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(2);
-            Toast.makeText(getApplicationContext(), "We Are In National Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_sports) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(3);
-            Toast.makeText(getApplicationContext(), "We Are In Sports Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_health) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(4);
-            Toast.makeText(getApplicationContext(), "We Are In Health Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_international) {
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
             assert viewPager != null;
             viewPager.setCurrentItem(5);
-            Toast.makeText(getApplicationContext(), "We Are In International Feeds Drawer", Toast.LENGTH_LONG).show();
-
+        }else if (id == R.id.nav_local) {
+            assert viewPager != null;
+            viewPager.setCurrentItem(6);
         } else if (id == R.id.nav_bookmarked_feeds) {
             startActivity(new Intent(getApplicationContext(), BookmarksActivity.class));
-            Toast.makeText(getApplicationContext(), "We Are In Sports Feeds Drawer", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.nav_share) {
 
@@ -600,9 +693,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void goToCustomizationActivity(MenuItem item) {
-        startActivity(new Intent(MainActivity.this, Customization.class));
-        this.finish();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user == null){
+            Snackbar snackbar = Snackbar.make( myDrawerLayout,"You'r not Signed In, SignIn to Customize ", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Sign In", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        }
+                    });
+            snackbar.show();
+            myDrawerLayout.closeDrawers();
+
+        }else{
+            startActivity(new Intent(MainActivity.this, Customization.class));
+        }
     }
+
     public void aboutActivity(MenuItem item) {
         startActivity(new Intent(MainActivity.this, About.class));
 
@@ -621,29 +730,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    //SIMPLE LOGOUT API
-    public void logOutCurrentUser(View view) {
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(user == null){
-            Toast.makeText(MainActivity.this, "You Are Already Logged Out!", Toast.LENGTH_SHORT).show();
-        }else{
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(MainActivity.this, "Logged Out Successfully!", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-
 
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {
 
-//        ProgressDialog pdl;
 
         @Override
         protected void onPreExecute() {
+
+//            if(firstTimeInONCreate){
+//                manager.beginTransaction().add(R.id.myDrawerLayout,frag,"splashScreenFragment").commit();
+//            }
             super.onPreExecute();
+
         }
 
         //DOWNLOAD THE FILES FROM INTERNET
@@ -677,7 +775,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 Downloader.DownloadFromUrl("http://kashmirglobal.com/feed",openFileOutput("KashmirGlobal.xml",Context.MODE_PRIVATE));
 
-                Downloader.DownloadFromUrl("http://www.dailyexcelsior.com/feed",openFileOutput("Dailyexcelsior.xml",Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl("http://www.kashmirlife.net/feed/",openFileOutput("KashmirLife.xml",Context.MODE_PRIVATE));
+
+                Downloader.DownloadFromUrl("http://www.tribuneindia.com/rss/feed.aspx?cat_id=5",openFileOutput("TribuneLocal.xml",Context.MODE_PRIVATE));
 
             } catch (FileNotFoundException e) {
                 Log.e("ERROR at DoInBackground", String.valueOf(e));
@@ -688,59 +788,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void result) {
             mySwipeRefreshLayout.setRefreshing(false);
-            Snackbar snackbar = Snackbar.make( myDrawerLayout,"Your Feeds Has Been Successfully Updated!", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("OKAY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
 
-                        }
-                    });
+            Toast toast =  Toast.makeText(MainActivity.this, " Feeds Successfully Synced!", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER,0,0);
+            toast.show();
 
-            floatingButton.setVisibility(View.VISIBLE);
-            floatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                floatingButton.setVisibility(View.INVISIBLE);
-                try{
-                    mRecyclerView = (RecyclerView)  findViewById(R.id.my_recycler_view);
-                    LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView
-                            .getLayoutManager();
+//            manager.beginTransaction().remove(frag).commit();
 
-                    layoutManager.setSmoothScrollbarEnabled(true);
-//                    layoutManager.scrollToPositionWithOffset(0, 0);
-                    mRecyclerView.smoothScrollToPosition(0);
-
-//                    mRecyclerView.setOnScrollListener();
-
-                }catch (NullPointerException NPE){
-                    Log.e("At PostExecuteOFMain", String.valueOf(NPE));
-                }
-            }
-        });
-
-
-//            mRecyclerView = (RecyclerView)  findViewById(R.id.my_recycler_view);
-//            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                @Override
-//                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//
-//                    if(dy > 20){
-//
-//                        getSupportActionBar().hide();
-////                        View decorView = getWindow().getDecorView();
-////                        uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-////                        decorView.setSystemUiVisibility(uiOptions);
-//
-//                    }else if(dy < - 20) {
-//                        getSupportActionBar().show();
-////                        int uiOptionsNormalScreen = 0;
-////                        View decorView = getWindow().getDecorView();
-////                        decorView.setSystemUiVisibility(uiOptionsNormalScreen);
-//                    }
-//
-//                    super.onScrolled(recyclerView, dx, dy);
-//                }
-//            });
         }
     }
 

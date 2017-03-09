@@ -101,6 +101,7 @@ public class WebViewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarWebView);
         String linkToDisplayOnToolbar = link.substring(11);
         toolbar.setTitle(linkToDisplayOnToolbar);
+        toolbar.collapseActionView();
         setSupportActionBar(toolbar);
         try{
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

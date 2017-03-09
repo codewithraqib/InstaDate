@@ -3,9 +3,11 @@
     <color name="colorPrimarySearch">#ffffff</color>
     <color name="colorPrimary">#263238</color>
     <color name="colorPrimaryLight">#ffffff</color>
-    <color name="colorMaterial">#4caf95</color>
-    <color name="colorPrimaryDark">#4caf95</color>
+    <color name="colorMaterial">#4db6ac</color>
+    <color name="colorPrimaryDark">#4db6ac</color>
     <color name="colorAccent">#ec407a</color>
+    <color name="colorSubscription">#FFAD47</color>
+
 
 
     <!-- Screens background color-->

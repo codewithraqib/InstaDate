@@ -27,6 +27,10 @@
             android:id="@+id/nav_international"
             android:icon="@drawable/international_icon2"
             android:title="@string/international" />
+        <item
+            android:id="@+id/nav_local"
+            android:icon="@drawable/local_icon2"
+            android:title="@string/local" />
 
 
         <item

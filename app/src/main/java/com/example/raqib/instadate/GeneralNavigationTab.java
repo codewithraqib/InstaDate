@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -21,16 +19,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public class GeneralNavigationTab extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     RecyclerView recyclerView;
     public List<NewsItems> BookmarkedFeeds;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,9 @@ public class GeneralNavigationTab extends AppCompatActivity implements Navigatio
 
 //        BookmarkedFeeds = SitesXmlPullParserWorldSports.getStackSitesFromFile(this);
 //        BookmarkedFeeds = MyNewsRecyclerViewAdapter.bookmarkedNewsList;
+
+
+
 
         recyclerView.setAdapter(new RecyclerAdapter());
 
@@ -86,10 +89,10 @@ public class GeneralNavigationTab extends AppCompatActivity implements Navigatio
         startActivity(new Intent(GeneralNavigationTab.this, RegisterActivity.class));
     }
 
-    public void goToLoginActivity(View view) {
-
-        startActivity(new Intent(GeneralNavigationTab.this, LoginActivity.class));
-    }
+//    public void goToLoginActivity(View view) {
+//
+//        startActivity(new Intent(GeneralNavigationTab.this, LoginActivity.class));
+//    }
 
     public void goToCustomizationActivity(MenuItem item) {
         startActivity(new Intent(GeneralNavigationTab.this, Customization.class));
@@ -132,10 +135,17 @@ public class GeneralNavigationTab extends AppCompatActivity implements Navigatio
 
     //HELPER METHOD TO DETERMINE WHETHER NETWORK IS AVAILABLE OR NOT
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        }
+        catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     private class SitesDownloadTask extends AsyncTask<Void, Void, Void> {

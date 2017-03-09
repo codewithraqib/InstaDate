@@ -13,8 +13,11 @@
     <item android:id="@+id/searchInMain"
         android:title="@string/search_in_main_menu"
         android:orderInCategory="1"
-        android:icon="@drawable/search_icon_black"
+        android:icon="@drawable/search_icon"
         app:showAsAction="ifRoom"
+        android:clickable="true"
+        android:inputType="none"
+        android:focusable="false"
         android:onClick="goForSearchInNewsList"
         />
 </menu>

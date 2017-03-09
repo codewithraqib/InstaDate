@@ -4,32 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:openDrawer="start"
-    android:id="@+id/myDrawerLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity">
+    android:id="@+id/myDrawerLayout"
+    tools:context=".MainActivity"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/mainNewsScreen"
-        >
+        android:layout_height="wrap_content"
+        android:id="@+id/appbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:orientation="vertical">
+
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mainToolbar">
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorMaterial"
+                app:layout_scrollFlags="scroll|enterAlways"
                 />
-
 
             <com.miguelcatalan.materialsearchview.MaterialSearchView
                 android:id="@+id/search_view"
@@ -41,78 +46,57 @@
                 app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
                 app:searchSuggestionIcon="@drawable/ic_suggestion"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#FFFFFF"
+                android:textColorHint="#e0e0e0"
                 />
-
-            <com.example.raqib.instadate.CustomTabLayout
-                android:id="@+id/tabHost"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:tabIndicatorHeight="2dp"
-                android:background="@color/colorMaterial"
-                app:tabIndicatorColor="#000000"
-                android:layout_below="@+id/toolbar"
-                app:tabTextColor="#000000"
-                app:tabSelectedTextColor="#ffffff"
-                app:tabMode="scrollable"
-                app:tabGravity="center"
-                app:tabMaxWidth="0dp"
-                />
-
         </RelativeLayout>
 
 
+        <com.example.raqib.instadate.CustomTabLayout
+            android:id="@+id/tabHost"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            app:tabIndicatorHeight="3dp"
+            android:background="@color/colorMaterial"
+            app:tabIndicatorColor="#ff9800"
+            app:tabTextColor="#616161"
+            app:tabSelectedTextColor="#ffffff"
+            app:tabMode="scrollable"
+            app:tabGravity="center"
+            app:tabMaxWidth="0dp"
+            />
+    </LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/mainNewsRelativeLayout"
+    android:layout_below="@+id/appbar"
+    android:orientation="vertical">
 
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/swipeRefreshInMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:filterTouchesWhenObscured="true"
+        >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/mainNewsRelativeLayout"
-                android:gravity="center"
-                >
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </android.support.v4.view.ViewPager>
 
-                <android.support.v4.widget.SwipeRefreshLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:id="@+id/swipeRefreshInMain"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:filterTouchesWhenObscured="true"
-                    >
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-                    <android.support.v4.view.ViewPager
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:tag=""
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                        >
-                    </android.support.v4.view.ViewPager>
-
-
-                </android.support.v4.widget.SwipeRefreshLayout>
-
-                <ImageView
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/floatingButton"
-                    android:layout_width="140dp"
-                    android:layout_height="31dp"
-                    android:foregroundGravity="center_horizontal"
-                    android:layout_marginLeft="120dp"
-                    android:src="@drawable/new_feeds"
-                    android:layout_marginStart="120dp"
-                    android:background="@drawable/roundedbuttonrefreshfeed"
-                    />
-
-            </RelativeLayout>
-
-        <!--</LinearLayout>-->
 
     </LinearLayout>
 
+    </RelativeLayout>
 
 
 
@@ -120,17 +104,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginTop="56dp"
         android:id="@+id/searchInMainLinearLayout">
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="56dp"
             android:id="@+id/searchListView"
-            android:divider ="#616161"
+            android:layout_marginTop="40dp"
+            android:divider ="#ff9800"
             android:visibility="invisible"
-            android:dividerHeight="1dp">
+            android:dividerHeight="2dp">
         </ListView>
 
     </LinearLayout>
@@ -157,6 +141,6 @@
         app:menu="@menu/navigation_main_menu"
         />
 
+
+
 </android.support.v4.widget.DrawerLayout>
-
-

@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -90,7 +89,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         String BBC = "www.bbc.co.uk";
         String Rediff = "www.rediff.com";
         String KG = "kashmirglobal.com";
-        String DE = "www.dailyexcelsior.com";
+        String KL = "www.kashmirlife.com";
 
         if(linkToCheck.toLowerCase().contains(FE.toLowerCase()))
             holder.moreAtLink.setText(R.string.FinancialExpress);
@@ -106,8 +105,8 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
             holder.moreAtLink.setText(R.string.Rediff);
         else if (linkToCheck.toLowerCase().contains(KG.toLowerCase()))
             holder.moreAtLink.setText(R.string.kashmirglobal_com);
-        else if (linkToCheck.toLowerCase().contains(DE.toLowerCase()))
-            holder.moreAtLink.setText(R.string.dailyexcelsior);
+        else if (linkToCheck.toLowerCase().contains(KL.toLowerCase()))
+            holder.moreAtLink.setText(R.string.kashmirlife);
 
 
 
@@ -152,6 +151,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
                 shareWith(holder,position) ;
             }
         });
+
 
         loadImage(holder,position);
 
@@ -207,13 +207,12 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         if(imageUrl == null)
             return;
 
-        ImageLoader imageLoader = VolleySingleton.getInstance(context)
-                .getImageLoader();
+        ImageLoader netImageLoader = VolleySingleton.getInstance(context).getImageLoader();
 
-        imageLoader.get(imageUrl, ImageLoader.getImageListener(holder.imageView,
+        netImageLoader.get(imageUrl, ImageLoader.getImageListener(holder.imageView,
                 R.drawable.main_image, android.R.drawable.ic_dialog_alert));
 
-        holder.imageView.setImageUrl(imageUrl, imageLoader);
+        holder.imageView.setImageUrl(imageUrl, netImageLoader);
 
 
     }
@@ -232,7 +231,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
         TextView time;
         TextView moreAt;
         TextView moreAtLink;
-        NetworkImageView imageView;
+        CircularNetworkImageView imageView;
         ImageButton bookmarkButton;
         ImageButton shareButton;
         View screenShotView ;
@@ -247,7 +246,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
             time = (TextView) view.findViewById(R.id.newsDate);
             moreAt = (TextView) view.findViewById(R.id.moreAtVirtual);
             moreAtLink = (TextView) view.findViewById(R.id.moreAtLink);
-            imageView = (NetworkImageView) view.findViewById(R.id.image);
+            imageView = (CircularNetworkImageView) view.findViewById(R.id.image);
             bookmarkButton = (ImageButton) view.findViewById(R.id.bookmarkButton);
             shareButton = (ImageButton) view.findViewById(R.id.shareButton);
             screenShotView = view.findViewById(R.id.card_view);
@@ -266,7 +265,7 @@ class MyNewsRecyclerViewAdapter extends RecyclerView.Adapter<MyNewsRecyclerViewA
 
     // BELOW ONCLICK METHODS FROM CARD VIEW ITEM
     private void shareWith(ViewHolder holder, int position) {
-//        verifyStoragePermissions(this);
+        verifyStoragePermissions((Activity) context);
 
         Bitmap myBitmap;
 

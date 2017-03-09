@@ -49,7 +49,7 @@ public class SitesXmlPullParserKashmirGlobal {
 
             // Open up InputStream and Reader of our file.
             FileInputStream fis = ctx.openFileInput("KashmirGlobal.xml");
-            Log.e("Global","kashmir"+newsItems.toString());
+//            Log.e("Global","kashmir"+newsItems.toString());
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
            /* StringBuffer output = new StringBuffer();
             String st;
@@ -101,7 +101,7 @@ public class SitesXmlPullParserKashmirGlobal {
                     case XmlPullParser.TEXT:
                         //grab the current text so we can use it in END_TAG event
                         curText = xpp.getText();
-                        Log.e("current","text"+curText);
+//                        Log.e("current","text"+curText);
                         break;
 
                     case XmlPullParser.END_TAG:
@@ -111,12 +111,12 @@ public class SitesXmlPullParserKashmirGlobal {
                             newsItems.add(curNewsItems);
                         } else if (tagName.equalsIgnoreCase(KEY_NAME) && actual_work) {
                             // if </title> use setTitle() on curSite
-                            Log.e("TITLE IS ",curText);
+//                            Log.e("TITLE IS ",curText);
                             curNewsItems.setTitle(curText);
 
                         } else if (tagName.equalsIgnoreCase(KEY_LINK) && actual_work) {
                             // if </link> use setLink() on curSite
-                            Log.e("LINK IS ",curText);
+//                            Log.e("LINK IS ",curText);
                             curNewsItems.setLink(curText);
                         } else if (tagName.equalsIgnoreCase(KEY_ABOUT) && actual_work) {
                             // if </description> use setDescription() on curSite
@@ -139,14 +139,14 @@ public class SitesXmlPullParserKashmirGlobal {
                             // curNewsItems.setDescription(curText);
                         } else if (tagName.equalsIgnoreCase(KEY_DATE) && actual_work) {
                             // if </image> use setImgUrl() on curSite
-                            Log.e("IMAGE DATE IS  : ", curText);
+//                            Log.e("IMAGE DATE IS  : ", curText);
 
                             curNewsItems.setDate(curText);
-                            Log.e("date ", "is" + curText);
+//                            Log.e("date ", "is" + curText);
                             end = 2;
 
                             if (end == 2 && curNewsItems != null) {
-                                Log.e("newsitem", "empty::" + curNewsItems);
+//                                Log.e("newsitem", "empty::" + curNewsItems);
                                 curNewsItems.setImgUrl(imageAt);
                             }
                         }
@@ -154,16 +154,17 @@ public class SitesXmlPullParserKashmirGlobal {
 
 
                     default:
-                        Log.e("Even type","default"+eventType);
+//                        Log.e("Even type","default"+eventType);
                         break;
-                }Log.e("switch ended","value"+eventType);
+                }
+//                Log.e("switch ended","value"+eventType);
 
 
                 //   Log.e("incr ","event::"+xpp.getEventType());
                 //move on to next iteration
 
                 eventType = xpp.next();
-                Log.e("Even type","increased"+eventType);
+//                Log.e("Even type","increased"+eventType);
                 // Log.e("Even type","tagname"+xpp.getText());
             }
         } catch (Exception e) {
